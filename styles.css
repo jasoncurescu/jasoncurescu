@@ -1,0 +1,102 @@
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+
+/* General Styling */
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    text-align: left;
+    padding: 20px;
+    font-size: 15px;
+}
+
+.container {
+    max-width: 600px;
+    margin-left: 300px;
+    margin-top: 50px
+}
+
+/* Header */
+h1 {
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+/* Email Link */
+.email {
+    color: #52FF00;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.email:hover {
+    text-decoration: underline;
+}
+
+/* Timeline */
+
+.timeline {
+    margin-top: 50px;
+}
+
+.timeline p {
+    margin: 20px 0;
+    font-size: 15px;
+    font-weight: 300;
+}
+
+.year {
+    color: #444444;
+    font-weight: normal;
+    margin-right: 15px;
+}
+
+.highlight {
+    color: #52FF00;
+    font-weight: 300;
+    text-decoration: none;
+}
+
+/* Bottom Links */
+.links {
+    margin-top: 50px;
+}
+
+.links a {
+    display: block;
+    color: #52FF00;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .container {
+        max-width: 90%;
+    }
+
+    h1 {
+        font-size: 14pt;
+    }
+
+    .email {
+        font-size: 11pt;
+    }
+
+    .timeline p {
+        font-size: 14pt;
+    }
+
+    .links a {
+        font-size: 9pt;
+    }
+}
