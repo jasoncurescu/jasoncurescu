@@ -86,7 +86,7 @@ h1 {
 @media (max-width: 600px) {
     .container {
         max-width: 90%;
-        margin-left: 50px;
+        margin-left: 20px;
         margin-top: 50px
     }
 
