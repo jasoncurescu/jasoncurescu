@@ -51,7 +51,7 @@ h1 {
 .year {
     color: #444444;
     font-weight: normal;
-    margin-right: 12px;
+    margin-right: 15px;
 }
 
 .highlight {
@@ -70,7 +70,6 @@ h1 {
 }
 
 .links a {
-    display: block;
     color: #52FF00;
     text-decoration: none;
     font-size: 10px;
