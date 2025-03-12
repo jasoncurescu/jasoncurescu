@@ -90,18 +90,18 @@ h1 {
     }
 
     h1 {
-        font-size: 12pt;
+        font-size: 13px;
     }
 
     .email {
-        font-size: 10pt;
+        font-size: 10px;
     }
 
     .timeline p {
-        font-size: 12pt;
+        font-size: 13px;
     }
 
     .links a {
-        font-size: 9pt;
+        font-size: 10px;
     }
 }
