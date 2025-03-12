@@ -85,12 +85,12 @@ h1 {
 @media (max-width: 600px) {
     .container {
         max-width: 90%;
-        margin-left: 20px;
+        margin-left: 15px;
         margin-top: 50px
     }
 
     h1 {
-        font-size: 13pt;
+        font-size: 12pt;
     }
 
     .email {
@@ -98,7 +98,7 @@ h1 {
     }
 
     .timeline p {
-        font-size: 13pt;
+        font-size: 12pt;
     }
 
     .links a {
