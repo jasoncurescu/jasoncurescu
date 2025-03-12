@@ -60,6 +60,10 @@ h1 {
     text-decoration: none;
 }
 
+.highlight:hover {
+    text-decoration: underline;
+}
+
 /* Bottom Links */
 .links {
     margin-top: 50px;
