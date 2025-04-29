@@ -3,8 +3,8 @@
 
 /* General Styling */
 body {
-    background-color: black;
-    color: white;
+    background-color: white;
+    color: balck;
     font-family: 'Inter', sans-serif;
     text-align: left;
     padding: 20px;
@@ -26,7 +26,7 @@ h1 {
 
 /* Email Link */
 .email {
-    color: #52FF00;
+    color: #007BFF;
     text-decoration: none;
     font-size: 12px;
     font-weight: 300;
@@ -55,7 +55,7 @@ h1 {
 }
 
 .highlight {
-    color: #52FF00;
+    color: #007BFF;
     font-weight: 300;
     text-decoration: none;
 }
@@ -70,7 +70,7 @@ h1 {
 }
 
 .links a {
-    color: #52FF00;
+    color: #007BFF;
     text-decoration: none;
     font-size: 10px;
     font-weight: 300;
