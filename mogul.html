@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <nav class="sticky-nav">
+            <ul>
+                <li><a href="#recruiter-tool">Recruiter Tool</a></li>
+                <li><a href="#mogul-app">Mogul App</a></li>
+                <li><a href="#mogul-x">Mogul X</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Content Sections -->
+    <section id="recruiter-tool">
+        <h2>Recruiter Tool</h2>
+        <!-- Content here -->
+    </section>
+    <section id="mogul-app">
+        <h2>Mogul App</h2>
+        <!-- Content here -->
+    </section>
+    <section id="mogul-x">
+        <h2>Mogul X</h2>
+        <!-- Content here -->
+    </section>
+
+    <!-- Bottom Icons -->
+    <section class="bottom-icons">
+        <div class="icon" onclick="changeImage('image1')">
+            <img src="icon1.png" alt="Icon 1">
+            <p>Icon 1</p>
+        </div>
+        <div class="icon" onclick="changeImage('image2')">
+            <img src="icon2.png" alt="Icon 2">
+            <p>Icon 2</p>
+        </div>
+        <div class="icon" onclick="changeImage('image3')">
+            <img src="icon3.png" alt="Icon 3">
+            <p>Icon 3</p>
+        </div>
+    </section>
+
+    <!-- Image Display Section -->
+    <section id="image-display">
+        <img id="main-image" src="image1.jpg" alt="Main Image">
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
