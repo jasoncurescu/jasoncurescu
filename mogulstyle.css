@@ -1,0 +1,581 @@
+.desktop {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.desktop .div {
+  background-color: #ffffff;
+  width: 1440px;
+  height: 8714px;
+  position: relative;
+}
+
+.desktop .text-wrapper {
+  position: absolute;
+  top: 99px;
+  left: 200px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-2 {
+  position: absolute;
+  top: 174px;
+  left: 200px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .product-strategy {
+  position: absolute;
+  top: 246px;
+  left: 200px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .p {
+  position: absolute;
+  width: 520px;
+  top: 1086px;
+  left: 720px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .i-joined-mogul-as {
+  position: absolute;
+  width: 520px;
+  top: 153px;
+  left: 720px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .we-noticed-a-growing {
+  position: absolute;
+  width: 520px;
+  top: 691px;
+  left: 720px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .it-became-clear-that {
+  position: absolute;
+  width: 520px;
+  top: 1825px;
+  left: 720px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .text-wrapper-3 {
+  position: absolute;
+  width: 520px;
+  top: 4885px;
+  left: 720px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .text-wrapper-4 {
+  position: absolute;
+  width: 520px;
+  top: 5173px;
+  left: 460px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .text-wrapper-5 {
+  position: absolute;
+  width: 520px;
+  top: 5895px;
+  left: 460px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .text-wrapper-6 {
+  position: absolute;
+  width: 520px;
+  top: 6588px;
+  left: 460px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .once-you-ve-sourced {
+  position: absolute;
+  width: 520px;
+  top: 7283px;
+  left: 460px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .once-all-candidates {
+  position: absolute;
+  width: 520px;
+  top: 8044px;
+  left: 460px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #000000;
+  font-size: 15px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .text-wrapper-7 {
+  position: absolute;
+  top: 153px;
+  left: 200px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-8 {
+  top: 691px;
+  left: 200px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  position: absolute;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-9 {
+  position: absolute;
+  top: 225px;
+  left: 200px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-10 {
+  top: 1086px;
+  position: absolute;
+  left: 200px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-11 {
+  position: absolute;
+  top: 1825px;
+  left: 200px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-12 {
+  top: 4885px;
+  position: absolute;
+  left: 200px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .inboxrecruiter {
+  position: absolute;
+  width: 730px;
+  height: 474px;
+  top: 5257px;
+  left: 355px;
+  object-fit: cover;
+}
+
+.desktop .oldrecruiter {
+  position: absolute;
+  width: 730px;
+  height: 413px;
+  top: 1277px;
+  left: 355px;
+  object-fit: cover;
+}
+
+.desktop .rectangle {
+  position: absolute;
+  width: 1040px;
+  height: 1px;
+  top: 498px;
+  left: 200px;
+  background-color: #000000;
+}
+
+.desktop .rectangle-2 {
+  position: absolute;
+  width: 1040px;
+  height: 1px;
+  top: 641px;
+  left: 200px;
+  background-color: #000000;
+}
+
+.desktop .rectangle-3 {
+  position: absolute;
+  width: 1040px;
+  height: 1px;
+  top: 1036px;
+  left: 200px;
+  background-color: #000000;
+}
+
+.desktop .rectangle-4 {
+  position: absolute;
+  width: 1040px;
+  height: 1px;
+  top: 1775px;
+  left: 200px;
+  background-color: #000000;
+}
+
+.desktop .rectangle-5 {
+  position: absolute;
+  width: 1040px;
+  height: 1px;
+  top: 4835px;
+  left: 200px;
+  background-color: #000000;
+}
+
+.desktop .text-wrapper-13 {
+  position: absolute;
+  top: 5145px;
+  left: 700px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.desktop .inbox {
+  position: absolute;
+  width: 28px;
+  height: 24px;
+  top: 5112px;
+  left: 706px;
+  object-fit: cover;
+}
+
+.desktop .sourcing {
+  position: absolute;
+  width: 30px;
+  height: 28px;
+  top: 5831px;
+  left: 704px;
+  object-fit: cover;
+}
+
+.desktop .filters {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  top: 6523px;
+  left: 706px;
+  object-fit: cover;
+}
+
+.desktop .review {
+  position: absolute;
+  width: 28px;
+  height: 32px;
+  top: 7215px;
+  left: 706px;
+  object-fit: cover;
+}
+
+.desktop .text-wrapper-14 {
+  position: absolute;
+  top: 5867px;
+  left: 687px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.desktop .sourcingrecruiter {
+  position: absolute;
+  width: 730px;
+  height: 474px;
+  top: 5964px;
+  left: 355px;
+  object-fit: cover;
+}
+
+.desktop .text-wrapper-15 {
+  position: absolute;
+  top: 6560px;
+  left: 697px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-16 {
+  position: absolute;
+  top: 7255px;
+  left: 693px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-17 {
+  position: absolute;
+  top: 8016px;
+  left: 683px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.desktop .flows {
+  position: absolute;
+  width: 830px;
+  height: 277px;
+  top: 2121px;
+  left: 305px;
+  object-fit: cover;
+}
+
+.desktop .recruiterprototype {
+  position: absolute;
+  width: 830px;
+  height: 818px;
+  top: 2468px;
+  left: 305px;
+  object-fit: cover;
+}
+
+.desktop .img {
+  position: absolute;
+  width: 830px;
+  height: 662px;
+  top: 3356px;
+  left: 305px;
+  object-fit: cover;
+}
+
+.desktop .recruiterprototype-2 {
+  position: absolute;
+  width: 830px;
+  height: 662px;
+  top: 4088px;
+  left: 305px;
+  object-fit: cover;
+}
+
+.desktop .group {
+  position: absolute;
+  width: 1047px;
+  height: 62px;
+  top: 539px;
+  left: 199px;
+}
+
+.desktop .overlap-group {
+  position: relative;
+  width: 1041px;
+  height: 62px;
+}
+
+.desktop .rectangle-6 {
+  position: absolute;
+  width: 1040px;
+  height: 62px;
+  top: 0;
+  left: 1px;
+  background-color: #ffffff;
+}
+
+.desktop .text-wrapper-18 {
+  position: absolute;
+  top: 31px;
+  left: 1px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #027bff;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-19 {
+  top: 31px;
+  left: 261px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #027bff;
+  position: absolute;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .text-wrapper-20 {
+  top: 10px;
+  left: 1px;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #000000;
+  position: absolute;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+  white-space: nowrap;
+}
+
+.desktop .rectangle-7 {
+  position: absolute;
+  width: 100px;
+  height: 1px;
+  top: 51px;
+  left: 0;
+  background-color: #027bff;
+}
+
+.desktop .campaign {
+  position: absolute;
+  width: 35px;
+  height: 26px;
+  top: 7982px;
+  left: 703px;
+  object-fit: cover;
+}
+
+.desktop .filtersrecruiter {
+  position: absolute;
+  width: 730px;
+  height: 474px;
+  top: 6657px;
+  left: 355px;
+  object-fit: cover;
+}
+
+.desktop .reviewrecruiter {
+  position: absolute;
+  width: 730px;
+  height: 474px;
+  top: 7415px;
+  left: 355px;
+  object-fit: cover;
+}
+
+.desktop .campaignrecruiter {
+  position: absolute;
+  width: 730px;
+  height: 474px;
+  top: 8155px;
+  left: 355px;
+  object-fit: cover;
+}
