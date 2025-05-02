@@ -194,7 +194,7 @@
   white-space: nowrap;
 }
 
-.desktop .group {
+.desktop .flows {
   position: absolute;
   width: 1040px;
   height: 426px;
@@ -203,7 +203,7 @@
   object-fit: cover;
 }
 
-.desktop .img {
+.desktop .recruiterprototype {
   position: absolute;
   width: 1040px;
   height: 927px;
@@ -212,7 +212,7 @@
   object-fit: cover;
 }
 
-.desktop .group-2 {
+.desktop .img {
   position: absolute;
   width: 1040px;
   height: 777px;
@@ -221,7 +221,7 @@
   object-fit: cover;
 }
 
-.desktop .group-3 {
+.desktop .recruiterprototype-2 {
   position: absolute;
   width: 1040px;
   height: 777px;
@@ -295,7 +295,7 @@
   white-space: nowrap;
 }
 
-.desktop .group-4 {
+.desktop .inbox {
   position: absolute;
   width: 28px;
   height: 24px;
@@ -303,7 +303,7 @@
   left: 390px;
 }
 
-.desktop .overlap-group-wrapper {
+.desktop .sourcing {
   position: absolute;
   width: 28px;
   height: 26px;
@@ -379,7 +379,7 @@
   left: 9px;
 }
 
-.desktop .group-5 {
+.desktop .filters {
   position: absolute;
   width: 28px;
   height: 28px;
@@ -457,7 +457,7 @@
   border-color: #989898;
 }
 
-.desktop .group-6 {
+.desktop .review {
   position: absolute;
   width: 26px;
   height: 30px;
@@ -519,7 +519,7 @@
   border: 2px solid;
 }
 
-.desktop .overlap-wrapper {
+.desktop .campaign {
   position: absolute;
   width: 33px;
   height: 24px;
@@ -610,7 +610,7 @@
   transform: rotate(30.00deg);
 }
 
-.desktop .group-7 {
+.desktop .new-recruiter {
   position: absolute;
   width: 700px;
   height: 444px;
@@ -673,12 +673,12 @@
   background-size: 100% 100%;
 }
 
-.desktop .inbox {
-  top: 5px;
-  left: 18px;
+.desktop .inbox-2 {
   position: absolute;
   width: 18px;
   height: 6px;
+  top: 5px;
+  left: 18px;
 }
 
 .desktop .ellipse-stroke-wrapper {
@@ -829,12 +829,12 @@
   left: 133px;
 }
 
-.desktop .inbox-2 {
-  top: 25px;
-  left: 29px;
+.desktop .inbox-3 {
   position: absolute;
   width: 18px;
   height: 6px;
+  top: 25px;
+  left: 29px;
 }
 
 .desktop .there-are-new {
@@ -1169,9 +1169,9 @@
   background-color: #000000;
 }
 
-.desktop .div-wrapper {
+.desktop .group {
   position: absolute;
-  width: 1049px;
+  width: 1047px;
   height: 62px;
   top: 539px;
   left: 199px;
@@ -1219,19 +1219,6 @@
 }
 
 .desktop .text-wrapper-16 {
-  position: absolute;
-  top: 31px;
-  left: 521px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
-  color: #027bff;
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: 21px;
-  white-space: nowrap;
-}
-
-.desktop .text-wrapper-17 {
   position: absolute;
   top: 10px;
   left: 1px;
