@@ -1,0 +1,92 @@
+/* Basic reset and styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #fff;
+    padding: 10px;
+}
+
+.sticky-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.sticky-nav ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.sticky-nav ul li {
+    margin: 0 15px;
+}
+
+.sticky-nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.sticky-nav ul li a:hover {
+    color: #007BFF;
+}
+
+/* Section styling */
+section {
+    padding: 80px 20px;
+    margin-top: 60px; /* To prevent content from hiding behind sticky header */
+}
+
+section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Bottom icons */
+.bottom-icons {
+    display: flex;
+    justify-content: center;
+    padding: 30px 0;
+}
+
+.icon {
+    text-align: center;
+    margin: 0 15px;
+    cursor: pointer;
+}
+
+.icon img {
+    width: 50px;
+    height: 50px;
+    transition: transform 0.3s;
+}
+
+.icon:hover img {
+    transform: scale(1.1);
+}
+
+.icon p {
+    margin-top: 10px;
+}
+
+/* Image Display Section */
+#image-display {
+    text-align: center;
+    padding: 20px;
+}
+
+#main-image {
+    max-width: 100%;
+    height: auto;
+}
