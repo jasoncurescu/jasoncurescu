@@ -1,164 +1,20 @@
-.desktop .text-wrapper-13 {
-  position: absolute;
-  top: 5801px;
-  left: 982px;
-  font-family: "Inter-SemiBold", Helvetica;
-  font-weight: 600;
-  color: #989898;
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: normal;
-  white-space: nowrap;
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.desktop .newrecruiter {
-  position: absolute;
-  width: 730px;
-  height: 474px;
-  top: 5905px;
-  left: 355px;
-  object-fit: cover;
-}
-
-.desktop .oldrecruiter {
-  position: absolute;
-  width: 730px;
-  height: 413px;
-  top: 1277px;
-  left: 355px;
-  object-fit: cover;
-}
-
-.desktop .rectangle,
-.desktop .rectangle-2,
-.desktop .rectangle-3,
-.desktop .rectangle-4,
-.desktop .rectangle-5 {
-  position: absolute;
-  width: 1040px;
-  height: 1px;
-  left: 200px;
-  background-color: #000000;
-}
-
-.desktop .rectangle { top: 498px; }
-.desktop .rectangle-2 { top: 641px; }
-.desktop .rectangle-3 { top: 1036px; }
-.desktop .rectangle-4 { top: 1775px; }
-.desktop .rectangle-5 { top: 5293px; }
-
-.desktop .group {
-  position: absolute;
-  width: 1047px;
-  height: 62px;
-  top: 539px;
-  left: 199px;
-}
-
-.desktop .overlap-group {
-  position: relative;
-  width: 1041px;
-  height: 62px;
-}
-
-.desktop .rectangle-6 {
-  position: absolute;
-  width: 1040px;
-  height: 62px;
-  top: 0;
-  left: 1px;
+/* Typography */
+body {
+  font-family: 'Your Chosen Font', sans-serif;
   background-color: #ffffff;
+  color: #333333;
 }
 
-.desktop .text-wrapper-14 {
-  position: absolute;
-  top: 31px;
-  left: 1px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
-  color: #027bff;
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: 21px;
-  white-space: nowrap;
+/* Layout and sections */
+header, main, footer {
+  padding: 20px;
 }
 
-.desktop .text-wrapper-15 {
-  position: absolute;
-  top: 31px;
-  left: 261px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
-  color: #027bff;
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: 21px;
-  white-space: nowrap;
-}
-
-.desktop .text-wrapper-16 {
-  position: absolute;
-  top: 10px;
-  left: 1px;
-  font-family: "Inter-SemiBold", Helvetica;
-  font-weight: 600;
-  color: #000000;
-  font-size: 15px;
-  letter-spacing: 0;
-  line-height: 21px;
-  white-space: nowrap;
-}
-
-.desktop .rectangle-7 {
-  position: absolute;
-  width: 100px;
-  height: 1px;
-  top: 51px;
-  left: 0;
-  background-color: #027bff;
-}
-
-.desktop .inbox {
-  position: absolute;
-  width: 28px;
-  height: 24px;
-  top: 5768px;
-  left: 390px;
-  object-fit: cover;
-}
-
-.desktop .sourcing {
-  position: absolute;
-  width: 30px;
-  height: 28px;
-  top: 5764px;
-  left: 540px;
-  object-fit: cover;
-}
-
-.desktop .campaign {
-  position: absolute;
-  width: 41px;
-  height: 38px;
-  top: 5759px;
-  left: 998px;
-  object-fit: cover;
-}
-
-.desktop .filters {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  top: 5764px;
-  left: 695px;
-  object-fit: cover;
-}
-
-.desktop .review {
-  position: absolute;
-  width: 28px;
-  height: 32px;
-  top: 5760px;
-  left: 842px;
-  object-fit: cover;
-}
+/* Add more styles as per your design */
