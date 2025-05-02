@@ -364,7 +364,7 @@
 
 .desktop .appdemo {
   position: absolute;
-  width: 701px;
+  width: 700px;
   height: 394px;
   top: 6260px;
   left: 370px;
@@ -393,14 +393,5 @@
   letter-spacing: 0;
   line-height: 21px;
   white-space: nowrap;
-}
-
-video {
-  position: relative;
-  bottom: 0;
-  width: 700px;
-  height: auto;
-  object-fit: cover;
-  z-index: 1;
 }
 
