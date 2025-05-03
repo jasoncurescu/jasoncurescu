@@ -372,6 +372,11 @@
   left: 370px;
 }
 
+
+.desktop .appdemo video {
+  width: 100%;
+}
+
 .desktop .recruiter-tool-mogul {
   position: absolute;
   top: 402px;
