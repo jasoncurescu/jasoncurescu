@@ -2,16 +2,18 @@
 
 .desktop {
   background-color: #ffffff;
-  display: flex;
+/*   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 100%;
+  width: 100%; */
+  width: 1440px;
+  margin: 0 auto;
 }
 
 .desktop .div {
   background-color: #ffffff;
-  width: 1440px;
-  height: 8714px;
+/*   width: 1440px;
+  height: 8714px; */
   position: relative;
 }
 
