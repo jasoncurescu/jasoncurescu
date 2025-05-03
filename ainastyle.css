@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 .desktop {
   background-color: #ffffff;
   display: flex;
@@ -17,7 +19,7 @@
   position: absolute;
   top: 99px;
   left: 200px;
-  font-family: "Inter-SemiBold", Helvetica;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 20px;
@@ -30,8 +32,8 @@
   position: absolute;
   top: 174px;
   left: 200px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   letter-spacing: 0;
@@ -43,8 +45,8 @@
   position: absolute;
   top: 246px;
   left: 200px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   letter-spacing: 0;
@@ -56,8 +58,8 @@
   width: 520px;
   top: 545px;
   left: 720px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   letter-spacing: 0;
@@ -69,8 +71,8 @@
   width: 520px;
   top: 153px;
   left: 720px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   letter-spacing: 0;
@@ -82,8 +84,8 @@
   width: 520px;
   top: 842px;
   left: 720px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   letter-spacing: 0;
@@ -103,8 +105,8 @@
   width: 520px;
   top: 272px;
   left: 155px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   text-align: center;
@@ -134,8 +136,8 @@
   width: 520px;
   top: 428px;
   left: 155px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   text-align: center;
@@ -165,8 +167,8 @@
   width: 520px;
   top: 700px;
   left: 155px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   text-align: center;
@@ -196,8 +198,8 @@
   width: 520px;
   top: 1273px;
   left: 155px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #000000;
   font-size: 15px;
   text-align: center;
@@ -218,7 +220,7 @@
   position: absolute;
   top: 153px;
   left: 200px;
-  font-family: "Inter-SemiBold", Helvetica;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -231,7 +233,7 @@
   position: absolute;
   top: 225px;
   left: 200px;
-  font-family: "Inter-SemiBold", Helvetica;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -244,7 +246,7 @@
   position: absolute;
   top: 545px;
   left: 200px;
-  font-family: "Inter-SemiBold", Helvetica;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -257,7 +259,7 @@
   position: absolute;
   top: 842px;
   left: 200px;
-  font-family: "Inter-SemiBold", Helvetica;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -288,8 +290,8 @@
   position: absolute;
   top: 402px;
   left: 200px;
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #027bff;
   font-size: 15px;
   letter-spacing: 0;
@@ -297,8 +299,8 @@
 }
 
 .desktop .span {
-  font-family: "Inter-Regular", Helvetica;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
   color: #027bff;
   font-size: 15px;
   letter-spacing: 0;
@@ -309,7 +311,7 @@
   position: absolute;
   top: 381px;
   left: 200px;
-  font-family: "Inter-SemiBold", Helvetica;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
