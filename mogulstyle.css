@@ -535,6 +535,6 @@
 }
 
 .container {
-  width: 1440px; /* Set this to your desired fixed width */
+  width: 1100px; /* Set this to your desired fixed width */
   margin: 0 auto; /* This centers the container horizontally */
 }
