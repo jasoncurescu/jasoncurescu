@@ -17,7 +17,7 @@
   position: absolute;
   top: 99px;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 20px;
@@ -30,7 +30,7 @@
   position: absolute;
   top: 174px;
   left: 200px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -43,7 +43,7 @@
   position: absolute;
   top: 246px;
   left: 200px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -55,7 +55,7 @@
   position: absolute;
   top: 402px;
   left: 200px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #027bff;
   font-size: 15px;
@@ -64,7 +64,7 @@
 }
 
 .desktop .span {
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #027bff;
   font-size: 15px;
@@ -77,7 +77,7 @@
   width: 520px;
   top: 943px;
   left: 720px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -90,7 +90,7 @@
   width: 520px;
   top: 153px;
   left: 720px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -103,7 +103,7 @@
   width: 520px;
   top: 548px;
   left: 720px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -116,7 +116,7 @@
   width: 520px;
   top: 1682px;
   left: 720px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -129,7 +129,7 @@
   width: 520px;
   top: 4742px;
   left: 720px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -142,7 +142,7 @@
   width: 520px;
   top: 5030px;
   left: 460px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -156,7 +156,7 @@
   width: 520px;
   top: 5752px;
   left: 460px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -170,7 +170,7 @@
   width: 520px;
   top: 6445px;
   left: 460px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -184,7 +184,7 @@
   width: 520px;
   top: 7140px;
   left: 460px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -198,7 +198,7 @@
   width: 520px;
   top: 7901px;
   left: 460px;
-  font-family: "Inter-Regular", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   color: #000000;
   font-size: 15px;
@@ -211,7 +211,7 @@
   position: absolute;
   top: 153px;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -224,7 +224,7 @@
   top: 548px;
   position: absolute;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -237,7 +237,7 @@
   position: absolute;
   top: 225px;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -250,7 +250,7 @@
   top: 381px;
   position: absolute;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -263,7 +263,7 @@
   top: 943px;
   position: absolute;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -276,7 +276,7 @@
   position: absolute;
   top: 1682px;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -289,7 +289,7 @@
   top: 4742px;
   position: absolute;
   left: 200px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -356,7 +356,7 @@
   position: absolute;
   top: 5002px;
   left: 700px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -405,7 +405,7 @@
   position: absolute;
   top: 5724px;
   left: 687px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -427,7 +427,7 @@
   position: absolute;
   top: 6417px;
   left: 697px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -440,7 +440,7 @@
   position: absolute;
   top: 7112px;
   left: 693px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
@@ -453,7 +453,7 @@
   position: absolute;
   top: 7873px;
   left: 683px;
-  font-family: "Inter-SemiBold", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   color: #000000;
   font-size: 15px;
