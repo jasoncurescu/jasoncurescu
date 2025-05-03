@@ -364,7 +364,7 @@
 
 .desktop .appdemo {
   position: absolute;
-  width: 700px;
+  width: 701px;
   height: 394px;
   top: 6260px;
   left: 370px;
@@ -374,6 +374,15 @@
   position: absolute;
   top: 402px;
   left: 200px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #027bff;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
+.desktop .span {
   font-family: "Inter-Regular", Helvetica;
   font-weight: 400;
   color: #027bff;
@@ -394,4 +403,3 @@
   line-height: 21px;
   white-space: nowrap;
 }
-
