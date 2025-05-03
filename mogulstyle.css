@@ -533,8 +533,3 @@
   left: 355px;
   object-fit: cover;
 }
-
-.container {
-  width: 1100px; /* Set this to your desired fixed width */
-  margin: 0 auto; /* This centers the container horizontally */
-}
