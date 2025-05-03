@@ -63,6 +63,15 @@
   line-height: 21px;
 }
 
+.desktop .span {
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #027bff;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 21px;
+}
+
 .desktop .p {
   position: absolute;
   width: 520px;
