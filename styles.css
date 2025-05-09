@@ -217,7 +217,7 @@ footer nav ul li a {
     object-fit: contain;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 1000px) {
     .experience-content__section {
         flex-direction: column;
         gap: 20px;
