@@ -140,8 +140,13 @@ footer nav ul li a {
 }
 
 .experience__name {
+    text-decoration: none;
+}
+
+.experience__name a {
     text-decoration: underline;
     cursor: pointer;
+    color: #000;
 }
 
 .experience__action a {
