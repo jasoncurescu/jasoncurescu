@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Jason Curescu - Cover Letter</title>
+        <link rel="icon" type="image/png" href="images/jsn.png">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            .about-main {
+                display: grid;
+                grid-template-columns: 25% 50% 25%;
+                max-width: 100vw;
+                margin: 0px 50px 0px 0px;
+                padding: 0;
+                align-items: baseline;
+            }
+            .about-label {
+                grid-column: 1;
+                font-size: 14px;
+                font-weight: 300;
+                color: #000;
+                text-align: left;
+                margin-bottom: 20px;
+                line-height: 1.6;
+                padding-left: 30px;
+            }
+            .about-content {
+                grid-column: 2;
+                font-size: 14px;
+                font-weight: 300;
+                color: #000;
+                text-align: left;
+                margin-bottom: 00px;
+                line-height: 1.6;
+                width: 100%;
+                max-width: 100%;
+                padding-left: 30px;
+            }
+            body {
+                overflow-x: hidden;
+            }
+
+            @media screen and (max-width: 1000px) {
+                .about-main {
+                    grid-template-columns: 1fr;
+                    margin: 30px auto;
+                    padding: 0px 30px;
+                    gap: 0px;
+                }
+
+                .about-label,
+                .about-content {
+                    grid-column: auto;
+                    padding-left: 0;
+                }
+
+                .about-label {
+                    margin-bottom: 0px;
+                }
+
+                .about-content {
+                    margin-top: 0px;
+                    padding-top: 0px;
+                }
+
+                .about-content p:first-child {
+                    margin-top: 0px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header id="header">
+            <div class="row">
+                <div>
+                    <div class="section">
+                        <a href="/index.html" class="logo">Jason Curescu</a>
+                    </div>
+            
+                    <div class="section">
+                        <a href="/index.html">Visit my portfolio</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <ul id="experiences">
+            <li>
+                <div class="about-main">
+                    <div class="about-label" style="margin-top:0;">Charles Schwab<br>Senior User Experience Designer, Design System<br>Cover Letter</div>
+                    <div class="about-content" style="margin-top:0;"></div>
+
+                    <div class="about-label">Intro</div>
+                    <div class="about-content">
+                        Hi, I’m Jason Curescu. I’ve spent the last seven years as a senior product designer at Mogul, a recruitment platform focused on making hiring better for everyone involved. It was a rewarding place to grow and build. Now that Mogul has closed its doors, I’m looking ahead to what’s next. I’m hoping to find a role where I can keep learning, solve real problems, and design things that truly matter. I’m currently based in Chicago but in the process of relocating to the Phoenix area.
+                    </div>
+
+                    <div class="about-label">Value I bring</div>
+                    <div class="about-content">
+                        What really stood out to me about this role is the focus on the Everest Design System and the chance to work on something that touches almost every part of the Schwab experience. I’ve always been drawn to the kind of work that brings structure, clarity, and consistency to large and complex products. At Mogul, I led design efforts that involved maintaining our Figma libraries, documenting components and patterns, and collaborating closely with engineering, product, and accessibility teams to make sure everything worked well together. I’ve also worked on mobile design across both iOS and Android, so the idea of helping bridge platform differences while supporting native conventions is something I’m already comfortable with and excited to keep growing in. On top of that, I enjoy writing clear documentation and thinking through edge cases to make sure a design system is truly useful and not just polished on the surface. The scale of Schwab’s design community and the range of challenges you’re solving for make this role feel like a great fit for both my experience and the kind of work I love doing.
+                      </div>
+                </div>
+            </li>
+        </ul>
+
+        <footer>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#" id="back-to-top">Back to top</a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
+
+        <script>
+            // Back to top functionality
+            document.getElementById('back-to-top').addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({top: 0});
+            });
+
+            // Logo click functionality
+            document.querySelector('.logo').addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({top: 0});
+            });
+        </script>
+    </body>
+</html> 
