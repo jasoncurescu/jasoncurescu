@@ -17,7 +17,7 @@
                     <div class="section">
                         <a href="/index.html" class="logo">Jason Curescu</a>
                     </div>
-            
+
                     <div class="section">
                         I'm a senior product designer at Mogul, crafting tools that make hiring smarter, faster, and more inclusive.
                     </div>
@@ -38,10 +38,11 @@
                         <a href="https://www.instagram.com/pepas.pizza/" target="_blank">Sometimes I make pizza</a>
                     </div>
                 </div>
-            
+
                 <div class="bio-pic-container">
                     <img src="images/me.jpg" alt="Jason Curescu" class="bio-pic">
                 </div>
+
             </div>
         </header>
 
@@ -56,67 +57,145 @@
                 </div>
 
                 <div class="experience-content">
-                    <div class="experience-content__section">
+                    <div class="experience-content__section" style="margin-bottom: 0; padding-bottom: 0;">
                         <div>
                             <span style="white-space:nowrap;">Mogul<a href="https://onmogul.com/for_employers" target="_blank"><img src="images/link.png" alt="link to Mogul" style="width: 11px; height: 11px; position: relative; top: 0px; margin-left: 5px;"></a></span><br>
                             
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <div class="experience-content__section" style="margin-top: 0; padding-top: 0;">
+                        <div>
                             Responsibilities:<br>
-                            Product Strategy & Leadership<br>
-                            UI/UX Design & Product Development<br>
-                            User Research & Validation<br>
-                            AI Integration & Recruitment Tools<br>
-                            Branding & Marketing<br>
+                            Product strategy & leadership<br>
+                            UI/UX design & product development<br>
+                            User research & validation<br>
+                            AI integration & recruitment tools<br>
+                            Branding & marketing<br></div>
+                        <div>
+                            Results:<br>
+                                Simplified and more intuitive workflow<br>
+                                Faster, more focused sourcing<br>
+                                Smarter candidate review<br>
+                                Integrated campaign management<br>
+                                Validated by positive feedback<br>
                         </div>
-                        <div>The problem:<br>
-                            We saw a growing challenge: companies were struggling to find and connect with candidates from underrepresented backgrounds. Since Mogul already had a strong community of diverse professionals, we recognized a real opportunity to bridge that gap. That's how Mogul Recruiter was born. An AI-powered sourcing tool designed to help companies surface talent across key diversity categories like gender, ethnicity, veteran status, and disability.</div>
                     </div>
-                   
+
+                    <div class="experience-content__section" style="display: block; margin-top: 50px; margin-bottom: 70px;">
+                        <p style="font-size: 2em; line-height: 1.4;" class="problem-text">
+                            We saw a growing challenge: companies were struggling to find and connect with candidates from underrepresented backgrounds. Since Mogul already had a strong community of diverse professionals, we recognized a real opportunity to bridge that gap. That's how Mogul Recruiter was born. An AI-powered sourcing tool designed to help companies surface talent across key diversity categories like gender, ethnicity, veteran status, and disability.</p>
+                    </div>
+
+                    <style>
+                        @media screen and (max-width: 1000px) {
+                            .problem-text {
+                                font-size: 1.5em !important;
+                            }
+                        }
+                    </style>
+
                     <div class="experience-content__section">
-                        <div>The process:<br>
-Redesigning the Mogul recruiter tool started with a lot of listening. I talked to clients and our Customer Success team to understand how recruiters were actually using the product and where things were getting confusing. As more features were added, the experience started to feel messy, so my goal was to simplify it. I mapped out how people moved through the tool, sketched out rough ideas, and had conversations to test if those ideas made sense. I paid close attention to where users got stuck and what they expected to happen next. After a few rounds of refining and tweaking, we landed on a structure that felt clear, intuitive, and way easier to use. The feedback confirmed we were on the right track.</div>
-                        <div><img src="images/flows.jpg" alt="mogulprototypes" class="mogul-prototypes"></div>
-                    </div>
-
-
-                    <div class="experience-content__section">
-                        <div style="display: flex; flex-direction: column;">
-                            <img src="images/prototypeone.jpg" alt="mogulprototypes" class="mogul-prototypes">
-                            <div style="margin-top: 10px; font-size: 14px; color: #666;">An early prototype where we tested an AI assistant to automatically pull up candidates for the recruiter.</div>
-                        </div>
-                        <div style="display: flex; flex-direction: column;">
-                            <img src="images/prototypetwo.jpg" alt="mogulprototypes" class="mogul-prototypes">
-                            <div style="margin-top: 10px; font-size: 14px; color: #666;">Refined the prototype to simplify the current search screen. This version started to move things in the right direction.</div>
+                        <div>Redesigning the Mogul recruiter tool was all about turning a cluttered, growing product into something clear and easy to use. I started by listening, talking to clients and our Customer Success team to really understand where people were getting stuck and what they needed most. I mapped out user flows, sketched early concepts, and tested them through real conversations to make sure they made sense. I led the full product rethink and focused on simplifying the experience without losing depth. Each round of feedback helped shape a tool that actually matched how recruiters work. The result was a cleaner, more focused experience that teams felt confident using right away.</div>
+                        <div class="carousel-container" style="position: relative; width: 100%; display: flex; flex-direction: column;">
+                            <div class="carousel-slides" style="display: flex; transition: transform 0.5s ease; cursor: pointer;">
+                                <img src="images/prototypeone.jpg" alt="mogulprototypes" class="mogul-prototypes" style="width: 100%;">
+                                <img src="images/prototypetwo.jpg" alt="mogulprototypes" class="mogul-prototypes" style="width: 100%;">
+                            </div>
+                            <div class="carousel-counter">1/2</div>
                         </div>
                     </div>
 
+                    <style>
+                        .carousel-container {
+                            overflow: hidden;
+                        }
+                        .carousel-slides {
+                            display: flex;
+                            transition: transform 0.5s ease;
+                        }
+                        .carousel-slides img {
+                            flex: 0 0 100%;
+                        }
+                    </style>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const slides = document.querySelector('.carousel-slides');
+                            const counter = document.querySelector('.carousel-counter');
+                            let currentSlide = 0;
+                            const totalSlides = document.querySelectorAll('.carousel-slides img').length;
+
+                            function updateSlide() {
+                                slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+                                counter.textContent = `${currentSlide + 1}/${totalSlides}`;
+                            }
+
+                            slides.addEventListener('click', () => {
+                                currentSlide = (currentSlide + 1) % totalSlides;
+                                updateSlide();
+                            });
+                        });
+                    </script>
+
+
+
+                    <div class="experience-content__section" style="display: block; margin-top: 50px; margin-bottom: 100px;">
+                        <p style="font-size: 2em; line-height: 1.4;" class="problem-text">
+                            The redesign centered on one big idea: clarity through structure. I reimagined the experience around a job-centric model where everything (sourcing, candidate review, campaigns, and progress tracking) lives within each job. This shift gave recruiters a single, focused space to get their work done without jumping between disconnected sections. A key part of this was redesigning the menu bar, which had become cluttered and confusing.</p>
+                    </div>
+
+
+
+                    <div style="width: 100%; margin: 40px 0 0 0; display: flex; justify-content: center;">
+                         <img src="images/inbox.jpg" alt="filters test" style="width: 100%; max-width: 800px; height: auto;" class="filters-image">
+                   </div>
+
+                    <div style="width: 100%; max-width: 800px; margin: 10px auto; margin-bottom: 70px; text-align: left;">
+                        To support day-to-day workflow, I created a new inbox system. A centralized view that keeps recruiters up to date with tasks, updates, and candidate activity.
+                    </div>
+
+
+
+
+                    <div style="width: 100%; margin: 40px 0 0 0; display: flex; justify-content: center;">
+                        <img src="images/sourcing.jpg" alt="filters test" style="width: 100%; max-width: 800px; height: auto;" class="filters-image">
+                    </div>
+
+                    <div style="width: 100%; max-width: 800px; margin: 10px auto; margin-bottom: 100px; text-align: left;">
+                        Sourcing is the first step in hiring, so it needs to be fast and focused. I simplified the experience to highlight what recruiters actually use, mainly current role and work history. Bios still help with search in the background, but hiding them cleaned up the UI and made scanning easier.
+                    </div>
+
+                    <div style="width: 100%; margin: 40px 0 0 0; display: flex; justify-content: center;">
+                        <img src="images/filters.jpg" alt="filters test" style="width: 100%; max-width: 800px; height: auto;" class="filters-image">
+                    </div>
+
+                    <div style="width: 100%; max-width: 800px; margin: 10px auto; margin-bottom: 100px; text-align: left;">
+                        After sourcing, recruiters shift into review mode to narrow the pool and decide who moves forward. I designed this flow for speed and clarity, with smart sort options like Best Fit and Top Potential. Contact details now show automatically, and actions like emailing or removing candidates are just a tap away.
+                </div>
+
+
+                <div style="width: 100%; margin: 40px 0 0 0; display: flex; justify-content: center;">
+                    <img src="images/review.jpg" alt="review test" style="width: 100%; max-width: 800px; height: auto;" class="review-image">
+                </div>
+
+
+                    <div style="width: 100%; max-width: 800px; margin: 10px auto; margin-bottom: 100px; text-align: left;">
+                        After sourcing, recruiters can review saved candidates and sort by Best Fit or Top Potential. They can also email or remove candidates before moving forward.
+                    </div>
+
+
+                    <div style="width: 100%; margin: 40px 0 0 0; display: flex; justify-content: center;">
+                        <img src="images/campaign.jpg" alt="campaign test" style="width: 100%; max-width: 800px; height: auto;" class="campaign-image">
+                    </div>
                     
-                    <div class="experience-content__section">
-                        <div>The outcome:<br>
-                            The redesign centered on one big idea: clarity through structure. I reimagined the experience around a job-centric model where everything (sourcing, candidate review, campaigns, and progress tracking) lives within each job. This shift gave recruiters a single, focused space to get their work done without jumping between disconnected sections. A key part of this was redesigning the menu bar, which had become cluttered and confusing. I streamlined it by merging "Projects" and "My Jobs" into a single "My Jobs" section, surfacing the most recent jobs for quick access. I also moved "Search" and "Sequences" into each job, creating a more intuitive, linear flow that better supports how recruiters actually work.<br><br>
-                            Inbox:<br>
-                            To support day-to-day workflow, I also designed a new inbox system. A centralized view that keeps recruiters up to date with tasks, updates, and candidate activity.</div>
-                        <div><img src="images/inboxrecruiter.png" alt="mogulinbox" class="mogul-inbox"></div>
+
+                    <div style="width: 100%; max-width: 800px; margin: 10px auto; margin-bottom: 50px; text-align: left;">
+                        Campaigns used to feel separate from sourcing, so I integrated them into each job to make outreach a natural next step. Recruiters can now build and schedule personalized email and SMS campaigns with built-in analytics to track engagement and improve results.
                     </div>
-                    <div class="experience-content__section">
-                        <div>Sourcing:<br>
-                            Sourcing is where the hiring journey begins. It's about surfacing the right candidates, fast and without distraction. In rethinking this experience, I stripped the interface down to only what recruiters truly need. Through client research, we learned that candidate bios were rarely read at this stage. Instead, recruiters prioritized quick access to essentials like current role and work history. We still factor bios into search relevance behind the scenes, but by removing them from view, we decluttered the UI and improved scanability to make it easier to build high-quality pipelines with speed and intention.</div>
-                        <div><img src="images/sourcingrecruiter.png" alt="mogulsourcing" class="mogul-sourcing"></div>
-                    </div>
-                    <div class="experience-content__section">
-                        <div>Filters:<br>
-                            After sourcing, recruiters enter review mode. Here they narrow down the talent pool and deciding who moves forward. I designed this experience to support speed and clarity, with flexible sort options like "Best Fit" (based on experience match) and "Top Potential" (based on predictive success indicators). Contact info like emails and phone numbers is now auto-revealed, saving clicks and reducing workflow interruptions. Actions like emailing or removing candidates are just a tap away making it easy to keep momentum without leaving the flow.</div>
-                        <div><img src="images/filtersrecruiter.png" alt="mogulfiltersrecruiter" class="mogul-filtersrecruiter"></div>
-                    </div>
-                    <div class="experience-content__section">
-                        <div>Review:<br>
-                            Once you've sourced candidates, you can review and manage all the ones you've saved. Recruiters have the option to sort by "Best Fit," which ranks candidates from most to least suitable based on their experience. There's also a "Top Potential" sort, which highlights candidates most likely to succeed in the role. Additionally, you can email candidates directly or remove them before moving forward with the campaign.</div>
-                        <div><img src="images/reviewrecruiter.png" alt="mogulrecruiterreview" class="mogul-recruiterreview"></div>
-                    </div>
-                    <div class="experience-content__section">
-                        <div>Campaign:<br>
-                            Campaign creation used to feel like a separate tool. It was disconnected from the sourcing experience. I integrated it directly into each job, making outreach a natural next step instead of an afterthought. Recruiters can now create personalized email and SMS campaigns without breaking stride, and schedule them to match their hiring timelines. Each step includes real-time analytics so teams can track engagement and optimize future outreach. The result: a more cohesive, data-driven approach to connecting with candidates.</div>
-                        <div><img src="images/campaignrecruiter.png" alt="mogulcampaign" class="mogul-campaign"></div>
-                    </div>
+
+
                 </div>
             </li>
             <li>
