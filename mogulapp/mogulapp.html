@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mogul App - Jason Curescu</title>
+    <link rel="icon" type="image/png" href="../images/jasoncurescu_favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+  .project-left {
+    position: static;
+  }
+</style>
+</head>
+    <body id="top" class="mogulrecruiter-page">
+    <header>
+        <div class="header-content">
+            <h1><a href="/">JASON CURESCU</a></h1>
+        </div>
+        <div class="header-right">
+            <span><a href="https://www.linkedin.com/in/jasoncurescu/" target="_blank" rel="noopener noreferrer">LinkedIn</a></span>
+            <span><a href="../images/jason_curescu_resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></span>
+        </div>
+    </header>
+
+    <div class="project-header">
+        <p>Mogul <a href="https://onmogul.com/" target="_blank" rel="noopener noreferrer"><img src="../images/link.svg" alt="Link" class="link-icon"></a></p>
+        <p>Senior Product Designer</p>
+        <p>Mogul App</p>
+    </div>
+
+
+
+ <div class="about-section project-overview-section" style="margin-top: 75px !important;">
+            <div class="about-left">
+                <h2>Responsibilities</h2>
+                <p>Product strategy & leadership<br>
+                UI/UX design & product development<br>
+                User research & validation<br>
+                AI integration & recruitment tools<br>
+                Branding & marketing</p>
+            </div>
+            <div class="about-right">
+                <h2>Results</h2>
+                <p>Clear progress for users<br>
+                    Daily focus with morning and evening ritual<br>
+                    Built-in planning<br>
+                    Stronger community<br>
+                    Users have better direction</p>
+            </div>
+        </div>
+        
+
+        
+        <div class="project-description">
+            <p>Many users in our community had big goals but didn't know how to get started. They felt stuck, overwhelmed, and unsure of what to do first. Without a clear way to break things down or stay organized, it was hard to make progress. The process of setting and managing goals felt confusing, and motivation often dropped off. We saw an opportunity to create a simple tool that could help people turn their ideas into action.</p>
+        </div>
+
+
+
+        <div class="hero-image">
+            <img src="../images/mogulapponboard.jpg" alt="Mogul App Onboard">
+        </div>
+
+        <div class="project-info">
+            <div class="project-left">Each evening, reflect on your day and plan what's next. Every morning, get a clear overview to help you stay focused and on track. Simple rituals to keep you moving forward.</div>
+            <div class="project-center"></div>
+            <div class="project-right"></div>
+        </div>
+
+        <div class="hero-image">
+            <img src="../images/mogulappdashboard.jpg" alt="Mogul App Dashboard">
+        </div>
+
+        <div class="project-info">
+            <div class="project-left">End your day with a moment of reflection, and start the next one when you're ready to move forward with clarity. Whether you're building new habits or chasing big goals, you're never doing it alone. There's a whole community of like-minded people here to support you along the way.</div>
+            <div class="project-center"></div>
+            <div class="project-right"></div>
+        </div>
+
+        <div class="hero-image">
+            <img src="../images/mogulappritual.jpg" alt="Mogul Recruiter Filters">
+        </div>
+
+        <div class="project-info">
+            <div class="project-left">The evening ritual guides you through three simple questions: What did you learn? What could you improve? What was your win? Taking time to reflect this way helps you build a growth mindset and sets you up for a better tomorrow.</div>
+            <div class="project-center"></div>
+            <div class="project-right"></div>
+        </div>
+
+        <div class="hero-image">
+            <img src="../images/mogulappcalendar.jpg" alt="Mogul App Calendar">
+        </div>
+
+        <div class="project-info">
+            <div class="project-left">After you finish your evening questions, it's time to plan tomorrow. Add or adjust your goals and to-dos, then drag them into your calendar to create a schedule that works for you. This simple step turns your intentions into a plan and helps you wake up ready to get things done.</div>
+            <div class="project-center"></div>
+            <div class="project-right"></div>
+        </div>
+
+
+       
+
+
+
+        <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <div>Copyright © 2025</div>
+                <div>Jason Curescu</div>
+            </div>
+            <div class="footer-column">
+                <div><a href="https://www.instagram.com/jason.curescu/" target="_blank" rel="noopener noreferrer">Instagram</a></div>
+                <div><a href="https://www.flickr.com/photos/jasoncurescu/" target="_blank" rel="noopener noreferrer">Flickr</a></div>
+            </div>
+            <div class="footer-column">
+                <div>Contact me</div>
+                <div class="underline"><a href="mailto:jasoncurescu@gmail.com">jasoncurescu@gmail.com</a></div>
+            </div>
+            <div class="footer-column footer-right">
+                <div>I know where the big</div>
+                <div>fish are hiding</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Image switching functionality with constrained swipe animation
+        const flowImage = document.querySelector('.about-right img');
+        const pagination = document.querySelector('.image-pagination');
+        let isCurrentFlowA = true;
+        
+        if (flowImage) {
+            flowImage.addEventListener('click', () => {
+                // Create a temporary overlay image for the swipe effect
+                const tempImg = document.createElement('img');
+                tempImg.src = isCurrentFlowA ? 'images/currentflowb.jpg' : 'images/currentflowa.jpg';
+                tempImg.alt = isCurrentFlowA ? 'Current Flow B' : 'Current Flow A';
+                tempImg.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: auto;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease-in-out;
+                    z-index: 2;
+                `;
+                
+                // Add the new image to the container
+                flowImage.parentElement.appendChild(tempImg);
+                
+                // Start the swipe animation - both images move simultaneously
+                setTimeout(() => {
+                    tempImg.style.transform = 'translateX(0)';
+                    flowImage.style.transform = 'translateX(-100%)';
+                }, 10);
+                
+                // After animation completes, replace the original image
+                setTimeout(() => {
+                    flowImage.src = tempImg.src;
+                    flowImage.alt = tempImg.alt;
+                    flowImage.style.transition = 'none';
+                    flowImage.style.transform = 'translateX(0)';
+                    tempImg.remove();
+                    isCurrentFlowA = !isCurrentFlowA;
+                    
+                    // Update pagination indicator
+                    pagination.textContent = isCurrentFlowA ? '1/2' : '2/2';
+                    
+                    // Re-enable transition for next animation
+                    setTimeout(() => {
+                        flowImage.style.transition = 'transform 0.3s ease-in-out';
+                    }, 10);
+                }, 300);
+            });
+            
+            // Add cursor pointer to indicate it's clickable
+            flowImage.style.cursor = 'pointer';
+        }
+    </script>
+
+</body>
+</html>

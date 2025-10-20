@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jason Curescu - Senior Product Designer</title>
+    <link rel="icon" type="image/png" href="images/jasoncurescu_favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="top">
+    <header>
+        <div class="header-content">
+            <h1><a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">JASON CURESCU</a></h1>
+        </div>
+        <div class="header-right">
+            <span><a href="https://www.linkedin.com/in/jasoncurescu/" target="_blank" rel="noopener noreferrer">LinkedIn</a></span>
+            <span><a href="images/jason_curescu_resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></span>
+        </div>
+    </header>
+
+    <div class="intro-text">
+        <p>I'm a <span class="semi-bold">senior product designer</span> collaborating with AI to design <span class="italic">smarter</span>, <span class="italic">impactful</span>, and <span class="italic">meaningful</span> digital products.</p>
+    </div>
+
+        <div class="hero-image">
+            <img src="images/mogulrecruiterhero.jpg" alt="Mogul Recruiter Hero" id="mogul-image">
+            <button class="project-button" onclick="window.location.href='mogulrecruiter/mogulrecruiter.html'">
+                <span class="button-text">Open project</span>
+                <span class="button-arrow">→</span>
+            </button>
+        </div>
+
+    <div class="project-info">
+        <div class="project-left">Mogul - Senior Product Designer</div>
+        <div class="project-center">Mogul Recruiter Tool</div>
+        <div class="project-right"><a href="mogulrecruiter/mogulrecruiter.html">View project</a></div>
+    </div>
+
+        <div class="hero-image">
+            <img src="images/ainahero.jpg" alt="Aina Hero" id="aina-image">
+            <button class="project-button" onclick="window.location.href='aina/aina.html'">
+                <span class="button-text">Open project</span>
+                <span class="button-arrow">→</span>
+            </button>
+        </div>
+
+    <div class="project-info">
+        <div class="project-left">Aina - Cofounder & Head of Design</div>
+        <div class="project-center">Farm Discovery Platform</div>
+        <div class="project-right"><a href="aina/aina.html">View project</a></div>
+    </div>
+
+        <div class="hero-image">
+            <img src="images/mogulapphero.jpg" alt="Mogul App Hero" id="mogulapp-image">
+            <button class="project-button" onclick="window.location.href='mogulapp/mogulapp.html'">
+                <span class="button-text">Open project</span>
+                <span class="button-arrow">→</span>
+            </button>
+        </div>
+
+    <div class="project-info">
+        <div class="project-left">Mogul - Senior Product Designer</div>
+        <div class="project-center">Mogul App</div>
+        <div class="project-right"><a href="mogulapp/mogulapp.html">View project</a></div>
+    </div>
+
+
+    
+        <div class="about-section">
+            <div class="about-left">
+                <div class="water-container">
+                    <img src="images/jsn.jpg" alt="Jason" id="jason-image">
+                    <canvas class="drawing-canvas" id="drawing-canvas"></canvas>
+                    <div class="redo-icon" id="redo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                            <path d="M21 3v5h-5"/>
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                            <path d="M3 21v-5h5"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        <div class="about-right">
+            <h2>About</h2>
+            <p>I'm a product designer with 8+ years of experience designing digital products across HR tech, edtech, and startups. I've created useful tools spanning SaaS platforms, marketplaces, productivity tools, and social apps that help people get things done.</p>
+            <p>When I'm not designing, you'll find me fishing, playing hide & seek with my daughters, trying new food with my wife, or riding bikes.</p>
+            <p>Currently in Scottsdale, AZ / <span class="strikethrough">New York, NY</span> / <span class="strikethrough">Chicago,&nbsp;IL</span></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <div>Copyright © 2025</div>
+                <div>Jason Curescu</div>
+            </div>
+            <div class="footer-column">
+                <div><a href="https://www.instagram.com/jason.curescu/" target="_blank" rel="noopener noreferrer">Instagram</a></div>
+                <div><a href="https://www.flickr.com/photos/jasoncurescu/" target="_blank" rel="noopener noreferrer">Flickr</a></div>
+            </div>
+            <div class="footer-column">
+                <div>Contact me</div>
+                <div class="underline"><a href="mailto:jasoncurescu@gmail.com">jasoncurescu@gmail.com</a></div>
+            </div>
+                <div class="footer-column footer-right">
+                    <div>I know where the big</div>
+                    <div>fish are hiding</div>
+                </div>
+        </div>
+    </footer>
+
+        <script>
+            // Function to add hover effect to an image and its button
+            function addHoverEffect(imageId, clickUrl) {
+                const image = document.getElementById(imageId);
+                const button = image.parentElement.querySelector('.project-button');
+                let isHovering = false;
+                
+                function showButton() {
+                    button.style.opacity = '1';
+                    button.style.pointerEvents = 'auto';
+                }
+                
+                function hideButton() {
+                    button.style.opacity = '0';
+                    button.style.pointerEvents = 'none';
+                    button.style.transform = 'translateX(-50%) translateY(0px)';
+                }
+                
+                // Show button when entering image or button
+                image.addEventListener('mouseenter', () => {
+                    isHovering = true;
+                    showButton();
+                });
+                
+                button.addEventListener('mouseenter', () => {
+                    isHovering = true;
+                    showButton();
+                });
+                
+                // Track mouse movement on image
+                image.addEventListener('mousemove', (e) => {
+                    if (isHovering) {
+                        const rect = image.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        // Calculate movement based on cursor position relative to image center
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        
+                        const moveX = ((x - centerX) / centerX) * 5;
+                        const moveY = ((y - centerY) / centerY) * 5;
+                        
+                        button.style.transform = `translateX(calc(-50% + ${moveX}px)) translateY(${moveY}px)`;
+                    }
+                });
+                
+                // Hide button when leaving both image and button
+                image.addEventListener('mouseleave', () => {
+                    isHovering = false;
+                    setTimeout(() => {
+                        if (!image.matches(':hover') && !button.matches(':hover')) {
+                            hideButton();
+                        }
+                    }, 50);
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    isHovering = false;
+                    setTimeout(() => {
+                        if (!image.matches(':hover') && !button.matches(':hover')) {
+                            hideButton();
+                        }
+                    }, 50);
+                });
+                
+                // Add click functionality to image (handles both image and button clicks)
+                image.addEventListener('click', (e) => {
+                    if (e.metaKey || e.ctrlKey) {
+                        // Command+Click or Ctrl+Click - open in new tab
+                        window.open(clickUrl, '_blank');
+                    } else {
+                        // Regular click - navigate in same tab
+                        window.location.href = clickUrl;
+                    }
+                });
+            }
+            
+            // Add hover effects to all three images
+            addHoverEffect('mogul-image', 'mogulrecruiter/mogulrecruiter.html');
+            addHoverEffect('aina-image', 'aina/aina.html');
+            addHoverEffect('mogulapp-image', 'mogulapp/mogulapp.html');
+            
+            // Drawing effect for Jason's image using HTML5 Canvas
+            console.log('Starting drawing setup...');
+            const jasonImage = document.getElementById('jason-image');
+            const drawingCanvas = document.getElementById('drawing-canvas');
+            const redoIcon = document.getElementById('redo-icon');
+            
+            console.log('jasonImage:', jasonImage);
+            console.log('drawingCanvas:', drawingCanvas);
+            
+            if (!jasonImage || !drawingCanvas) {
+                console.error('Could not find image or canvas elements!');
+            } else {
+            
+            const ctx = drawingCanvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let hasDrawn = false;
+            
+            console.log('Canvas context:', ctx);
+            
+            // Set up canvas size
+            function updateCanvasSize() {
+                const rect = jasonImage.getBoundingClientRect();
+                const oldWidth = drawingCanvas.width;
+                const oldHeight = drawingCanvas.height;
+                
+                drawingCanvas.width = rect.width;
+                drawingCanvas.height = rect.height;
+                
+                // Restore canvas properties after resize
+                ctx.strokeStyle = '#39FF14';
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                console.log('Canvas size updated:', rect.width, rect.height);
+            }
+            
+            // Wait for image to load, then update canvas size
+            jasonImage.addEventListener('load', updateCanvasSize);
+            setTimeout(updateCanvasSize, 100); // Fallback
+            window.addEventListener('resize', updateCanvasSize);
+            
+            // Set up canvas drawing properties
+            ctx.strokeStyle = '#39FF14';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            drawingCanvas.addEventListener('mousedown', (e) => {
+                console.log('CANVAS MOUSEDOWN EVENT FIRED!');
+                e.preventDefault();
+                isDrawing = true;
+                drawingCanvas.classList.add('active');
+                
+                const rect = drawingCanvas.getBoundingClientRect();
+                lastX = e.clientX - rect.left;
+                lastY = e.clientY - rect.top;
+                
+                console.log('Started drawing at:', lastX, lastY, 'isDrawing set to:', isDrawing);
+            });
+            
+            drawingCanvas.addEventListener('mousemove', (e) => {
+                console.log('Canvas mouse move detected, isDrawing:', isDrawing);
+                if (isDrawing) {
+                    e.preventDefault();
+                    const rect = drawingCanvas.getBoundingClientRect();
+                    const currentX = e.clientX - rect.left;
+                    const currentY = e.clientY - rect.top;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(currentX, currentY);
+                    ctx.stroke();
+                    
+                    lastX = currentX;
+                    lastY = currentY;
+                    hasDrawn = true;
+                    
+                    // Show redo icon after drawing
+                    if (hasDrawn && redoIcon) {
+                        redoIcon.classList.add('visible');
+                    }
+                    
+                    console.log('Drawing line to:', currentX, currentY);
+                }
+            });
+            
+            drawingCanvas.addEventListener('mouseup', () => {
+                console.log('CANVAS MOUSEUP EVENT FIRED! isDrawing was:', isDrawing);
+                if (isDrawing) {
+                    isDrawing = false;
+                    drawingCanvas.classList.remove('active');
+                    console.log('Finished drawing');
+                }
+            });
+            
+            jasonImage.addEventListener('mouseleave', () => {
+                if (isDrawing) {
+                    isDrawing = false;
+                    drawingCanvas.classList.remove('active');
+                }
+            });
+            
+            // Double-click to clear all drawings
+            jasonImage.addEventListener('dblclick', () => {
+                ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+                hasDrawn = false;
+                if (redoIcon) {
+                    redoIcon.classList.remove('visible');
+                }
+                console.log('Cleared all drawings');
+            });
+            
+            // Redo icon click to clear all drawings
+            if (redoIcon) {
+                redoIcon.addEventListener('click', () => {
+                    ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+                    hasDrawn = false;
+                    redoIcon.classList.remove('visible');
+                    console.log('Cleared all drawings via redo icon');
+                });
+            }
+            
+            } // Close the else block
+        </script>
+
+</body>
+</html>
