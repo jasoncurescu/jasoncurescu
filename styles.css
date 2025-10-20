@@ -307,7 +307,7 @@ body:not(.mogulrecruiter-page) .hero-image img {
 }
 
 .about-section {
-    margin-top: 100px;
+    margin-top: 200px;
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
@@ -318,7 +318,7 @@ body:not(.mogulrecruiter-page) .hero-image img {
 
 /* Mogul recruiter page specific - move first about section up by 100px */
 .mogulrecruiter-page .about-section:first-of-type {
-    margin-top: 100px !important;
+    margin-top: 0px !important;
 }
 
 /* Alternative selector for the specific section */
