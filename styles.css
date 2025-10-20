@@ -323,7 +323,7 @@ body:not(.mogulrecruiter-page) .hero-image img {
 
 /* Alternative selector for the specific section */
 .mogulrecruiter-page .project-description + .about-section {
-    margin-top: 100px !important;
+    margin-top: 0px !important;
 }
 
 /* Aina page specific - consistent spacing between image sections */
