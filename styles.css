@@ -412,11 +412,11 @@ body:not(.mogulrecruiter-page) .hero-image img {
     pointer-events: auto;
     border-radius: 8px;
     overflow: hidden;
-    cursor: url('images/paintbrush.png') 0 24, auto;
+    cursor: url('images/paintbrush.svg') 0 24, auto;
 }
 
 #jason-image {
-    cursor: url('images/paintbrush.png') 0 24, auto;
+    cursor: url('images/paintbrush.svg') 0 24, auto;
     user-select: none;
     -webkit-user-drag: none;
     -khtml-user-drag: none;
