@@ -144,7 +144,7 @@ header {
 }
 
 .hero-image:not(:first-of-type) {
-    margin-top: 200px;
+    margin-top: 150px;
 }
 
 .hero-image img {
