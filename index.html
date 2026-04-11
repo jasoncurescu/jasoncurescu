@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jason Curescu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;460;500;600&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { min-height: 100%; overflow-y: scroll; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0,0,0,0); text-rendering: optimizelegibility; text-size-adjust: 100%; }
+  body { background: #fff; color: rgb(17,17,17); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; min-height: 100%; display: flex; flex-direction: column; }
+  main { max-width: 600px; width: 100%; margin: 0 auto; padding: 80px 24px 60px; }
+  .header { display: flex; align-items: center; gap: 16px; }
+  .avatar-wrap { flex-shrink: 0; width: 56px; height: 56px; }
+  #avatarCanvas { width: 56px; height: 56px; border-radius: 50%; }
+  .header-text { display: flex; flex-direction: column; }
+  h1 { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); text-wrap-style: balance; position: relative; }
+  .subtitle-wrap { height: 20px; position: relative; display: flex; align-items: center; }
+  .subtitle-text { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgba(0,0,0,0.35); }
+  .cursor { display: inline-block; width: 1px; height: 14px; background: rgba(0,0,0,0.3); margin-left: 1px; vertical-align: middle; animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  p { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 16px; }
+  @keyframes staggerIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .stagger { animation: staggerIn 0.5s ease both; }
+  .stagger:nth-child(1) { animation-delay: 0s; }
+  .stagger:nth-child(2) { animation-delay: 0.1s; }
+  .stagger:nth-child(3) { animation-delay: 0.15s; }
+  .stagger:nth-child(4) { animation-delay: 0.2s; }
+  .stagger:nth-child(5) { animation-delay: 0.25s; }
+  .stagger:nth-child(6) { animation-delay: 0.3s; }
+  .stagger:nth-child(7) { animation-delay: 0.35s; }
+  .stagger:nth-child(8) { animation-delay: 0.4s; }
+  .stagger:nth-child(9) { animation-delay: 0.45s; }
+  .stagger:nth-child(10) { animation-delay: 0.5s; }
+  a { position: relative; display: inline; color: inherit; font-weight: inherit; line-height: inherit; text-decoration: none; transition: 0.2s; }
+  a::before { pointer-events: none; content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; border-radius: 2px; background: rgb(217,217,217); opacity: 1; transition: inherit; }
+  a:hover::before { background: rgb(102,102,102); }
+  .section-heading { font-size: 14px; font-weight: 460; line-height: normal; letter-spacing: -0.09008px; color: rgba(0,0,0,0.4); border-bottom: 1px solid rgb(242,242,242); padding-bottom: 8px; margin-top: 32px; margin-bottom: 0; display: flex; position: relative; }
+  .entries { list-style: none; }
+  .entries li a { display: flex; align-items: baseline; justify-content: space-between; padding: 8px 0; text-decoration: none; color: rgb(17,17,17); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; transition: opacity 0.15s; gap: 16px; }
+  .entries li a::before { display: none; }
+  .entries li a:hover { opacity: 0.5; }
+  .entry-title { font-weight: 500; font-size: 14px; }
+  .entry-meta { display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; }
+  .entry-date { font-family: 'Silkscreen', cursive; font-size: 12px; font-weight: 400; color: #001eff; font-variant-numeric: tabular-nums; }
+  .projects .entry-date { color: #00bd29; }
+  footer { max-width: 600px; width: 100%; margin: auto auto 0; padding: 0 24px 32px; }
+  .local-time { font-size: 13px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgba(0,0,0,0.4); padding-bottom: 50px; }
+  @media (max-width: 600px) {
+    main { padding: 56px 20px 44px; }
+    footer { padding: 0 20px 28px; }
+    .header { gap: 12px; }
+    .avatar-wrap { width: 48px; height: 48px; }
+    #avatarCanvas { width: 48px; height: 48px; }
+    .section-heading { margin-top: 28px; }
+    .entries li a { padding: 6px 0; }
+  }
+  @media (max-width: 380px) {
+    main { padding: 44px 16px 36px; }
+    footer { padding: 0 16px 24px; }
+  }
+  ::selection { background: #39FF14; color: #FF6600; }
+  ::-moz-selection { background: #39FF14; color: #FF6600; }
+</style>
+</head>
+<body>
+<main>
+  <div class="header stagger">
+    <div class="avatar-wrap">
+      <canvas id="avatarCanvas" width="224" height="224"></canvas>
+    </div>
+    <div class="header-text">
+      <h1>Jason Curescu</h1>
+      <div class="subtitle-wrap">
+        <span class="subtitle-text" id="typewriter"></span><span class="cursor"></span>
+      </div>
+    </div>
+  </div>
+  <p class="stagger">I'm a Chicago native, currently living in Phoenix, AZ.</p>
+  <p class="stagger">I co-founded <a href="https://farmsthataredelivering.com/" target="_blank" rel="noopener">Farms That Are Delivering</a> with my best friend <a href="https://www.linkedin.com/in/davidkpham/" target="_blank" rel="noopener">David Pham</a> as a solution to finding high-quality food in NYC at the start of the 2020 pandemic, when it was getting harder to come by. We're currently rebuilding the farm-to-consumer search engine to help people find local farms that deliver or offer pickup. What started as a simple search tool is growing into a direct ordering platform.</p>
+  <p class="stagger">Previously, I was the first and sole product designer at <a href="https://onmogul.com" target="_blank" rel="noopener">Mogul</a> for over 7 years, where I owned the end-to-end design of their diversity recruitment platform serving Fortune 1000 clients like Nike, Amazon, and Intuit.</p>
+  <p class="stagger">I use AI tools like Claude and Cursor as part of how I design and build. They help me move faster, explore more ideas, and ship things I couldn't pull off alone.</p>
+  <p class="stagger">You can find me on <a href="https://www.instagram.com/jason.curescu/" target="_blank" rel="noopener">Instagram</a>, <a href="https://www.linkedin.com/in/jasoncurescu" target="_blank" rel="noopener">LinkedIn</a>, or reach me at <a id="email-link" href="#">loading</a>.</p>
+  <h3 class="section-heading stagger">Case Studies</h3>
+  <div class="stagger">
+    <ul class="entries">
+      <li><a href="/farms"><span class="entry-title">Farms That Are Delivering</span><span class="entry-meta"><span class="entry-date">0-to-1 Platform</span></span></a></li>
+      <li><a href="/recruiter"><span class="entry-title">Mogul Recruiter Tool</span><span class="entry-meta"><span class="entry-date">SaaS Redesign</span></span></a></li>
+      <li><a href="/jdenhancer"><span class="entry-title">AI Job Description Enhancer</span><span class="entry-meta"><span class="entry-date">AI Prototyping</span></span></a></li>
+      <li><a href="/mogulapp"><span class="entry-title">Mogul App</span><span class="entry-meta"><span class="entry-date">Native Mobile App</span></span></a></li>
+    </ul>
+  </div>
+  <h3 class="section-heading stagger">Projects</h3>
+  <div class="stagger projects">
+    <ul class="entries">
+      <li><a href="/sloth"><span class="entry-title">sloth</span><span class="entry-meta"><span class="entry-date">Slowed + Reverb Player</span></span></a></li>
+    </ul>
+  </div>
+</main>
+
+<script>
+  // Email - built with JS to avoid Cloudflare obfuscation
+  var eUser='jasoncurescu';var eDomain='gmail.com';
+  var eLink=document.getElementById('email-link');
+  eLink.href='mai'+'lto:'+eUser+'@'+eDomain;
+  eLink.textContent=eUser+'@'+eDomain;
+
+  var phrases=['Designing, building, probably making pizza','17 years deep in a bike search','Product designer, 9 years and counting','Collaborating with AI to build faster','Shooting film, not digital','Chicago kid living in the desert'];
+  var el=document.getElementById('typewriter');var pI=0;var cI=0;var isDel=false;
+  function ts(){return(isDel?30:55)+Math.random()*40;}
+  function tick(){var c=phrases[pI];if(!isDel){el.textContent=c.substring(0,cI+1);cI++;if(cI===c.length){setTimeout(function(){isDel=true;tick();},2800);return;}}else{el.textContent=c.substring(0,cI-1);cI--;if(cI===0){isDel=false;pI=(pI+1)%phrases.length;setTimeout(tick,400);return;}}setTimeout(tick,ts());}
+  setTimeout(tick,800);
+
+var frames=[];for(var fi=1;fi<=80;fi++){frames.push('./images/avatar/frame-'+(fi<10?'0'+fi:fi)+'.jpg');}
+
+  var canvas=document.getElementById('avatarCanvas');
+  var ctx=canvas.getContext('2d');
+  var SZ=224;var GR=24;var SP=SZ/GR;var DR=SP*0.44;
+  var off=document.createElement('canvas');off.width=GR;off.height=GR;
+  var oCtx=off.getContext('2d');
+
+  var frameImages=[];
+  var loadedCount=0;
+  var currentFrame=0;
+  var direction=1;
+  var lastFrameTime=0;
+  var frameInterval=125;
+
+  frames.forEach(function(src,i){
+    var im=new Image();
+    im.onload=function(){
+      loadedCount++;
+      if(loadedCount===frames.length){requestAnimationFrame(render);}
+    };
+    im.src=src;
+    frameImages[i]=im;
+  });
+
+  function render(timestamp){
+    if(timestamp-lastFrameTime>frameInterval){
+      lastFrameTime=timestamp;
+      currentFrame+=direction;
+      if(currentFrame>=frames.length-1){currentFrame=frames.length-1;direction=-1;}
+      if(currentFrame<=0){currentFrame=0;direction=1;}
+    }
+
+    var img=frameImages[currentFrame];
+    if(!img||!img.complete){requestAnimationFrame(render);return;}
+
+    oCtx.clearRect(0,0,GR,GR);
+    oCtx.drawImage(img,0,0,GR,GR);
+    var px=oCtx.getImageData(0,0,GR,GR).data;
+
+    ctx.clearRect(0,0,SZ,SZ);
+    ctx.save();
+    ctx.beginPath();ctx.arc(SZ/2,SZ/2,SZ/2,0,Math.PI*2);ctx.clip();
+    ctx.fillStyle='#ebebeb';ctx.fillRect(0,0,SZ,SZ);
+
+    var cX=SZ/2,cY=SZ/2,cR=SZ/2-SP*0.3;
+    for(var r=0;r<GR;r++){for(var c=0;c<GR;c++){
+      var x=c*SP+SP/2,y=r*SP+SP/2;
+      var dx=x-cX,dy=y-cY;
+      if(Math.sqrt(dx*dx+dy*dy)>cR)continue;
+      var i=(r*GR+c)*4;
+      var rv=px[i],gv=px[i+1],bv=px[i+2],av=px[i+3];
+      if(av<10)continue;
+      var br=(rv*0.299+gv*0.587+bv*0.114)/255;
+      var ds=DR*(0.35+(1-br)*0.85);
+      var op=0.2+(1-br)*0.8;
+      ctx.beginPath();ctx.arc(x,y,ds,0,Math.PI*2);
+      ctx.fillStyle='rgba(10,10,10,'+op+')';ctx.fill();
+    }}
+    ctx.restore();
+    requestAnimationFrame(render);
+  }
+</script>
+</body>
+</html>

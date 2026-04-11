@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mogul Recruiter Tool | Jason Curescu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;460;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { min-height: 100%; overflow-y: scroll; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0,0,0,0); text-rendering: optimizelegibility; text-size-adjust: 100%; }
+  body { background: #fff; color: rgb(17,17,17); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; min-height: 100%; display: flex; justify-content: center; }
+
+  /* Layout wrapper */
+  .page-wrap { position: relative; width: 550px; padding: 80px 0 100px; }
+
+  /* Fixed aside - left column */
+  .aside { position: fixed; top: 80px; left: 80px; width: 156px; }
+
+  .back-link { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; padding-bottom: 4px; }
+  .back-link:hover { color: rgba(0,0,0,0.8); }
+
+  /* TOC nav */
+  .toc { margin-top: 24px; }
+  .toc-title { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgb(17,17,17); padding-bottom: 16px; cursor: pointer; }
+  .toc-list { list-style: none; }
+  .toc-item { cursor: pointer; transition: opacity 0.15s; }
+  .toc-item a { display: block; padding: 4px 0; font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(0,0,0,0.25); text-decoration: none; transition: color 0.2s; }
+  .toc-item.active a { color: rgba(0,0,0,0.7); }
+  .toc-item a:hover { color: rgba(0,0,0,0.5); }
+
+  /* Article */
+  article header { padding-top: 0; }
+  article header h1 { font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); }
+  article header time { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgba(0,0,0,0.4); display: block; }
+
+  article p { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 16px; }
+  article p strong { font-weight: 600; }
+
+  .section-heading { padding-top: 64px; }
+  .section-label { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(18,18,18,0.4); }
+  .section-title { font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 4px; }
+
+  /* Links in article */
+  article a { position: relative; display: inline; color: inherit; font-weight: inherit; text-decoration: none; transition: 0.2s; }
+  article a::before { pointer-events: none; content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; border-radius: 2px; background: rgb(217,217,217); transition: inherit; }
+  article a:hover::before { background: rgb(102,102,102); }
+
+  /* Stats */
+  .stats { display: flex; gap: 32px; padding-top: 32px; padding-bottom: 16px; }
+  .stat { display: flex; flex-direction: column; }
+  .stat-value { font-size: 20px; font-weight: 600; line-height: 28px; color: rgb(17,17,17); letter-spacing: -0.3px; }
+  .stat-label { font-size: 13px; font-weight: 460; line-height: 18px; color: rgba(0,0,0,0.4); }
+
+  /* Role tags */
+  .role-details { padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .role-tag { font-size: 12px; font-weight: 460; line-height: 16px; padding: 4px 10px; border-radius: 100px; background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.5); }
+
+  .subsection { margin-top: 40px; }
+  .visual-placeholder { margin-top: 24px; padding: 40px 24px; background: rgba(0,0,0,0.02); border: 1px dashed rgba(0,0,0,0.1); border-radius: 12px; text-align: center; color: rgba(0,0,0,0.3); font-size: 13px; line-height: 18px; }
+  .visual-placeholder span { display: block; font-weight: 500; color: rgba(0,0,0,0.4); margin-bottom: 4px; }
+
+  /* Demo browser container - matching benji.org */
+  .demo-container { margin-top: 24px; }
+  .demo-container img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .demo-browser { position: relative; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08); }
+  .demo-bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .demo-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .demo-dot.red { background: #ff5f57; }
+  .demo-dot.yellow { background: #febc2e; }
+  .demo-dot.green { background: #28c840; }
+  .demo-url { flex: 1; margin-left: 8px; padding: 4px 10px; background: rgba(0,0,0,0.04); border-radius: 6px; font-size: 10px; color: rgba(0,0,0,0.4); font-family: system-ui, sans-serif; }
+  .demo-content { padding: 20px; max-height: 460px; overflow-y: auto; }
+  .demo-content::-webkit-scrollbar { width: 4px; }
+  .demo-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 4px; }
+  .demo-caption { font-size: 12px; line-height: 16px; color: rgba(0,0,0,0.4); margin-top: 10px; }
+
+  /* Flow diagram */
+  .flow-diagram { font-family: system-ui, -apple-system, sans-serif; }
+  .flow-group-label { font-size: 10px; font-weight: 600; letter-spacing: 0.4px; color: rgba(0,0,0,0.35); text-transform: uppercase; margin-top: 20px; margin-bottom: 6px; }
+  .flow-group-label:first-child { margin-top: 0; }
+  .flow-path { font-size: 11px; color: rgb(17,17,17); line-height: 22px; padding: 0; }
+  .flow-path.dim { color: rgba(0,0,0,0.35); }
+  .flow-path.sub { padding-left: 16px; color: rgba(0,0,0,0.55); }
+
+  /* Step indicator */
+  .step-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 24px; }
+  .step-dot { width: 22px; height: 22px; border-radius: 50%; background: rgba(0,0,0,0.06); color: rgba(0,0,0,0.35); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; font-family: system-ui, sans-serif; }
+  .step-dot.active { background: rgb(17,17,17); color: #fff; }
+  .step-line { width: 40px; height: 1px; background: rgba(0,0,0,0.1); }
+
+  /* Wireframe steps */
+  .wireframe-step { margin-bottom: 24px; }
+  .step-label { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.5); margin-bottom: 8px; font-family: system-ui, sans-serif; letter-spacing: 0.2px; }
+  .wireframe { background: #fff; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); overflow: hidden; font-family: system-ui, -apple-system, sans-serif; position: relative; }
+  .friction-callout { font-size: 11px; line-height: 15px; color: rgba(180,80,60,0.8); margin-top: 6px; padding-left: 12px; border-left: 2px solid rgba(180,80,60,0.25); font-family: system-ui, sans-serif; }
+
+  /* Wireframe nav bar */
+  .wf-nav { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgb(17,17,17); }
+  .wf-logo { width: 20px; height: 20px; border-radius: 4px; background: #6C5CE7; flex-shrink: 0; }
+  .wf-nav-text { font-size: 10px; color: rgba(255,255,255,0.8); }
+  .wf-nav-text.dim { color: rgba(255,255,255,0.4); }
+  .wf-spacer { flex: 1; }
+  .wf-avatar { width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+
+  /* Wireframe elements */
+  .wf-hero { text-align: center; padding: 28px 16px 20px; }
+  .wf-hero-text { font-size: 14px; font-weight: 800; color: rgb(17,17,17); line-height: 1.2; font-style: italic; margin-bottom: 12px; }
+  .wf-btn { display: inline-block; font-size: 10px; font-weight: 500; padding: 6px 14px; border-radius: 4px; }
+  .wf-btn.purple { background: #6C5CE7; color: #fff; }
+  .wf-btn.small { font-size: 9px; padding: 5px 16px; }
+  .wf-close { position: absolute; top: 38px; right: 12px; font-size: 14px; color: rgba(0,0,0,0.3); }
+  .wf-form-center { text-align: center; padding: 30px 40px 24px; }
+  .wf-form-title { font-size: 12px; font-weight: 600; color: rgb(17,17,17); margin-bottom: 10px; }
+  .wf-input { font-size: 10px; color: rgba(0,0,0,0.3); border: 1px solid rgba(0,0,0,0.12); border-radius: 4px; padding: 6px 10px; text-align: left; margin-bottom: 10px; }
+  .wf-input.small { font-size: 9px; padding: 5px 8px; margin-bottom: 0; }
+  .wf-search-form { padding: 12px 16px 16px; }
+  .wf-field-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .wf-field { flex: 1; }
+  .wf-field-label { font-size: 9px; font-weight: 600; color: rgba(0,0,0,0.5); margin-bottom: 4px; }
+  .wf-checkbox-row { display: flex; gap: 12px; margin-bottom: 4px; }
+  .wf-checkbox { font-size: 9px; color: rgba(0,0,0,0.5); }
+  .wf-upload { margin: 10px 0; }
+  .wf-upload-text { font-size: 9px; color: rgba(0,0,0,0.4); margin-bottom: 4px; }
+  .wf-upload-box { font-size: 9px; color: #6C5CE7; border: 1px dashed rgba(0,0,0,0.12); border-radius: 6px; padding: 12px; text-align: center; }
+  .wf-results-layout { display: flex; }
+  .wf-sidebar { width: 120px; padding: 10px; border-right: 1px solid rgba(0,0,0,0.06); flex-shrink: 0; }
+  .wf-filter { font-size: 9px; color: rgba(0,0,0,0.5); padding: 2px 0; }
+  .wf-filter.dim { color: rgba(0,0,0,0.25); }
+  .wf-filter-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 6px 0; }
+  .wf-results { flex: 1; padding: 10px; }
+  .wf-result-header { font-size: 9px; color: rgba(0,0,0,0.3); text-align: right; margin-bottom: 8px; }
+  .wf-result-card { border-bottom: 1px solid rgba(0,0,0,0.04); padding: 8px 0; }
+  .wf-result-name { font-size: 10px; font-weight: 600; color: rgb(17,17,17); }
+  .wf-result-role { font-size: 9px; color: rgba(0,0,0,0.5); }
+  .wf-result-detail { font-size: 9px; color: rgba(0,0,0,0.35); }
+
+  /* Before/after comparison */
+  .compare-section { }
+  .compare-label { font-size: 11px; font-weight: 600; letter-spacing: 0.2px; margin-bottom: 8px; font-family: system-ui, sans-serif; }
+  .compare-label.before { color: rgba(180,80,60,0.7); }
+  .compare-label.after { color: rgba(34,120,60,0.7); }
+  .compare-block { padding: 14px 16px; border-radius: 8px; }
+  .compare-block.before { background: rgba(180,80,60,0.04); border: 1px solid rgba(180,80,60,0.1); }
+  .compare-block.after { background: rgba(34,120,60,0.04); border: 1px solid rgba(34,120,60,0.1); }
+  .compare-block .flow-path { font-size: 11px; line-height: 20px; }
+  .compare-group-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: rgba(0,0,0,0.3); margin-top: 10px; margin-bottom: 2px; }
+  .compare-group-label:first-child { margin-top: 0; }
+  .compare-break { font-size: 10px; color: rgba(180,80,60,0.6); text-align: center; padding: 8px 0; font-weight: 500; font-family: system-ui, sans-serif; }
+  .compare-count { font-size: 10px; color: rgba(180,80,60,0.6); margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.06); font-weight: 500; font-family: system-ui, sans-serif; }
+  .compare-count.green { color: rgba(34,120,60,0.6); }
+  .compare-note { font-size: 10px; color: rgba(0,0,0,0.3); font-style: italic; }
+
+  .ia-start-pill { display: inline-flex; align-items: center; gap: 7px; background: rgb(17,17,17); color: #fff; font-size: 12px; font-weight: 600; padding: 10px 22px; border-radius: 100px; letter-spacing: -0.1px; font-family: system-ui, sans-serif; }
+  .ia-start-pill-icon { width: 18px; height: 18px; border-radius: 5px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 9px; }
+  .ia-start-wrap { text-align: center; margin-bottom: 0; }
+  .ia-connector { display: flex; justify-content: center; padding: 8px 0; }
+  .ia-connector-line { width: 1px; height: 20px; background: rgba(0,0,0,0.12); }
+  .ia-fork-new { display: flex; gap: 10px; margin-bottom: 0; }
+  .ia-fork-card { flex: 1; background: #fff; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.06); }
+  .ia-fork-card-icon { width: 28px; height: 28px; border-radius: 8px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .ia-fork-card-icon.existing { background: rgba(0,122,255,0.08); }
+  .ia-fork-card-icon.new { background: rgba(52,199,89,0.08); }
+  .ia-fork-card-name { font-size: 11px; font-weight: 600; color: rgb(17,17,17); font-family: system-ui, sans-serif; }
+  .ia-fork-card-sub { font-size: 10px; color: rgba(0,0,0,0.4); margin-top: 3px; line-height: 1.4; font-family: system-ui, sans-serif; }
+  .ia-fork-divider { display: flex; align-items: center; justify-content: center; padding: 0 6px; }
+  .ia-fork-divider-text { font-size: 9px; font-weight: 600; color: rgba(0,0,0,0.2); text-transform: uppercase; letter-spacing: 0.5px; font-family: system-ui, sans-serif; }
+  .ia-start { font-size: 12px; font-weight: 600; color: rgb(17,17,17); background: rgba(0,0,0,0.04); border-radius: 8px; padding: 10px 14px; text-align: center; font-family: system-ui, sans-serif; }
+  .ia-fork { display: flex; align-items: stretch; gap: 0; margin-top: 16px; }
+  .ia-fork-path { flex: 1; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; padding: 12px 14px; text-align: center; }
+  .ia-fork-label { font-size: 11px; font-weight: 600; color: rgb(17,17,17); font-family: system-ui, sans-serif; }
+  .ia-fork-desc { font-size: 10px; color: rgba(0,0,0,0.4); margin-top: 4px; font-family: system-ui, sans-serif; }
+  .ia-fork-or { display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(0,0,0,0.25); font-weight: 500; padding: 0 10px; font-family: system-ui, sans-serif; }
+  .ia-arrow { text-align: center; font-size: 14px; color: rgba(0,0,0,0.2); padding: 8px 0; }
+  .ia-steps { }
+  .ia-step { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; background: rgba(34,120,60,0.04); border: 1px solid rgba(34,120,60,0.1); border-radius: 8px; }
+  .ia-step-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(34,120,60,0.12); color: rgba(34,120,60,0.7); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: system-ui, sans-serif; }
+  .ia-step-content { }
+  .ia-step-title { font-size: 11px; font-weight: 600; color: rgb(17,17,17); font-family: system-ui, sans-serif; }
+  .ia-step-desc { font-size: 10px; color: rgba(0,0,0,0.4); margin-top: 2px; font-family: system-ui, sans-serif; }
+  .ia-step-connector { text-align: center; font-size: 12px; color: rgba(34,120,60,0.25); padding: 2px 0; }
+  .ia-summary { text-align: center; font-size: 11px; font-weight: 600; color: rgba(34,120,60,0.6); margin-top: 16px; font-family: system-ui, sans-serif; letter-spacing: 0.2px; }
+
+  /* Iteration showcase */
+  .iteration { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .iteration:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .iteration-header { margin-bottom: 10px; }
+  .iteration-num { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: rgba(0,0,0,0.3); font-family: system-ui, sans-serif; }
+  .iteration-title { font-size: 12px; font-weight: 600; color: rgb(17,17,17); font-family: system-ui, sans-serif; margin-top: 2px; }
+  .iteration-wireframe { background: #1a1a1a; border-radius: 6px; overflow: hidden; padding: 0; }
+  .iteration-note { font-size: 11px; line-height: 16px; color: rgba(0,0,0,0.45); margin-top: 8px; font-family: system-ui, sans-serif; }
+  .iteration-verdict { font-size: 10px; font-weight: 600; color: rgba(180,80,60,0.6); margin-top: 6px; font-family: system-ui, sans-serif; }
+
+  /* Wireframe layouts inside iterations */
+  .iter-layout { display: flex; min-height: 160px; background: #fff; }
+  .iter-sidebar { width: 110px; background: #fafafa; border-right: 1px solid rgba(0,0,0,0.06); padding: 10px 8px; font-size: 9px; color: rgba(0,0,0,0.5); font-family: system-ui, sans-serif; display: flex; flex-direction: column; gap: 3px; }
+  .iter-sidebar-item { padding: 2px 4px; border-radius: 3px; }
+  .iter-sidebar-item.bold { font-weight: 600; color: rgb(17,17,17); }
+  .iter-sidebar-item.indent { padding-left: 12px; }
+  .iter-sidebar-item.active { background: rgba(0,0,0,0.06); }
+  .iter-sidebar-item.bottom { margin-top: auto; }
+  .iter-sidebar-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 4px 0; }
+  .iter-main { flex: 1; padding: 12px; font-family: system-ui, sans-serif; }
+  .iter-main-full { flex: 2; padding: 12px; font-family: system-ui, sans-serif; }
+  .iter-main-title { font-size: 11px; font-weight: 600; color: rgb(17,17,17); margin-bottom: 8px; }
+  .iter-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .iter-card { background: rgba(0,0,0,0.08); border-radius: 4px; height: 55px; }
+  .iter-candidate { padding: 8px; border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; margin-bottom: 6px; }
+  .iter-candidate-name { font-size: 10px; font-weight: 600; color: rgb(17,17,17); }
+  .iter-candidate-role { font-size: 9px; color: rgba(0,0,0,0.5); }
+  .iter-candidate-detail { font-size: 8px; color: rgba(0,0,0,0.3); margin-top: 2px; }
+  .iter-feedback { display: flex; gap: 8px; justify-content: center; margin: 8px 0 4px; }
+  .iter-thumb { display: inline-block; padding: 4px 14px; background: #c8ff00; border-radius: 6px; font-size: 14px; }
+  .iter-feedback-input { font-size: 9px; color: rgba(0,0,0,0.3); border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; padding: 5px 8px; text-align: center; }
+  .iter-bottom-bar { display: flex; justify-content: space-between; font-size: 9px; color: rgba(0,0,0,0.4); margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(0,0,0,0.06); }
+  .iter-next { font-weight: 600; color: rgb(17,17,17); }
+  .iter-stats-row { display: flex; gap: 8px; font-size: 8px; color: rgba(0,0,0,0.35); margin-bottom: 8px; font-family: system-ui, sans-serif; }
+  .iter-table { font-size: 9px; color: rgba(0,0,0,0.4); font-family: system-ui, sans-serif; }
+  .iter-table-header { font-weight: 600; color: rgba(0,0,0,0.3); font-size: 8px; text-transform: uppercase; letter-spacing: 0.3px; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .iter-table-row { padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
+  .iter-filter-pills { display: flex; gap: 4px; margin-bottom: 6px; }
+  .iter-pill { font-size: 8px; padding: 3px 8px; border-radius: 4px; background: #6C5CE7; color: #fff; font-family: system-ui, sans-serif; }
+  .iter-chat { width: 160px; background: #fafafa; border-left: 1px solid rgba(0,0,0,0.06); padding: 10px; font-family: system-ui, sans-serif; display: flex; flex-direction: column; gap: 4px; }
+  .iter-chat-title { font-size: 10px; font-weight: 600; color: rgb(17,17,17); margin-bottom: 4px; }
+  .iter-chat-msg { font-size: 8px; padding: 4px 8px; border-radius: 8px; max-width: 90%; line-height: 1.3; }
+  .iter-chat-msg.ai { background: rgba(0,0,0,0.06); color: rgba(0,0,0,0.6); align-self: flex-start; }
+  .iter-chat-msg.user { background: #6C5CE7; color: #fff; align-self: flex-end; margin-left: auto; }
+  .iter-chat-input { font-size: 8px; color: rgba(0,0,0,0.25); border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 5px 8px; margin-top: auto; }
+
+  /* Callout */
+  .callout { padding-top: 24px; padding-left: 16px; border-left: 2px solid rgba(0,0,0,0.08); }
+  .callout p { padding-top: 0; color: rgba(0,0,0,0.5); font-style: italic; }
+
+  .reflection { padding-top: 24px; }
+  .reflection p { padding-top: 0; color: rgb(17,17,17); }
+
+  /* Stagger */
+  @keyframes staggerIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  article > * { animation: staggerIn 0.5s ease both; }
+  article > :nth-child(1) { animation-delay: 0s; }
+  article > :nth-child(2) { animation-delay: 0.05s; }
+  article > :nth-child(3) { animation-delay: 0.1s; }
+  article > :nth-child(4) { animation-delay: 0.15s; }
+  article > :nth-child(5) { animation-delay: 0.2s; }
+  article > :nth-child(6) { animation-delay: 0.25s; }
+
+  /* Mobile: hide sidebar */
+  .mobile-back { display: none; }
+  @media (max-width: 1080px) {
+    .aside { display: none; }
+    .mobile-back { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; margin-bottom: 24px; }
+    .mobile-back:hover { color: rgba(0,0,0,0.8); }
+    .page-wrap { padding: 40px 24px 80px; width: 100%; max-width: 600px; }
+  }
+  @media (max-width: 600px) {
+    .page-wrap { padding: 32px 20px 60px; }
+    .section-heading { padding-top: 48px; }
+    .stats { gap: 24px; flex-wrap: wrap; }
+    .demo-content { max-height: 360px; }
+    .role-details { gap: 6px; }
+  }
+  @media (max-width: 380px) {
+    .page-wrap { padding: 28px 16px 48px; }
+    .stats { gap: 16px; }
+    .stat-value { font-size: 18px; }
+  }
+  ::selection { background: #39FF14; color: #FF6600; }
+  ::-moz-selection { background: #39FF14; color: #FF6600; }
+</style>
+</head>
+<body>
+
+<aside class="aside">
+  <a href="portfolio.html" class="back-link">← Go back</a>
+  <nav class="toc">
+    <h2 class="toc-title" onclick="window.scrollTo({top:0,behavior:'smooth'})">Mogul Recruiter Tool</h2>
+    <ul class="toc-list">
+      <li class="toc-item active" data-section="problem"><a href="#problem">The problem</a></li>
+      <li class="toc-item" data-section="discovery"><a href="#discovery">What I discovered</a></li>
+      <li class="toc-item" data-section="recommendation"><a href="#recommendation">What I recommended</a></li>
+      <li class="toc-item" data-section="process"><a href="#process">How I worked</a></li>
+      <li class="toc-item" data-section="result"><a href="#result">The new experience</a></li>
+      <li class="toc-item" data-section="outcome"><a href="#outcome">What happened</a></li>
+      <li class="toc-item" data-section="reflection"><a href="#reflection">What I'd do differently</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<div class="page-wrap">
+  <a href="portfolio.html" class="mobile-back">← Go back</a>
+  <article>
+    <header>
+      <h1>Mogul Recruiter Tool</h1>
+    </header>
+
+    <div style="padding-top:40px;display:flex;flex-direction:column;gap:20px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Responsibilities</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Led end-to-end product redesign</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Conducted user research and testing</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Audited and mapped existing workflows</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Defined new job-centric experience</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Partnered with engineers for launch</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Results</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Increased product engagement by 40%</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">15% more client renewals in the first 3 months after launch</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Simplified navigation and workflows</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Boosted recruiter confidence and satisfaction</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-heading" id="problem">
+      <div class="section-title">The problem</div>
+    </div>
+
+    <p>Over the years, we kept adding features to the Mogul Recruiter. New sourcing tools, AI resume ranking, a built-in CRM, and eventually an entire ATS. Each feature made sense on its own, but together the product started to feel like a Frankenstein. Recruiters weren't sure where to start a search, and there were too many ways to do the same thing.</p>
+
+    <p>Our Client Success team started hearing more and more complaints. Clients were telling us the software was confusing and some were switching to other recruitment tools instead. That was the signal that we needed to take a hard look at what was going on.</p>
+
+    <!-- Interactive flow diagram - styled like benji.org demos -->
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-content">
+          <div class="flow-diagram">
+
+            <div class="flow-group-label">From Home</div>
+            <div class="flow-path">Home → Create new project → Create Project Name → Create Project Details → Search</div>
+
+            <div class="flow-group-label">From My Jobs</div>
+            <div class="flow-path">My Jobs → Upload New Job → Upload Job Description → Create → Update</div>
+            <div class="flow-path">My Jobs → Job Name → Edit Job Description → Update → My Jobs</div>
+            <div class="flow-path">My Jobs → Create A New Project → Go To Project → Search Page</div>
+            <div class="flow-path">My Jobs → Go To Project → Search Page</div>
+            <div class="flow-path">My Jobs → Rank Resumes → View Job Description</div>
+
+            <div class="flow-group-label">From Projects</div>
+            <div class="flow-path">Projects → Create new project → Create Project Name → Create Project Details → Search</div>
+            <div class="flow-path">Projects → Project Name → Resume Search → Search page</div>
+            <div class="flow-path">Projects → Project Name → Download .CSV → Sends Email</div>
+            <div class="flow-path">Projects → Project Name → View Candidate → Add to sequence → Select Sequence</div>
+            <div class="flow-path sub" style="color:rgb(17,17,17);padding-left:180px;">↳ Remove Candidate</div>
+            <div class="flow-path sub" style="color:rgb(17,17,17);padding-left:180px;">↳ Select candidate → Download Resume</div>
+            <div class="flow-path sub" style="color:rgb(17,17,17);padding-left:180px;">↳ Show Email</div>
+            <div class="flow-path">Projects → Project Name → Show Candidate Email → LinkedIn</div>
+            <div class="flow-path">Projects → Project Name → LinkedIn</div>
+            <div class="flow-path">Projects → Project Name → Create Email to Candidate</div>
+
+            <div class="flow-group-label">From Tools</div>
+            <div class="flow-path">Tools → Job Description Optimization → Put in job description → Submit</div>
+
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">Every path a recruiter could take in the old product. Multiple routes to the same destination, redundant screens, and too many clicks to do simple things.</div>
+    </div>
+
+    <div class="section-heading" id="discovery">
+      <div class="section-title">What I discovered</div>
+    </div>
+
+    <p>I started by mapping out every feature and workflow in the recruiter software. What I found was a mess. There were multiple paths leading to the same screens, wires getting crossed everywhere, and too many clicks to do simple things.</p>
+
+    <p>The biggest issue was sourcing. Recruiters had to go through 4 different screens just to start a search, filling out info along the way that slowed them down. On top of that, there were two ways to start sourcing: you could create a job first and source for it, or you could just start a sourcing project with no job attached. This created confusion because when recruiters went back to their projects later, they couldn't always tell which job they were sourcing for.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">mogul-recruiter / old-sourcing-flow</div>
+        </div>
+        <div class="demo-content" style="padding:16px;">
+          <div class="wireframe-step" style="margin-bottom:0;">
+            <div class="step-label">Step 1: Landing page</div>
+            <div class="wireframe">
+              <div class="wf-nav"><div class="wf-logo"></div><div class="wf-nav-text">Projects</div><div class="wf-spacer"></div><div class="wf-nav-text dim">Logout</div><div class="wf-avatar"></div></div>
+              <div class="wf-hero">
+                <div class="wf-hero-text">READY TO FIND<br>TOP DIVERSE<br>TALENT?</div>
+                <div class="wf-btn purple">Create new project</div>
+              </div>
+            </div>
+            <div class="friction-callout">Only option is "Create new project", no way to jump straight to search.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">mogul-recruiter / old-sourcing-flow</div>
+        </div>
+        <div class="demo-content" style="padding:16px;">
+          <div class="wireframe-step" style="margin-bottom:0;">
+            <div class="step-label">Step 2: Name your project</div>
+            <div class="wireframe">
+              <div class="wf-nav"><div class="wf-logo"></div><div class="wf-nav-text">Projects</div><div class="wf-spacer"></div><div class="wf-nav-text dim">Logout</div><div class="wf-avatar"></div></div>
+              <div class="wf-close">✕</div>
+              <div class="wf-form-center">
+                <div class="wf-form-title">Create a new project</div>
+                <div class="wf-input">Name your project</div>
+                <div class="wf-btn purple small">Create</div>
+              </div>
+            </div>
+            <div class="friction-callout">A full page just to type a name. This could have been a single field in step 1.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">mogul-recruiter / old-sourcing-flow</div>
+        </div>
+        <div class="demo-content" style="padding:16px;">
+          <div class="wireframe-step" style="margin-bottom:0;">
+            <div class="step-label">Step 3: Configure your search</div>
+            <div class="wireframe">
+              <div class="wf-nav"><div class="wf-logo"></div><div class="wf-nav-text">Projects</div><div class="wf-nav-text">›</div><div class="wf-nav-text">Marketing director</div><div class="wf-spacer"></div><div class="wf-nav-text dim">Logout</div><div class="wf-avatar"></div></div>
+              <div class="wf-search-form">
+                <div class="wf-form-title" style="text-align:left;">Start your search</div>
+                <div class="wf-field-row">
+                  <div class="wf-field"><div class="wf-field-label">Job title</div><div class="wf-input small">Enter job title</div></div>
+                  <div class="wf-field"><div class="wf-field-label">Location</div><div class="wf-input small">Enter location</div></div>
+                </div>
+                <div class="wf-field-label">Diversity filters</div>
+                <div class="wf-checkbox-row">
+                  <span class="wf-checkbox">☐ Gender-diverse</span>
+                  <span class="wf-checkbox">☐ Ethnically-diverse</span>
+                </div>
+                <div class="wf-checkbox-row">
+                  <span class="wf-checkbox">☐ Veterans</span>
+                  <span class="wf-checkbox">☐ People with disabilities</span>
+                </div>
+                <div class="wf-upload">
+                  <div class="wf-upload-text">Attach a job description (optional)</div>
+                  <div class="wf-upload-box">Select DOCX file to upload</div>
+                </div>
+                <div class="wf-btn purple small">Search</div>
+              </div>
+            </div>
+            <div class="friction-callout">Yet another full page of fields before seeing a single candidate. Job title is re-entered here even though the project was already named.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">mogul-recruiter / old-sourcing-flow</div>
+        </div>
+        <div class="demo-content" style="padding:16px;">
+          <div class="wireframe-step" style="margin-bottom:0;">
+            <div class="step-label">Step 4: Finally, results</div>
+            <div class="wireframe">
+              <div class="wf-nav"><div class="wf-logo"></div><div class="wf-nav-text">Projects</div><div class="wf-nav-text">›</div><div class="wf-nav-text">Marketing director</div><div class="wf-nav-text">›</div><div class="wf-nav-text">Search</div><div class="wf-spacer"></div></div>
+              <div class="wf-results-layout">
+                <div class="wf-sidebar">
+                  <div class="wf-field-label">Filters</div>
+                  <div class="wf-filter">☐ Gender-diverse</div>
+                  <div class="wf-filter">☐ Ethnically-diverse</div>
+                  <div class="wf-filter">☐ Veterans</div>
+                  <div class="wf-filter-divider"></div>
+                  <div class="wf-filter dim">Location</div>
+                  <div class="wf-filter dim">Title</div>
+                  <div class="wf-filter dim">Years of exp.</div>
+                  <div class="wf-filter dim">Company</div>
+                  <div class="wf-filter dim">Industry</div>
+                </div>
+                <div class="wf-results">
+                  <div class="wf-result-header"><span class="dim">3,582 Results</span></div>
+                  <div class="wf-result-card">
+                    <div class="wf-result-name">Rachel Okonkwo</div>
+                    <div class="wf-result-role">VP of Marketing at Hinge Health</div>
+                    <div class="wf-result-detail">Sr. Marketing Manager at Salesforce</div>
+                    <div class="wf-result-detail">Brand Strategist at Ogilvy</div>
+                  </div>
+                  <div class="wf-result-card">
+                    <div class="wf-result-name">Derek Callahan</div>
+                    <div class="wf-result-role">Director of Marketing at Grammarly</div>
+                    <div class="wf-result-detail">Growth Marketing Lead at HubSpot</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="friction-callout">4 screens just to get here. The filters from step 3 are duplicated in the sidebar. Recruiters had to repeat work they already did.</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">The old 4-step sourcing flow. Recruiters had to create a project, name it, configure search details, and only then could they see candidates. Each step was a full page load.</div>
+    </div>
+
+    <p>I talked with our Client Success team, our internal recruitment team at Mogul, and both high-usage and low-usage clients. The same theme kept coming up: people just wanted a clear, simple way to go from "I need to fill this role" to "here are my candidates." The product was getting in the way of that.</p>
+
+    <p>The other big finding was around our ATS. We had just built an entire applicant tracking system into the recruiter, but it was completely disconnected from the sourcing experience. You had to source candidates in one section, then click over to the ATS in the menu bar and find your project there. Almost no one was using it. The data showed that recruiters were just exporting candidates to their own external ATS systems instead.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+
+        <div class="demo-content" style="padding:20px;">
+
+          <div class="compare-section">
+            <div class="compare-label before">Before: Sourcing + ATS disconnected</div>
+            <div class="compare-block before">
+              <div class="compare-group-label">Sourcing (4 screens)</div>
+              <div class="flow-path">Home → Create project → Name project → Configure search → Search</div>
+              <div class="flow-path">Select candidate → Save to project</div>
+
+              <div class="compare-break">↕ Switch context, go to menu bar, click "Sequences"</div>
+
+              <div class="compare-group-label">ATS / Outreach (separate section)</div>
+              <div class="flow-path">Sequences → Add sequence → Enter sequence name</div>
+              <div class="flow-path">Select project to import candidates from ↓</div>
+              <div class="flow-path">Click Create → Click Steps → Build email sequence</div>
+
+              <div class="compare-count">9+ screens · 2 disconnected sections · manual candidate import</div>
+            </div>
+          </div>
+
+          <div class="compare-section" style="margin-top:20px;">
+            <div class="compare-label after">After: Everything under one job</div>
+            <div class="compare-block after">
+              <div class="flow-path">Click on job <span class="compare-note">(auto-populated from client)</span></div>
+              <div class="flow-path">→ Source candidates</div>
+              <div class="flow-path">→ Review candidates</div>
+              <div class="flow-path">→ Create campaign <span class="compare-note">(email sequences built in)</span></div>
+
+              <div class="compare-count green">4 steps · 1 workspace · no context switching</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="demo-caption">The old product split sourcing and outreach into two completely separate sections. The redesign unified everything under a single job workspace.</div>
+    </div>
+
+    <div class="section-heading" id="recommendation">
+      <div class="section-title">What I recommended</div>
+    </div>
+
+    <p>Two paths came out of the research. The first was a quicker fix: redesign the navigation to make it clearer where to start the sourcing process. It would help but wouldn't solve the deeper issues. The second was a full redesign that rethought the entire workflow from the ground up.</p>
+
+    <p>I pushed for the full redesign. The product had been built without a deep understanding of how recruiters actually work, and layering more features on top of a broken foundation wasn't going to fix that. The CTO and CEO agreed. We all felt the software needed a reset.</p>
+
+    <p>The core idea behind the new design was making everything job-centric. Instead of having sourcing, candidate review, outreach, and tracking scattered across different sections, everything would live under one job. You open a job, and all the tools you need for that role are right there: sourcing, pipeline, campaigns, and progress tracking. One workspace instead of a scattered experience.</p>
+
+    <p>I also proposed integrating the ATS directly into the sourcing workflow so it didn't feel like a separate tool. Recruiters would move candidates through stages naturally as part of the process rather than having to jump to a different section. For recruiters who still preferred their own ATS, I kept the option to export candidates.</p>
+
+    <div class="callout"><p>The CEO initially pushed back on folding the ATS into the workflow since we had just built it as a standalone feature. But I was able to show the data: recruiters simply weren't using it the way it was set up. When I presented the new integrated approach, she saw that it was a much better solution and gave the green light.</p></div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-content" style="padding:24px 20px 20px;">
+          <div class="flow-diagram">
+
+            <div class="ia-title">New recruiter flow</div>
+
+            <div class="ia-start-wrap">
+              <div class="ia-start-pill">
+                <div class="ia-start-pill-icon">⊞</div>
+                Dashboard: select a job
+              </div>
+            </div>
+
+            <div class="ia-connector"><div class="ia-connector-line"></div></div>
+
+            <div class="ia-fork-new">
+              <div class="ia-fork-card">
+                <div class="ia-fork-card-icon existing">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="3" width="10" height="8" rx="1.5" stroke="rgba(0,122,255,0.6)" stroke-width="1.2"/><path d="M4 6h6M4 8.5h4" stroke="rgba(0,122,255,0.4)" stroke-width="0.8" stroke-linecap="round"/></svg>
+                </div>
+                <div class="ia-fork-card-name">Existing job</div>
+                <div class="ia-fork-card-sub">Auto-populated from<br>client's careers page</div>
+              </div>
+              <div class="ia-fork-divider">
+                <div class="ia-fork-divider-text">or</div>
+              </div>
+              <div class="ia-fork-card">
+                <div class="ia-fork-card-icon new">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="rgba(52,199,89,0.6)" stroke-width="1.2"/><path d="M7 4.5v5M4.5 7h5" stroke="rgba(52,199,89,0.5)" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <div class="ia-fork-card-name">Add new job</div>
+                <div class="ia-fork-card-sub">Enter title, location,<br>description → Create</div>
+              </div>
+            </div>
+
+            <div class="ia-connector"><div class="ia-connector-line"></div></div>
+
+            <div class="ia-steps">
+              <div class="ia-step">
+                <div class="ia-step-num">1</div>
+                <div class="ia-step-content">
+                  <div class="ia-step-title">Source</div>
+                  <div class="ia-step-desc">Search and find candidates for the role</div>
+                </div>
+              </div>
+              <div class="ia-step-connector">↓</div>
+              <div class="ia-step">
+                <div class="ia-step-num">2</div>
+                <div class="ia-step-content">
+                  <div class="ia-step-title">Review</div>
+                  <div class="ia-step-desc">Evaluate saved candidates, remove or export to external ATS</div>
+                </div>
+              </div>
+              <div class="ia-step-connector">↓</div>
+              <div class="ia-step">
+                <div class="ia-step-num">3</div>
+                <div class="ia-step-content">
+                  <div class="ia-step-title">Campaign</div>
+                  <div class="ia-step-desc">Create and send personalized email outreach</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ia-summary">One job. One workspace. Three steps.</div>
+
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">The redesigned information architecture. Every tool a recruiter needs lives under a single job, replacing the scattered multi-section experience.</div>
+    </div>
+
+    <div class="section-heading" id="process">
+      <div class="section-title">How I worked</div>
+    </div>
+
+    <p>This wasn't a "stop everything and redesign" situation. I worked on the redesign in my free time over about 6 months, building it out piece by piece with the CTO. I'd share prototypes with the CTO and CEO first, and if they liked what they saw, I'd bring it to Client Success and our internal recruitment team for feedback.</p>
+
+    <p>Client Success was a huge help here because they knew our clients' pain points inside and out. They could look at a mockup and tell me right away if it would land well or cause confusion. The team also shared some of the mockups with clients during renewal calls, which actually helped keep some clients on board while we were building the new version.</p>
+
+    <p>I also tested the new workflows with our internal recruitment team before launch to make sure the simplified flows actually felt better in practice, not just on paper.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-content" style="padding:20px;">
+          <div class="flow-diagram">
+            <div class="iteration" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+              <div class="iteration-header">
+                <div class="iteration-num">Iteration 1</div>
+                <div class="iteration-title">Rapid recruiting with sidebar navigation</div>
+              </div>
+              <div class="iteration-wireframe">
+                <div class="iter-layout">
+                  <div class="iter-sidebar">
+                    <div class="iter-sidebar-item">🔍 Quick Find</div>
+                    <div class="iter-sidebar-item bold">🏠 Home</div>
+                    <div class="iter-sidebar-item bold">🔎 Searches</div>
+                    <div class="iter-sidebar-item indent active">Marketing Director</div>
+                    <div class="iter-sidebar-item indent">Graphic Designer</div>
+                    <div class="iter-sidebar-item indent">CFO</div>
+                    <div class="iter-sidebar-item bottom">+ New Search</div>
+                  </div>
+                  <div class="iter-main">
+                    <div class="iter-main-title">Marketing Director ▾</div>
+                    <div class="iter-grid">
+                      <div class="iter-card"></div>
+                      <div class="iter-card"></div>
+                      <div class="iter-card"></div>
+                      <div class="iter-card"></div>
+                      <div class="iter-card"></div>
+                      <div class="iter-card"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="iteration-note">Tested showing multiple candidates at once in a grid. The sidebar navigation was a step forward, but there was way too much information on screen. Recruiters couldn't effectively evaluate candidates this way.</div>
+              <div class="iteration-verdict">❌ Too much information density</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-content" style="padding:20px;">
+          <div class="flow-diagram">
+            <div class="iteration" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+              <div class="iteration-header">
+                <div class="iteration-num">Iteration 2</div>
+                <div class="iteration-title">Iterative feedback with thumbs up/down</div>
+              </div>
+              <div class="iteration-wireframe">
+                <div class="iter-layout">
+                  <div class="iter-sidebar">
+                    <div class="iter-sidebar-item bold">Mogul AI</div>
+                    <div class="iter-sidebar-item bold">🔎 Searches</div>
+                    <div class="iter-sidebar-item indent active">Product Designer</div>
+                    <div class="iter-sidebar-item indent">Graphic Designer</div>
+                    <div class="iter-sidebar-item">New search</div>
+                  </div>
+                  <div class="iter-main">
+                    <div class="iter-main-title">Product Designer</div>
+                    <div class="iter-candidate">
+                      <div class="iter-candidate-name">Marcus Webb</div>
+                      <div class="iter-candidate-role">Senior Product Designer</div>
+                      <div class="iter-candidate-detail">Experience · Education · Bio</div>
+                    </div>
+                    <div class="iter-feedback">
+                      <span class="iter-thumb down">👎</span>
+                      <span class="iter-thumb up">👍</span>
+                    </div>
+                    <div class="iter-feedback-input">What do you like or dislike?</div>
+                    <div class="iter-bottom-bar">
+                      <span>✉ Email candidate</span>
+                      <span>+ Save candidate</span>
+                      <span class="iter-next">→ Next candidate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="iteration-note">Recruiters could highlight parts of a candidate profile and give thumbs up/down feedback. The system would learn and improve results iteratively. Cool concept, but too slow for how recruiters actually work. They need to move fast.</div>
+              <div class="iteration-verdict">❌ Too slow for recruiter workflows</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-content" style="padding:20px;">
+          <div class="flow-diagram">
+            <div class="iteration" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+              <div class="iteration-header">
+                <div class="iteration-num">Iteration 3</div>
+                <div class="iteration-title">Sidebar navigation with sequences</div>
+              </div>
+              <div class="iteration-wireframe">
+                <div class="iter-layout">
+                  <div class="iter-sidebar">
+                    <div class="iter-sidebar-item bold">Mogul AI</div>
+                    <div class="iter-sidebar-item bold">🔎 Searches</div>
+                    <div class="iter-sidebar-item indent">Graphic Designer</div>
+                    <div class="iter-sidebar-item indent">Product Designer</div>
+                    <div class="iter-sidebar-item indent">CFO</div>
+                    <div class="iter-sidebar-item">New search</div>
+                    <div class="iter-sidebar-divider"></div>
+                    <div class="iter-sidebar-item bold">🔗 Sequences</div>
+                    <div class="iter-sidebar-item indent active">Marketing Assistant</div>
+                    <div class="iter-sidebar-item indent">General Sales</div>
+                    <div class="iter-sidebar-item indent">Operations Manager</div>
+                    <div class="iter-sidebar-item">New sequence</div>
+                  </div>
+                  <div class="iter-main">
+                    <div class="iter-main-title">● Marketing Assistant</div>
+                    <div class="iter-stats-row">
+                      <span>all contacts: 300</span>
+                      <span>sent: 0</span>
+                      <span>opened: 0</span>
+                      <span>replied: 0</span>
+                    </div>
+                    <div class="iter-table">
+                      <div class="iter-table-header">NAME · STATUS · ERRORS</div>
+                      <div class="iter-table-row">First Last · NOT MESSAGED YET</div>
+                      <div class="iter-table-row">First Last · MESSAGED</div>
+                      <div class="iter-table-row">First Last · OPENED</div>
+                      <div class="iter-table-row">First Last · REPLIED</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="iteration-note">Simplified the workflow and moved everything into a sidebar, but the ATS (Sequences) still felt like a separate section from sourcing. The disconnect between finding candidates and reaching out to them was still there.</div>
+              <div class="iteration-verdict">❌ ATS still felt divorced from sourcing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-content" style="padding:20px;">
+          <div class="flow-diagram">
+            <div class="iteration" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+              <div class="iteration-header">
+                <div class="iteration-num">Iteration 4</div>
+                <div class="iteration-title">AI chat interface</div>
+              </div>
+              <div class="iteration-wireframe">
+                <div class="iter-layout">
+                  <div class="iter-main-full">
+                    <div class="iter-main-title">Product Designer in New York, NY</div>
+                    <div class="iter-filter-pills">
+                      <span class="iter-pill">Title: Product designer</span>
+                      <span class="iter-pill">Location: New York, NY</span>
+                      <span class="iter-pill">Other filters</span>
+                    </div>
+                    <div class="iter-candidate" style="margin-top:8px;">
+                      <div class="iter-candidate-name">Marcus Webb</div>
+                      <div class="iter-candidate-role">Senior Product Designer</div>
+                      <div class="iter-candidate-detail">Experience · Education · Bio</div>
+                    </div>
+                    <div class="iter-candidate">
+                      <div class="iter-candidate-name">Priya Desmond</div>
+                      <div class="iter-candidate-role">Product Designer - New York, NY</div>
+                    </div>
+                  </div>
+                  <div class="iter-chat">
+                    <div class="iter-chat-title">Mogul AI</div>
+                    <div class="iter-chat-msg ai">What role are you looking to fill?</div>
+                    <div class="iter-chat-msg user">Show me product designers</div>
+                    <div class="iter-chat-msg ai">In what city and state?</div>
+                    <div class="iter-chat-msg user">In New York, NY</div>
+                    <div class="iter-chat-msg ai">Let me know what else I can help with</div>
+                    <div class="iter-chat-input">Narrow your search</div>
+                  </div>
+                </div>
+              </div>
+              <div class="iteration-note">Explored an AI chat interface where recruiters could have a conversation with an agent to find candidates. The team was really excited about this direction, but our small dev team didn't have the bandwidth to build it at the time. We had to table it.</div>
+              <div class="iteration-verdict">⏸ Tabled: too resource-intensive for our team size</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">Four major iterations exploring different approaches before landing on the final job-centric design. Each concept taught us something about what recruiters actually need.</div>
+    </div>
+
+    <div class="section-heading" id="result">
+      <div class="section-title">The new experience</div>
+    </div>
+
+    <p><strong>Simplified Navigation.</strong> The old menu had multiple entry points that all led to the same place, which made it hard for recruiters to know where to start. The new menu strips all of that away. Now when recruiters log in, they see their active jobs and a clear option to create a new one. No more guessing which path to take. You pick a job or create one, and everything you need for that role, sourcing, reviewing, outreach, and tracking, all lives inside it.</p>
+    <div class="demo-container"><img src="../images/recruiter-simplifiednavigation.jpg" alt="Simplified navigation screenshot" loading="lazy" decoding="async" /></div>
+
+    <p style="padding-top:80px;"><strong>Centralized Dashboard.</strong> The new inbox gives recruiters a clear overview of everything happening across their jobs. New candidates, check-in reminders for inactive projects, status updates, and outreach performance all live in one place.</p>
+    <div class="demo-container"><img src="../images/recruiter-centralizeddashboard.jpg" alt="Dashboard screenshot" loading="lazy" decoding="async" /></div>
+
+    <p style="padding-top:80px;"><strong>Simplified Search.</strong> I stripped the search experience down to focus on what recruiters actually look at first: current role and work history. Candidate bios still power the search results in the background, but hiding them from the main view made scanning candidates much faster.</p>
+    <div class="demo-container"><img src="../images/recruiter-simplifiedsearch.jpg" alt="Simplified search screenshot" loading="lazy" decoding="async" /></div>
+
+    <p style="padding-top:80px;"><strong>Streamlined Filters.</strong> I redesigned the filters with a simple icon-based entry point and more intentional spacing, making it easier to quickly narrow results without feeling overwhelmed.</p>
+    <div class="demo-container"><img src="../images/recruiter-streamlinedfilters.jpg" alt="Streamlined filters screenshot" loading="lazy" decoding="async" /></div>
+
+    <p style="padding-top:80px;"><strong>Smart Review Stage.</strong> After sourcing, recruiters move into a review stage designed for speed. Smart sort options like "best fit" and "top potential" help prioritize candidates, and recruiters can email or remove candidates directly from the interface without extra clicks.</p>
+    <div class="demo-container"><img src="../images/recruiter-smartreviewstage.jpg" alt="Smart review stage screenshot" loading="lazy" decoding="async" /></div>
+
+    <p style="padding-top:80px;"><strong>Integrated Campaigns.</strong> Recruiters can build and schedule personalized email and SMS campaigns right within each job, with built-in analytics to track what's working. This keeps all candidate activity in one place instead of bouncing between tools.</p>
+    <div class="demo-container"><img src="../images/recruiter-integratedcampaigns.jpg" alt="Integrated campaigns screenshot" loading="lazy" decoding="async" /></div>
+
+    <div class="section-heading" id="outcome">
+      <div class="section-title">What happened</div>
+    </div>
+
+    <p>After launch, Client Success held workshops with our clients to walk them through the new experience. The feedback was overwhelmingly positive.</p>
+
+    <p>We tracked everything through our analytics dashboard: candidates sourced, saved, searches run, projects created, and time spent in the platform. The data told a clear story. Product engagement increased by 40%, and in the first 3 months after launch, we saw 15% more client renewals compared to the same period the year before.</p>
+
+    <p>The recruiter that used to confuse people was now something clients actually enjoyed using.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-value">40%</div><div class="stat-label">Engagement increase</div></div>
+      <div class="stat"><div class="stat-value">15%</div><div class="stat-label">More client renewals in first 3 months</div></div>
+    </div>
+
+    <div class="section-heading" id="reflection">
+      <div class="section-title">What I'd do differently</div>
+    </div>
+
+    <div class="reflection"><p>If I could go back, I would have found ways to bring AI into the outreach process earlier. The email and campaign tools we built were solid, but writing personalized messages to each candidate was still very manual. I would have loved to build in a way to generate personalized outreach using AI so that each message felt tailored to the candidate rather than templated. That would have saved recruiters a lot of time and made their outreach stand out more.</p></div>
+
+  </article>
+</div>
+
+<script>
+  var sections = document.querySelectorAll('.section-heading');
+  var tocItems = document.querySelectorAll('.toc-item');
+  var clickLock = null;
+
+  function setActive(id) {
+    tocItems.forEach(function(item) {
+      if (item.dataset.section === id) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  function updateTOC() {
+    if (clickLock) return;
+    var current = '';
+    var sectionList = Array.from(sections);
+
+    // Use getBoundingClientRect for reliable viewport-relative positions
+    // Activate the last section whose top has scrolled above the trigger line
+    for (var i = sectionList.length - 1; i >= 0; i--) {
+      var rect = sectionList[i].getBoundingClientRect();
+      if (rect.top <= 80) {
+        current = sectionList[i].id;
+        break;
+      }
+    }
+
+    // Always activate last section near bottom of page
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+      current = sectionList[sectionList.length - 1].id;
+    }
+
+    setActive(current);
+  }
+
+  window.addEventListener('scroll', updateTOC);
+  updateTOC();
+
+  document.querySelectorAll('.toc-item a').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var href = this.getAttribute('href');
+      var target = document.querySelector(href);
+      var sectionId = href.replace('#', '');
+      if (target) {
+        setActive(sectionId);
+        clickLock = sectionId;
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 40, behavior: 'smooth' });
+        setTimeout(function() {
+          clickLock = null;
+          updateTOC();
+        }, 1200);
+      }
+    });
+  });
+</script>
+</body>
+</html>

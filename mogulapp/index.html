@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mogul App | Jason Curescu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;460;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { min-height: 100%; overflow-y: scroll; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0,0,0,0); text-rendering: optimizelegibility; text-size-adjust: 100%; }
+  body { background: #fff; color: rgb(17,17,17); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; min-height: 100%; display: flex; justify-content: center; }
+  .page-wrap { position: relative; width: 550px; padding: 80px 0 100px; }
+  .aside { position: fixed; top: 80px; left: 80px; width: 156px; }
+  .back-link { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; padding-bottom: 4px; }
+  .back-link:hover { color: rgba(0,0,0,0.8); }
+  .toc { margin-top: 24px; }
+  .toc-title { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgb(17,17,17); padding-bottom: 16px; cursor: pointer; }
+  .toc-list { list-style: none; }
+  .toc-item { cursor: pointer; transition: opacity 0.15s; }
+  .toc-item a { display: block; padding: 4px 0; font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(0,0,0,0.25); text-decoration: none; transition: color 0.2s; }
+  .toc-item.active a { color: rgba(0,0,0,0.7); }
+  .toc-item a:hover { color: rgba(0,0,0,0.5); }
+  article header { padding-top: 0; }
+  article header h1 { font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); }
+  article header time { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgba(0,0,0,0.4); display: block; }
+  article p { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 16px; }
+  article p strong { font-weight: 600; }
+  .section-heading { padding-top: 64px; }
+  .section-label { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(18,18,18,0.4); }
+  .section-title { font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 4px; }
+  article a { position: relative; display: inline; color: inherit; font-weight: inherit; text-decoration: none; transition: 0.2s; }
+  article a::before { pointer-events: none; content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; border-radius: 2px; background: rgb(217,217,217); transition: inherit; }
+  article a:hover::before { background: rgb(102,102,102); }
+  .stats { display: flex; gap: 32px; padding-top: 32px; padding-bottom: 16px; }
+  .stat { display: flex; flex-direction: column; }
+  .stat-value { font-size: 20px; font-weight: 600; line-height: 28px; color: rgb(17,17,17); letter-spacing: -0.3px; }
+  .stat-label { font-size: 13px; font-weight: 460; line-height: 18px; color: rgba(0,0,0,0.4); }
+  .role-details { padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .role-tag { font-size: 12px; font-weight: 460; line-height: 16px; padding: 4px 10px; border-radius: 100px; background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.5); }
+  .visual-placeholder { margin-top: 24px; padding: 40px 24px; background: rgba(0,0,0,0.02); border: 1px dashed rgba(0,0,0,0.1); border-radius: 12px; text-align: center; color: rgba(0,0,0,0.3); font-size: 13px; line-height: 18px; }
+  .visual-placeholder span { display: block; font-weight: 500; color: rgba(0,0,0,0.4); margin-bottom: 4px; }
+  .screens-row { margin-top: 24px; display: flex; gap: 12px; justify-content: center; }
+  .screens-row .phone-mask { flex: 1; max-width: 170px; position: relative; border-radius: 24px; border: 3px solid rgb(17,17,17); overflow: hidden; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .screens-row .phone-mask::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 14px; background: rgb(17,17,17); border-radius: 0 0 10px 10px; z-index: 2; }
+  .screens-row .phone-mask img { width: 100%; display: block; }
+  /* Demo browser container - matching recruiter page */
+  .demo-container { margin-top: 24px; }
+  .demo-container img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .demo-browser { position: relative; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08); }
+  .demo-bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .demo-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .demo-dot.red { background: #ff5f57; }
+  .demo-dot.yellow { background: #febc2e; }
+  .demo-dot.green { background: #28c840; }
+  .demo-url { flex: 1; margin-left: 8px; padding: 4px 10px; background: rgba(0,0,0,0.04); border-radius: 6px; font-size: 10px; color: rgba(0,0,0,0.4); font-family: system-ui, sans-serif; }
+  .demo-content { padding: 20px; }
+  .demo-caption { font-size: 12px; line-height: 16px; color: rgba(0,0,0,0.4); margin-top: 10px; }
+
+  /* Research insight demo */
+  .insight-split { display: flex; gap: 16px; font-family: system-ui, -apple-system, sans-serif; }
+  .insight-panel { flex: 1; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); }
+  .insight-panel-header { padding: 8px 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.2px; }
+  .insight-panel-header.calendar { background: rgba(0,122,255,0.06); color: rgba(0,100,210,0.7); border-bottom: 1px solid rgba(0,122,255,0.08); }
+  .insight-panel-header.notes { background: rgba(255,159,10,0.06); color: rgba(180,110,0,0.7); border-bottom: 1px solid rgba(255,159,10,0.08); }
+  .insight-panel-body { padding: 10px 12px; }
+  .cal-block { display: flex; align-items: center; gap: 8px; padding: 5px 8px; margin-bottom: 4px; border-radius: 4px; font-size: 9px; font-family: system-ui, sans-serif; }
+  .cal-block.filled { background: rgba(0,122,255,0.06); color: rgba(0,100,210,0.6); }
+  .cal-time { font-size: 8px; color: rgba(0,0,0,0.3); width: 36px; flex-shrink: 0; }
+  .note-line { font-size: 9px; color: rgba(0,0,0,0.4); padding: 3px 0; font-family: system-ui, sans-serif; line-height: 1.5; }
+  .note-line .checkbox { display: inline-block; width: 10px; height: 10px; border: 1px solid rgba(0,0,0,0.15); border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .insight-divider { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 0 2px; flex-shrink: 0; }
+  .insight-divider-line { width: 1px; height: 20px; background: rgba(180,80,60,0.2); }
+  .insight-divider-x { font-size: 10px; font-weight: 700; color: rgba(180,80,60,0.4); font-family: system-ui, sans-serif; }
+  .insight-quote { margin-top: 12px; padding: 10px 14px; background: rgba(0,0,0,0.02); border-radius: 8px; border-left: 2px solid rgba(0,0,0,0.08); }
+  .insight-quote-text { font-size: 11px; line-height: 16px; color: rgba(0,0,0,0.45); font-style: italic; font-family: system-ui, sans-serif; }
+  .insight-quote-attr { font-size: 9px; color: rgba(0,0,0,0.25); margin-top: 4px; font-family: system-ui, sans-serif; }
+
+  /* iPhone mockup */
+  .iphone-wrap { display: flex; justify-content: center; margin-top: 24px; }
+  .iphone-frame { width: 260px; height: 520px; border-radius: 36px; border: 3px solid rgb(17,17,17); background: #fff; position: relative; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04); }
+  .iphone-notch { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 95px; height: 24px; background: rgb(17,17,17); border-radius: 16px; z-index: 2; }
+  .iphone-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; padding: 44px 16px 16px; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; }
+  .mogul-header { font-size: 18px; font-weight: 800; color: rgb(17,17,17); font-style: italic; margin-bottom: 16px; }
+  .mogul-post { flex: 1; }
+  .mogul-author { font-size: 10px; color: rgba(0,0,0,0.45); margin-bottom: 4px; }
+  .mogul-post-text { font-size: 18px; font-weight: 700; color: rgb(17,17,17); line-height: 1.25; min-height: 24px; }
+  .mogul-reply-area { margin-top: 16px; opacity: 0; transition: opacity 0.4s; }
+  .mogul-reply-area.show { opacity: 1; }
+  .mogul-reply-input { font-size: 10px; color: rgba(0,0,0,0.3); border: 1px solid rgba(0,0,0,0.12); border-radius: 3px; padding: 6px 8px; margin-bottom: 6px; }
+  .mogul-reply-btn { display: inline-block; font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #6C5CE7; color: #fff; padding: 4px 10px; border-radius: 2px; float: right; }
+  .mogul-comment { margin-top: 12px; opacity: 0; transition: opacity 0.4s; }
+  .mogul-comment.show { opacity: 1; }
+  .mogul-comment-author { font-size: 10px; font-weight: 600; color: rgb(17,17,17); margin-bottom: 2px; }
+  .mogul-comment-text { font-size: 10px; color: rgba(0,0,0,0.5); line-height: 1.5; }
+  .mogul-comment-reply-btn { display: inline-block; font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #6C5CE7; color: #fff; padding: 4px 10px; border-radius: 2px; float: right; margin-top: 6px; opacity: 0; transition: opacity 0.4s; }
+  .mogul-comment-reply-btn.show { opacity: 1; }
+  .mogul-bottom { border-top: 1px solid rgba(0,0,0,0.06); padding-top: 10px; margin-top: auto; }
+  .mogul-bottom-input { font-size: 10px; color: rgba(0,0,0,0.3); border: 1px solid rgba(0,0,0,0.12); border-radius: 3px; padding: 6px 8px; margin-bottom: 6px; }
+  .mogul-bottom-btn { display: inline-block; font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: #6C5CE7; color: #fff; padding: 4px 10px; border-radius: 2px; float: right; }
+  .mogul-cursor { display: inline-block; width: 1px; height: 16px; background: rgb(17,17,17); vertical-align: text-bottom; animation: blink 0.6s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Meditative gathering mockup */
+  .med-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; cursor: pointer; user-select: none; -webkit-user-select: none; }
+  .med-landscape { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url(../images/mogulapp-med-landscape.jpg) center/cover no-repeat; }
+  .med-users-badge { position: absolute; top: 52px; left: 16px; display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.35); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 14px; padding: 5px 10px 5px 7px; z-index: 3; }
+  .med-users-icon { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+  .med-users-icon svg { width: 12px; height: 12px; }
+  .med-users-count { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); font-family: system-ui, sans-serif; }
+  .med-prompt-wrap { position: absolute; top: 35%; left: 0; right: 0; text-align: center; padding: 0 24px; z-index: 3; }
+  .med-prompt { font-size: 16px; font-weight: 600; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,0.3); line-height: 1.4; font-family: system-ui, sans-serif; opacity: 0; transition: opacity 0.8s; }
+  .med-prompt.show { opacity: 1; }
+  .med-impressions { position: absolute; bottom: 60px; left: 16px; display: flex; flex-direction: column; gap: 3px; z-index: 3; }
+  .med-impression { display: flex; align-items: center; gap: 5px; opacity: 0; transform: translateY(4px); transition: opacity 0.3s, transform 0.3s; }
+  .med-impression.show { opacity: 1; transform: translateY(0); }
+  .med-impression-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.7); box-shadow: 0 0 6px rgba(255,255,255,0.4); flex-shrink: 0; }
+  .med-impression-name { font-size: 8px; color: rgba(255,255,255,0.65); font-family: system-ui, sans-serif; }
+  .med-tap-hint { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; z-index: 3; }
+  .med-tap-text { font-size: 9px; color: rgba(255,255,255,0.4); font-family: system-ui, sans-serif; letter-spacing: 0.3px; }
+  .med-ripple { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.2); transform: translate(-50%,-50%) scale(0); animation: rippleOut 0.8s ease-out forwards; pointer-events: none; z-index: 2; }
+  @keyframes rippleOut { 0%{transform:translate(-50%,-50%) scale(0);opacity:1} 100%{transform:translate(-50%,-50%) scale(2.5);opacity:0} }
+
+  /* VR headset mockup */
+  .vr-wrap { display: flex; justify-content: center; margin-top: 24px; }
+  .vr-headset { position: relative; width: 100%; aspect-ratio: 2.1 / 1; border-radius: 40px; overflow: hidden; background: #0a0e1a; box-shadow: 0 0 0 4px rgb(17,17,17), 0 4px 24px rgba(0,0,0,0.25); }
+  .vr-nose { position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 40px; height: 18px; background: rgb(17,17,17); border-radius: 50% 50% 0 0; z-index: 10; }
+  .vr-vignette { position: absolute; inset: 0; border-radius: 40px; box-shadow: inset 0 0 60px 30px rgba(0,0,0,0.6); z-index: 5; pointer-events: none; }
+  .vr-scene { position: absolute; inset: 0; overflow: hidden; }
+  .vr-sky { position: absolute; inset: 0; background: linear-gradient(180deg, #070b15 0%, #0f1628 40%, #1a1f35 60%, #1e2a3a 100%); }
+  .vr-star { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; }
+  .vr-star.bright { width: 3px; height: 3px; animation: twinkle 3s ease-in-out infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.4} 50%{opacity:1} }
+  .vr-ground { position: absolute; bottom: 0; left: 0; right: 0; height: 42%; background: linear-gradient(180deg, #1a2a1e 0%, #162216 40%, #0f1a10 100%); }
+  .vr-ground-texture { position: absolute; bottom: 0; left: 0; right: 0; height: 42%; background: radial-gradient(ellipse 120% 60% at 50% 100%, rgba(50,70,40,0.3) 0%, transparent 70%); }
+  .vr-fire-wrap { position: absolute; bottom: 38%; left: 50%; transform: translateX(-50%); z-index: 3; }
+  .vr-fire-glow { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 40px; background: radial-gradient(ellipse, rgba(255,140,40,0.25) 0%, rgba(255,80,20,0.08) 50%, transparent 70%); z-index: 1; }
+  .vr-fire-base { width: 30px; height: 8px; background: rgba(80,40,20,0.7); border-radius: 50%; margin: 0 auto; position: relative; z-index: 2; }
+  .vr-flame { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); z-index: 3; }
+  .vr-flame-part { position: absolute; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+  .vr-flame-part.f1 { width: 12px; height: 22px; background: rgba(255,200,60,0.9); bottom: 0; left: 50%; transform: translateX(-50%); animation: flameMove 0.4s ease-in-out infinite alternate; }
+  .vr-flame-part.f2 { width: 8px; height: 16px; background: rgba(255,140,30,0.8); bottom: 0; left: 30%; animation: flameMove 0.5s ease-in-out infinite alternate-reverse; }
+  .vr-flame-part.f3 { width: 8px; height: 18px; background: rgba(255,160,40,0.85); bottom: 0; right: 30%; animation: flameMove 0.35s ease-in-out infinite alternate; }
+  .vr-flame-part.f4 { width: 6px; height: 10px; background: rgba(255,100,20,0.6); bottom: 0; left: 20%; animation: flameMove 0.55s ease-in-out infinite alternate-reverse; }
+  @keyframes flameMove { 0%{transform:scaleY(1) translateX(-2px)} 100%{transform:scaleY(1.15) translateX(2px)} }
+  .vr-embers { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; z-index: 4; }
+  .vr-ember { position: absolute; width: 2px; height: 2px; background: rgba(255,160,40,0.8); border-radius: 50%; animation: emberFloat 2s ease-out infinite; }
+  .vr-ember:nth-child(2) { left: 60%; animation-delay: 0.7s; animation-duration: 2.4s; }
+  .vr-ember:nth-child(3) { left: 30%; animation-delay: 1.3s; animation-duration: 1.8s; }
+  @keyframes emberFloat { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-30px) translateX(8px);opacity:0} }
+  .vr-log { position: absolute; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #3a2510, #4d3218, #3a2510); z-index: 2; }
+  .vr-user { position: absolute; z-index: 4; display: flex; flex-direction: column; align-items: center; }
+  .vr-user-circle { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); }
+  .vr-user-name { font-size: 7px; color: rgba(255,255,255,0.5); font-family: system-ui, sans-serif; margin-top: 2px; white-space: nowrap; }
+  .vr-bubble { position: absolute; background: rgba(255,255,255,0.12); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border-radius: 8px; padding: 5px 8px; font-size: 8px; color: rgba(255,255,255,0.75); font-family: system-ui, sans-serif; line-height: 1.4; max-width: 100px; opacity: 0; transition: opacity 0.5s; z-index: 6; white-space: nowrap; }
+  .vr-bubble.show { opacity: 1; }
+  .vr-bubble::after { content: ''; position: absolute; bottom: -4px; left: 14px; width: 8px; height: 8px; background: rgba(255,255,255,0.12); border-radius: 2px; transform: rotate(45deg); }
+  .vr-ground-glow { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 200px; height: 80px; background: radial-gradient(ellipse, rgba(255,120,30,0.08) 0%, transparent 70%); z-index: 1; }
+
+  .callout { padding-top: 24px; padding-left: 16px; border-left: 2px solid rgba(0,0,0,0.08); }
+  .callout p { padding-top: 0; color: rgba(0,0,0,0.5); font-style: italic; }
+  .reflection { padding-top: 24px; }
+  .reflection p { padding-top: 0; color: rgb(17,17,17); }
+  @keyframes staggerIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  article > * { animation: staggerIn 0.5s ease both; }
+  article > :nth-child(1) { animation-delay: 0s; }
+  article > :nth-child(2) { animation-delay: 0.05s; }
+  article > :nth-child(3) { animation-delay: 0.1s; }
+  article > :nth-child(4) { animation-delay: 0.15s; }
+  article > :nth-child(5) { animation-delay: 0.2s; }
+  article > :nth-child(6) { animation-delay: 0.25s; }
+  .mobile-back { display: none; }
+  @media (max-width: 1080px) {
+    .aside { display: none; }
+    .mobile-back { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; margin-bottom: 24px; }
+    .mobile-back:hover { color: rgba(0,0,0,0.8); }
+    .page-wrap { padding: 40px 24px 80px; width: 100%; max-width: 600px; }
+  }
+  @media (max-width: 600px) {
+    .page-wrap { padding: 32px 20px 60px; }
+    .section-heading { padding-top: 48px; }
+    .stats { gap: 24px; flex-wrap: wrap; }
+    .demo-content { max-height: 360px; }
+    .role-details { gap: 6px; }
+  }
+  @media (max-width: 380px) {
+    .page-wrap { padding: 28px 16px 48px; }
+    .stats { gap: 16px; }
+    .stat-value { font-size: 18px; }
+  }
+  ::selection { background: #39FF14; color: #FF6600; }
+  ::-moz-selection { background: #39FF14; color: #FF6600; }
+</style>
+</head>
+<body>
+
+<aside class="aside">
+  <a href="portfolio.html" class="back-link">← Go back</a>
+  <nav class="toc">
+    <h2 class="toc-title" onclick="window.scrollTo({top:0,behavior:'smooth'})">Mogul App</h2>
+    <ul class="toc-list">
+      <li class="toc-item active" data-section="background"><a href="#background">The background</a></li>
+      <li class="toc-item" data-section="discovery"><a href="#discovery">What I discovered</a></li>
+      <li class="toc-item" data-section="exploring"><a href="#exploring">Exploring ideas</a></li>
+      <li class="toc-item" data-section="built"><a href="#built">What we built</a></li>
+      <li class="toc-item" data-section="process"><a href="#process">How I worked</a></li>
+      <li class="toc-item" data-section="outcome"><a href="#outcome">What happened</a></li>
+      <li class="toc-item" data-section="reflection"><a href="#reflection">What I'd do differently</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<div class="page-wrap">
+  <a href="portfolio.html" class="mobile-back">← Go back</a>
+  <article>
+    <header>
+      <h1>Mogul App</h1>
+    </header>
+
+    <div style="padding-top:40px;display:flex;flex-direction:column;gap:20px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Responsibilities</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Product strategy and ideation</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">UI/UX design and product development</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">User research and in-person testing</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Branding and marketing for App Store launch</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Results</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">4.4 rating in the App Store</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">3,000+ downloads</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">500+ downloads at launch event alone</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Positive user response to calendar integration</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-heading" id="background">
+      <div class="section-title">The background</div>
+    </div>
+
+    <p>When I joined Mogul, it was a social platform for women. The site had a forum-style community where women would post about career advice, job opportunities, goal setting, support, and really any topic. But the majority of the conversations centered around career growth and reaching personal goals.</p>
+
+    <p>Mogul was founded by Tiffany Pham, one of the first women to make the Forbes 30 Under 30 list. After that recognition, she had an outpouring of interest from women all over the world asking how she accomplished so much. That's how Mogul was born: a place for women to talk with each other about their struggles, wins, and learnings.</p>
+
+    <p>I was hired to work with the CTO to figure out how we could take this incredible community and build something new around it.</p>
+
+    <div class="section-heading" id="discovery">
+      <div class="section-title">What I discovered</div>
+    </div>
+
+    <p>We interviewed dozens of the top Mogul community members to better understand who the core audience really was. We came to the conclusion that the Mogul user is someone who is a work in progress and wants to be the best version of themselves. Almost everyone we talked to wanted to do more in their life and reach certain goals, but they didn't have the right tools to help them get there.</p>
+
+    <p>Before our app, these users relied on basic lists and the notes app on their phone to track their goals. Their ambitions and personal todos lived in one place, and their busy work life lived in their calendar. The two were completely divorced from each other, and work always won. It was hard for people to make time for their personal goals because their calendar was full of work stuff and their goals were buried in a notes app somewhere.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-content">
+          <div class="insight-split">
+            <div class="insight-panel">
+              <div class="insight-panel-header calendar">Work calendar</div>
+              <div class="insight-panel-body">
+                <div class="cal-block filled"><span class="cal-time">9:00</span> Team standup</div>
+                <div class="cal-block filled"><span class="cal-time">10:00</span> Client sync</div>
+                <div class="cal-block filled"><span class="cal-time">11:30</span> Sprint planning</div>
+                <div class="cal-block filled"><span class="cal-time">1:00</span> Lunch with team</div>
+                <div class="cal-block filled"><span class="cal-time">2:00</span> Design review</div>
+                <div class="cal-block filled"><span class="cal-time">3:30</span> 1:1 with manager</div>
+                <div class="cal-block filled"><span class="cal-time">4:30</span> Wrap-up</div>
+              </div>
+            </div>
+            <div class="insight-divider">
+              <div class="insight-divider-line"></div>
+              <div class="insight-divider-x">✕</div>
+              <div class="insight-divider-line"></div>
+            </div>
+            <div class="insight-panel">
+              <div class="insight-panel-header notes">Notes app</div>
+              <div class="insight-panel-body">
+                <div class="note-line"><span class="checkbox"></span>Start running again</div>
+                <div class="note-line"><span class="checkbox"></span>Read 2 books this month</div>
+                <div class="note-line"><span class="checkbox"></span>Learn Spanish basics</div>
+                <div class="note-line"><span class="checkbox"></span>Save $500/mo</div>
+                <div class="note-line"><span class="checkbox"></span>Look into grad school</div>
+                <div class="note-line"><span class="checkbox"></span>Meditate daily</div>
+              </div>
+            </div>
+          </div>
+          <div class="insight-quote">
+            <div class="insight-quote-text">"Work always fills up my calendar. My goals just sit in my notes app and I forget about them."</div>
+            <div class="insight-quote-attr">Mogul community member</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">The core disconnect we heard in every interview. Work owned the calendar. Personal goals lived in a notes app. The two never talked to each other.</div>
+    </div>
+
+    <div class="section-heading" id="exploring">
+      <div class="section-title">Exploring ideas</div>
+    </div>
+
+    <p>We didn't jump straight to the final product. We went through several very different concepts and tested each one with real Mogul users. We even invited users to our office to test ideas in person so we could get a better gauge of their reactions.</p>
+
+    <p><strong>Concept 1: Interactive Message Boards.</strong> The first version was a mobile take on the Mogul forums but more interactive. Posts and comments were written out in real time on screen to make users feel like they were having a live conversation. This created a sense of community but didn't really help people take action on their goals.</p>
+
+    <div class="demo-container">
+      <div class="iphone-wrap">
+        <div class="iphone-frame">
+          <div class="iphone-notch"></div>
+          <div class="iphone-screen">
+            <div class="mogul-header">Mogul</div>
+            <div class="mogul-post">
+              <div class="mogul-author">Anna</div>
+              <div class="mogul-post-text" id="typing-text"><span class="mogul-cursor"></span></div>
+              <div class="mogul-reply-area" id="reply-area">
+                <div class="mogul-reply-input">Join the conversation</div>
+                <div class="mogul-reply-btn">Submit</div>
+                <div style="clear:both;"></div>
+              </div>
+              <div class="mogul-comment" id="comment-area">
+                <div class="mogul-comment-author">Miriam</div>
+                <div class="mogul-comment-text" id="comment-text"></div>
+                <div class="mogul-comment-reply-btn" id="reply-btn">Reply</div>
+                <div style="clear:both;"></div>
+              </div>
+            </div>
+            <div class="mogul-bottom">
+              <div class="mogul-bottom-input">Share a thought</div>
+              <div class="mogul-bottom-btn">Post</div>
+              <div style="clear:both;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">Posts and replies typed out in real time to simulate a live conversation between community members.</div>
+    </div>
+
+    <p><strong>Concept 2: Meditative Gathering.</strong> We tried a more meditative approach where at the same time every day, users would gather on the app to focus on what they could do in their lives to reach their goals. It had a cool collective energy to it but was hard to make work with people's schedules.</p>
+
+    <div class="demo-container">
+      <div class="iphone-wrap">
+        <div class="iphone-frame">
+          <div class="iphone-notch"></div>
+          <div class="med-screen" id="med-screen">
+            <div class="med-landscape"></div>
+            <div class="med-users-badge">
+              <div class="med-users-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M17 20c0-1.657-2.239-3-5-3s-5 1.343-5 3" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="10" r="3" stroke="rgba(255,255,255,0.9)" stroke-width="2"/><path d="M21 20c0-1.243-1.119-2.312-2.75-2.772" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="10.5" r="2.5" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" fill="none"/></svg></div>
+              <div class="med-users-count" id="med-user-count">47 here now</div>
+            </div>
+            <div class="med-prompt-wrap">
+              <div class="med-prompt" id="med-prompt"></div>
+            </div>
+            <div class="med-impressions" id="med-impressions"></div>
+            <div class="med-tap-hint"><div class="med-tap-text">tap to let others know you're here</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">A shared meditative moment. Users could see others were present and tap to leave impressions, creating a sense of collective focus.</div>
+    </div>
+
+    <p><strong>Concept 3: VR Community Space.</strong> We even tested a VR concept where Mogul users could come together in an open virtual space in real time and talk openly about their goals and ideas. It was really cool but not practical as a daily tool.</p>
+
+    <div class="demo-container">
+      <div class="vr-wrap">
+        <div class="vr-headset" id="vr-headset">
+          <div class="vr-scene" id="vr-scene">
+            <div class="vr-sky" id="vr-sky"></div>
+            <div class="vr-ground"></div>
+            <div class="vr-ground-texture"></div>
+            <div class="vr-ground-glow"></div>
+
+            <div class="vr-fire-wrap">
+              <div class="vr-flame">
+                <div class="vr-flame-part f1"></div>
+                <div class="vr-flame-part f2"></div>
+                <div class="vr-flame-part f3"></div>
+                <div class="vr-flame-part f4"></div>
+              </div>
+              <div class="vr-fire-base"></div>
+              <div class="vr-fire-glow"></div>
+              <div class="vr-embers">
+                <div class="vr-ember"></div>
+                <div class="vr-ember"></div>
+                <div class="vr-ember"></div>
+              </div>
+            </div>
+
+            <!-- Logs around fire -->
+            <div class="vr-log" style="width:32px;bottom:35%;left:calc(50% - 50px);transform:rotate(-20deg);"></div>
+            <div class="vr-log" style="width:28px;bottom:34%;left:calc(50% + 22px);transform:rotate(15deg);"></div>
+            <div class="vr-log" style="width:36px;bottom:31%;left:calc(50% - 18px);transform:rotate(5deg);"></div>
+
+            <!-- Users around the fire -->
+            <div class="vr-user" id="vr-u1" style="bottom:42%;left:calc(50% - 70px);">
+              <div class="vr-user-circle" style="background:rgba(108,92,231,0.6);"></div>
+              <div class="vr-user-name">Sarah</div>
+            </div>
+            <div class="vr-user" id="vr-u2" style="bottom:44%;left:calc(50% - 28px);">
+              <div class="vr-user-circle" style="background:rgba(255,107,107,0.6);"></div>
+              <div class="vr-user-name">Priya</div>
+            </div>
+            <div class="vr-user" id="vr-u3" style="bottom:44%;left:calc(50% + 16px);">
+              <div class="vr-user-circle" style="background:rgba(46,213,115,0.5);"></div>
+              <div class="vr-user-name">Jade</div>
+            </div>
+            <div class="vr-user" id="vr-u4" style="bottom:42%;left:calc(50% + 56px);">
+              <div class="vr-user-circle" style="background:rgba(255,200,60,0.6);"></div>
+              <div class="vr-user-name">Nina</div>
+            </div>
+            <div class="vr-user" id="vr-u5" style="bottom:48%;left:calc(50% - 50px);">
+              <div class="vr-user-circle" style="background:rgba(100,200,255,0.5);"></div>
+              <div class="vr-user-name">Ava</div>
+            </div>
+            <div class="vr-user" id="vr-u6" style="bottom:48%;left:calc(50% + 38px);">
+              <div class="vr-user-circle" style="background:rgba(255,150,200,0.5);"></div>
+              <div class="vr-user-name">Lena</div>
+            </div>
+
+            <!-- Speech bubbles -->
+            <div class="vr-bubble" id="vr-b1" style="bottom:54%;left:calc(50% - 82px);">I want to start my own studio</div>
+            <div class="vr-bubble" id="vr-b2" style="bottom:56%;left:calc(50% + 8px);">That's amazing, go for it!</div>
+            <div class="vr-bubble" id="vr-b3" style="bottom:54%;left:calc(50% + 48px);">What kind of studio?</div>
+            <div class="vr-bubble" id="vr-b4" style="bottom:60%;left:calc(50% - 60px);">A ceramics studio downtown</div>
+            <div class="vr-bubble" id="vr-b5" style="bottom:58%;left:calc(50% + 28px);">I did that! Happy to help</div>
+          </div>
+          <div class="vr-vignette"></div>
+          <div class="vr-nose"></div>
+        </div>
+      </div>
+      <div class="demo-caption">A VR campfire where Mogul users could sit together and talk about their goals in real time. Cool concept, but not practical as a daily tool.</div>
+    </div>
+
+    <p>Through all of this testing, one thing kept coming up: the community aspect was what made Mogul special. Whatever we built needed to make users feel like they weren't on their journey alone. That became the north star for the final direction.</p>
+
+    <div class="section-heading" id="built">
+      <div class="section-title">What we built</div>
+    </div>
+
+    <p>We landed on a daily ritual format: an evening reflection and a morning focus session. The idea was that it felt like you were doing the same thing as all the other users on the app at the same time. It created a sense of community without needing everyone in the same room.</p>
+
+    <p><strong>Evening Ritual.</strong> Each evening, the app guides you through three simple questions: What did you learn? What could you improve? What was your win? These questions came directly from Tiffany. They were the same questions she asked herself every day, and they were a big part of how she accomplished so much. Taking a few minutes to reflect this way helps build a growth mindset and sets you up for a better tomorrow.</p>
+
+    <div class="demo-container"><img src="../images/mogulapp-evening.jpg" alt="Evening ritual screen"></div>
+
+    <p><strong>Planning Tomorrow.</strong> After finishing the evening questions, users plan their next day. This is where the calendar feature comes in. The CTO and I spent a long time figuring out how to marry the work calendar with a personal todo list. We came up with a drag-and-drop interface where users could add or adjust their goals and todos, then drag them right into their calendar to create a schedule that works for them.</p>
+
+    <p>This was a big deal because it solved the core problem we found in research: goals and ambitions were living in a notes app, completely separate from the calendar that ran their day. By combining the two, users could actually carve out time for the things that mattered to them instead of letting work fill up every hour.</p>
+
+    <div class="demo-container"><img src="../images/mogulapp-planning.jpg" alt="Calendar feature screen"></div>
+
+    <p>The biggest challenge we ran into was calendar connectivity. Some users had to get permission from their work IT departments to connect their work email calendar to our app, and some weren't able to because of security restrictions. Those users ended up using the calendar feature to schedule goal todos into their phone calendar instead, which was still way better than having everything buried in the notes app.</p>
+
+    <p><strong>Morning Ritual.</strong> Every morning, users get a clear overview of their day: their goals, their schedule, and a reminder of what they reflected on the night before. It's a focused starting point to help them go into the day with intention.</p>
+
+    <div class="demo-container"><img src="../images/mogulapp-morning.jpg" alt="Morning ritual screen"></div>
+
+    <p><strong>Community.</strong> Throughout the app, users could see that other people were on the same journey. Whether it was knowing others were doing their evening ritual at the same time or seeing community activity, it reinforced the feeling that you're not doing this alone.</p>
+
+    <div class="demo-container"><img src="../images/mogulapp-community.jpg" alt="Community screen"></div>
+
+    <div class="section-heading" id="process">
+      <div class="section-title">How I worked</div>
+    </div>
+
+    <p>This was my first time designing a native mobile app that would go on the App Store. That meant thinking about a lot of things I hadn't dealt with before: App Store guidelines, branding at the app icon level, marketing screenshots, and making sure the experience felt right for mobile rather than just shrinking a web experience down.</p>
+
+    <p>I worked closely with the CTO throughout the process. We'd ideate together, I'd design and prototype, we'd test with users, and then iterate. The in-person testing sessions at our office were especially valuable because we could watch people interact with the prototypes in real time and pick up on things that surveys or remote feedback would miss.</p>
+
+    <div class="section-heading" id="outcome">
+      <div class="section-title">What happened</div>
+    </div>
+
+    <p>We officially launched the app at the Mogul X conference and had over 500 downloads at the event alone. The app went on to reach 3,000+ total downloads and earned a 4.4 rating in the App Store.</p>
+
+    <p>The calendar feature and the evening ritual got the strongest positive response from users. People really appreciated having a structured way to reflect on their day and plan for tomorrow, and the drag-and-drop calendar gave them something they couldn't get from a notes app and calendar living as two separate tools.</p>
+
+    <p>After about a year, we made the difficult decision to sunset the app. Our team was small and we needed to shift our full focus to the recruiter tool, which was becoming the core revenue driver for the company. It was the right business decision but it's one of those things that's still bittersweet because the community we built was really special.</p>
+
+    <div class="section-heading" id="reflection">
+      <div class="section-title">What I'd do differently</div>
+    </div>
+
+    <div class="reflection"><p>I wish there was a way for us to have kept the Mogul community going and helped it grow further. The community was the heart of everything we built, and sunsetting the app meant losing that daily touchpoint with users. Our team just had bigger things to focus on at the time since the recruiter software was how we were starting to make real money. But if I could go back, I would have explored ways to keep the community alive in a lighter-weight format, even if the full app couldn't be maintained.</p></div>
+
+  </article>
+</div>
+
+<script>
+  var sections = document.querySelectorAll('.section-heading');
+  var tocItems = document.querySelectorAll('.toc-item');
+  function updateTOC() {
+    var scrollPos = window.scrollY + 120;
+    var current = '';
+    sections.forEach(function(s) { if (s.offsetTop <= scrollPos) current = s.id; });
+    tocItems.forEach(function(item) {
+      if (item.dataset.section === current) item.classList.add('active');
+      else item.classList.remove('active');
+    });
+  }
+  window.addEventListener('scroll', updateTOC);
+  updateTOC();
+  document.querySelectorAll('.toc-item a').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) window.scrollTo({ top: target.offsetTop - 40, behavior: 'smooth' });
+    });
+  });
+
+  // Typing animation for Concept 1 demo
+  (function() {
+    var postText = "Does anyone in NYC play D&D? Would love to learn more about it.";
+    var commentText = "I host a ladies D&D night every Wednesday in Chelsea. You are more than welcome to join!";
+    var el = document.getElementById('typing-text');
+    var replyArea = document.getElementById('reply-area');
+    var commentArea = document.getElementById('comment-area');
+    var commentEl = document.getElementById('comment-text');
+    var replyBtn = document.getElementById('reply-btn');
+    var running = false;
+
+    function runSequence() {
+      if (running) return;
+      running = true;
+      el.innerHTML = '<span class="mogul-cursor"></span>';
+      replyArea.classList.remove('show');
+      commentArea.classList.remove('show');
+      replyBtn.classList.remove('show');
+      commentEl.textContent = '';
+      var i = 0;
+
+      function typePost() {
+        if (i < postText.length) {
+          el.innerHTML = postText.substring(0, i + 1) + '<span class="mogul-cursor"></span>';
+          i++;
+          setTimeout(typePost, 45 + Math.random() * 35);
+        } else {
+          el.innerHTML = postText;
+          setTimeout(function() { replyArea.classList.add('show'); }, 600);
+          setTimeout(function() {
+            commentArea.classList.add('show');
+            var j = 0;
+            function typeComment() {
+              if (j < commentText.length) {
+                commentEl.textContent = commentText.substring(0, j + 1);
+                j++;
+                setTimeout(typeComment, 30 + Math.random() * 25);
+              } else {
+                setTimeout(function() { replyBtn.classList.add('show'); }, 400);
+                setTimeout(function() {
+                  running = false;
+                  setTimeout(function() {
+                    el.innerHTML = '<span class="mogul-cursor"></span>';
+                    replyArea.classList.remove('show');
+                    commentArea.classList.remove('show');
+                    replyBtn.classList.remove('show');
+                    commentEl.textContent = '';
+                    setTimeout(runSequence, 800);
+                  }, 4000);
+                }, 800);
+              }
+            }
+            typeComment();
+          }, 1400);
+        }
+      }
+      setTimeout(typePost, 600);
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { runSequence(); observer.disconnect(); }
+      });
+    }, { threshold: 0.5 });
+    observer.observe(el.closest('.iphone-frame'));
+  })();
+
+  // Meditative gathering animation
+  (function() {
+    var prompts = [
+      "What step did you take today to reach your goal?",
+      "What step will you take tomorrow to reach your goal?",
+      "What can you do differently tomorrow?"
+    ];
+    var names = ['Sarah', 'Jade', 'Priya', 'Camille', 'Ava', 'Nina', 'Dana', 'Lena', 'Maria', 'Zoe', 'Yuki', 'Elif'];
+    var promptEl = document.getElementById('med-prompt');
+    var impressionsEl = document.getElementById('med-impressions');
+    var screenEl = document.getElementById('med-screen');
+    var countEl = document.getElementById('med-user-count');
+    var promptIndex = 0;
+    var userCount = 47;
+    var running = false;
+    var impressionCount = 0;
+
+    function addImpression(name) {
+      var imp = document.createElement('div');
+      imp.className = 'med-impression';
+      imp.innerHTML = '<div class="med-impression-dot"></div><div class="med-impression-name">' + name + ' is here</div>';
+      impressionsEl.appendChild(imp);
+      setTimeout(function() { imp.classList.add('show'); }, 30);
+      impressionCount++;
+      if (impressionCount > 6) {
+        var first = impressionsEl.querySelector('.med-impression');
+        if (first) { first.style.opacity = '0'; setTimeout(function() { if (first.parentNode) first.parentNode.removeChild(first); }, 300); }
+      }
+    }
+
+    function showPrompt() {
+      promptEl.classList.remove('show');
+      setTimeout(function() {
+        promptEl.textContent = prompts[promptIndex % prompts.length];
+        promptEl.classList.add('show');
+        promptIndex++;
+      }, 400);
+    }
+
+    function runSequence() {
+      if (running) return;
+      running = true;
+      impressionsEl.innerHTML = '';
+      impressionCount = 0;
+      promptEl.classList.remove('show');
+      userCount = 47;
+      countEl.textContent = userCount + ' here now';
+
+      setTimeout(function() { showPrompt(); }, 800);
+
+      var impressionNames = names.slice();
+      var delay = 2200;
+      for (var i = 0; i < 5; i++) {
+        (function(idx, d) {
+          setTimeout(function() {
+            var nameIdx = idx % impressionNames.length;
+            addImpression(impressionNames[nameIdx]);
+            userCount++;
+            countEl.textContent = userCount + ' here now';
+          }, d);
+        })(i, delay);
+        delay += 1200 + Math.random() * 800;
+      }
+
+      setTimeout(function() { showPrompt(); }, 8000);
+
+      setTimeout(function() {
+        running = false;
+        setTimeout(function() {
+          promptEl.classList.remove('show');
+          setTimeout(runSequence, 1200);
+        }, 5000);
+      }, 14000);
+    }
+
+    // Tap to create ripple + impression
+    screenEl.addEventListener('click', function(e) {
+      var rect = screenEl.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      var ripple = document.createElement('div');
+      ripple.className = 'med-ripple';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      screenEl.appendChild(ripple);
+      setTimeout(function() { if (ripple.parentNode) ripple.parentNode.removeChild(ripple); }, 900);
+      addImpression('You');
+      userCount++;
+      countEl.textContent = userCount + ' here now';
+    });
+
+    var observer2 = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { runSequence(); observer2.disconnect(); }
+      });
+    }, { threshold: 0.5 });
+    observer2.observe(screenEl.closest('.iphone-frame'));
+  })();
+
+  // VR campfire scene
+  (function() {
+    var sky = document.getElementById('vr-sky');
+    var headset = document.getElementById('vr-headset');
+    var scene = document.getElementById('vr-scene');
+    var bubbles = ['vr-b1','vr-b2','vr-b3','vr-b4','vr-b5'];
+    var running = false;
+
+    // Generate stars
+    for (var i = 0; i < 60; i++) {
+      var star = document.createElement('div');
+      star.className = 'vr-star' + (Math.random() > 0.8 ? ' bright' : '');
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 55 + '%';
+      star.style.opacity = (0.2 + Math.random() * 0.6);
+      if (star.className.indexOf('bright') > -1) {
+        star.style.animationDelay = (Math.random() * 3) + 's';
+      }
+      sky.appendChild(star);
+    }
+
+    // Subtle parallax on mouse move
+    headset.addEventListener('mousemove', function(e) {
+      var rect = headset.getBoundingClientRect();
+      var x = (e.clientX - rect.left) / rect.width - 0.5;
+      var y = (e.clientY - rect.top) / rect.height - 0.5;
+      scene.style.transform = 'translate(' + (x * -6) + 'px,' + (y * -4) + 'px)';
+    });
+    headset.addEventListener('mouseleave', function() {
+      scene.style.transform = 'translate(0,0)';
+      scene.style.transition = 'transform 0.4s';
+      setTimeout(function() { scene.style.transition = ''; }, 400);
+    });
+
+    // Cycle speech bubbles
+    function runBubbles() {
+      if (running) return;
+      running = true;
+      var delay = 1200;
+      for (var i = 0; i < bubbles.length; i++) {
+        (function(idx, d) {
+          setTimeout(function() {
+            var b = document.getElementById(bubbles[idx]);
+            b.classList.add('show');
+            setTimeout(function() { b.classList.remove('show'); }, 3500);
+          }, d);
+        })(i, delay);
+        delay += 2200;
+      }
+      setTimeout(function() {
+        running = false;
+        setTimeout(runBubbles, 2000);
+      }, delay + 2000);
+    }
+
+    var observer3 = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { runBubbles(); observer3.disconnect(); }
+      });
+    }, { threshold: 0.3 });
+    observer3.observe(headset);
+  })();
+</script>
+</body>
+</html>

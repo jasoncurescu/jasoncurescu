@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farms That Are Delivering | Jason Curescu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;460;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { min-height: 100%; overflow-y: scroll; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0,0,0,0); text-rendering: optimizelegibility; text-size-adjust: 100%; }
+  body { background: #fff; color: rgb(17,17,17); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; min-height: 100%; display: flex; justify-content: center; }
+  .page-wrap { position: relative; width: 550px; padding: 80px 0 100px; }
+  .aside { position: fixed; top: 80px; left: 80px; width: 156px; }
+  .back-link { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; padding-bottom: 4px; }
+  .back-link:hover { color: rgba(0,0,0,0.8); }
+  .toc { margin-top: 24px; }
+  .toc-title { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgb(17,17,17); padding-bottom: 16px; cursor: pointer; }
+  .toc-list { list-style: none; }
+  .toc-item { cursor: pointer; transition: opacity 0.15s; }
+  .toc-item a { display: block; padding: 4px 0; font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(0,0,0,0.25); text-decoration: none; transition: color 0.2s; }
+  .toc-item.active a { color: rgba(0,0,0,0.7); }
+  .toc-item a:hover { color: rgba(0,0,0,0.5); }
+  article header { padding-top: 0; }
+  article header h1 { font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); }
+  article header time { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgba(0,0,0,0.4); display: block; }
+  article p { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 16px; }
+  article p strong { font-weight: 600; }
+  .section-heading { padding-top: 64px; }
+  .section-label { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(18,18,18,0.4); }
+  .section-title { font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 4px; }
+  article a { position: relative; display: inline; color: inherit; font-weight: inherit; text-decoration: none; transition: 0.2s; }
+  article a::before { pointer-events: none; content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; border-radius: 2px; background: rgb(217,217,217); transition: inherit; }
+  article a:hover::before { background: rgb(102,102,102); }
+
+  /* Demo browser container */
+  .demo-container { margin-top: 24px; }
+  .demo-browser { position: relative; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08); }
+  .demo-bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .demo-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .demo-dot.red { background: #ff5f57; }
+  .demo-dot.yellow { background: #febc2e; }
+  .demo-dot.green { background: #28c840; }
+  .demo-url { flex: 1; margin-left: 8px; padding: 4px 10px; background: rgba(0,0,0,0.04); border-radius: 6px; font-size: 10px; color: rgba(0,0,0,0.4); font-family: system-ui, sans-serif; }
+  .demo-content { padding: 20px; }
+  .demo-caption { font-size: 12px; line-height: 16px; color: rgba(0,0,0,0.4); margin-top: 10px; }
+
+  /* Visual placeholder */
+  .visual-placeholder { margin-top: 24px; padding: 40px 24px; background: rgba(0,0,0,0.02); border: 1px dashed rgba(0,0,0,0.1); border-radius: 12px; text-align: center; color: rgba(0,0,0,0.3); font-size: 13px; line-height: 18px; }
+  .visual-placeholder span { display: block; font-weight: 500; color: rgba(0,0,0,0.4); margin-bottom: 4px; }
+
+  /* Callout */
+  .callout { padding-top: 24px; padding-left: 16px; border-left: 2px solid rgba(0,0,0,0.08); }
+  .callout p { padding-top: 0; color: rgba(0,0,0,0.5); font-style: italic; }
+
+  /* ----- Farm list (v1) demo ----- */
+  .farm-list-v1 { font-family: system-ui, -apple-system, sans-serif; }
+  .farm-list-v1-title { font-size: 13px; font-weight: 700; color: rgb(17,17,17); margin-bottom: 12px; }
+  .farm-list-v1-item { display: flex; align-items: baseline; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.06); gap: 12px; }
+  .farm-list-v1-item:last-child { border-bottom: none; }
+  .farm-list-v1-name { font-size: 11px; font-weight: 600; color: rgb(17,17,17); }
+  .farm-list-v1-loc { font-size: 10px; color: rgba(0,0,0,0.35); }
+  .farm-list-v1-link { font-size: 10px; color: rgba(30,100,200,0.7); white-space: nowrap; flex-shrink: 0; }
+
+  /* ----- Database spreadsheet demo ----- */
+  .gs-wrap { font-family: 'Arial', system-ui, sans-serif; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; background: #fff; }
+  .gs-toolbar { background: #f8f9fa; border-bottom: 1px solid #e0e0e0; padding: 5px 10px; display: flex; align-items: center; gap: 10px; }
+  .gs-toolbar-title { font-size: 10px; font-weight: 600; color: #3c4043; flex: 1; }
+  .gs-toolbar-icons { display: flex; gap: 8px; }
+  .gs-toolbar-icon { width: 14px; height: 14px; border-radius: 2px; background: rgba(0,0,0,0.08); }
+  .gs-formulabar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 3px 8px; display: flex; align-items: center; gap: 8px; }
+  .gs-cellref { font-size: 9px; color: #444746; background: #f8f9fa; border: 1px solid #dadce0; border-radius: 2px; padding: 2px 6px; width: 36px; text-align: center; flex-shrink: 0; }
+  .gs-formula-icon { font-size: 9px; color: #5f6368; flex-shrink: 0; font-style: italic; }
+  .gs-formula-text { font-size: 9px; color: #3c4043; flex: 1; }
+  .gs-table-wrap { overflow-x: auto; }
+  .gs-table { border-collapse: collapse; font-size: 9px; width: 100%; min-width: 560px; }
+  .gs-col-header { background: #f8f9fa; border-right: 1px solid #e0e0e0; border-bottom: 2px solid #e0e0e0; padding: 3px 8px; text-align: center; font-size: 9px; font-weight: 600; color: #5f6368; white-space: nowrap; min-width: 28px; }
+  .gs-row-num { background: #f8f9fa; border-right: 2px solid #e0e0e0; border-bottom: 1px solid #e8eaed; padding: 0 6px; text-align: center; font-size: 9px; color: #80868b; min-width: 22px; white-space: nowrap; }
+  .gs-thead th { background: #f8f9fa; border-right: 1px solid #e0e0e0; border-bottom: 2px solid #c6c9cd; padding: 4px 8px; text-align: left; font-size: 9px; font-weight: 600; color: #3c4043; white-space: nowrap; }
+  .gs-thead .gs-row-num { border-bottom: 2px solid #c6c9cd; }
+  .gs-td { border-right: 1px solid #e8eaed; border-bottom: 1px solid #e8eaed; padding: 3px 8px; font-size: 9px; color: #3c4043; white-space: nowrap; vertical-align: middle; }
+  .gs-tr:nth-child(even) .gs-td { background: #f8f9fa; }
+  .gs-tr:nth-child(even) .gs-row-num { background: #f1f3f4; }
+  .gs-tr.gs-skipped .gs-td { color: #9aa0a6; background: #fafafa; }
+  .gs-tr.gs-skipped .gs-row-num { background: #fafafa; }
+  .gs-tr.gs-selected .gs-td { background: #e8f0fe !important; }
+  .gs-tr.gs-selected .gs-row-num { background: #d2e3fc !important; color: #1967d2; font-weight: 700; }
+  .gs-chip { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 3px; font-size: 8px; font-weight: 600; }
+  .gs-chip.yes { background: #e6f4ea; color: #137333; }
+  .gs-chip.no { background: #fce8e6; color: #c5221f; }
+  .gs-chip.listed { background: #e8f0fe; color: #1967d2; }
+  .gs-chip.skipped { background: #f1f3f4; color: #80868b; }
+
+  /* ----- Search experience demo ----- */
+  .search-ui { font-family: system-ui, -apple-system, sans-serif; }
+  .search-bar-wrap { display: flex; gap: 8px; margin-bottom: 16px; }
+  .search-input { flex: 1; padding: 8px 12px; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; font-size: 11px; color: rgba(0,0,0,0.5); background: #fff; }
+  .search-btn { padding: 8px 14px; background: rgb(34,160,80); color: #fff; border-radius: 8px; font-size: 10px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .farm-result { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+  .farm-result:last-child { border-bottom: none; }
+  .farm-result-dot { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .farm-result-info { flex: 1; }
+  .farm-result-name { font-size: 11px; font-weight: 600; color: rgb(17,17,17); }
+  .farm-result-meta { font-size: 9px; color: rgba(0,0,0,0.35); margin-top: 2px; }
+  .farm-result-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+  .farm-tag { font-size: 8px; padding: 1px 6px; border-radius: 3px; background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.4); }
+  .farm-result-dist { font-size: 9px; color: rgba(0,0,0,0.3); flex-shrink: 0; padding-top: 1px; }
+
+  /* ----- Browse by city demo ----- */
+  .browse-ui { font-family: system-ui, -apple-system, sans-serif; }
+  .browse-headline-wrap { margin-bottom: 14px; }
+  .browse-headline-label { font-size: 9px; color: rgba(0,0,0,0.3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .browse-headline { font-size: 13px; font-weight: 700; color: rgb(17,17,17); line-height: 1.3; }
+  .browse-headline .rotating-word { color: rgb(34,160,80); }
+  .browse-categories { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .browse-cat { padding: 4px 10px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.1); font-size: 10px; color: rgba(0,0,0,0.55); cursor: pointer; transition: background 0.15s; }
+  .browse-cat.active { background: rgb(34,160,80); border-color: rgb(34,160,80); color: #fff; }
+  .browse-cat:hover:not(.active) { background: rgba(0,0,0,0.03); }
+  .browse-state-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .browse-state-card { padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.07); cursor: pointer; transition: background 0.15s; }
+  .browse-state-card:hover { background: rgba(0,0,0,0.02); }
+  .browse-state-name { font-size: 10px; font-weight: 600; color: rgb(17,17,17); }
+  .browse-state-count { font-size: 8px; color: rgba(0,0,0,0.35); margin-top: 1px; }
+
+  /* ----- Farm spotlight (Aina) demo ----- */
+  .spotlight-ui { font-family: system-ui, -apple-system, sans-serif; }
+  .spotlight-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .spotlight-logo { font-size: 14px; font-weight: 800; color: rgb(17,17,17); letter-spacing: -0.5px; }
+  .spotlight-nav-links { display: flex; gap: 12px; }
+  .spotlight-nav-link { font-size: 9px; color: rgba(0,0,0,0.35); }
+  .spotlight-card { border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,0.07); }
+  .spotlight-card-img { height: 80px; background: linear-gradient(135deg, rgba(34,160,80,0.15) 0%, rgba(100,180,60,0.1) 100%); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  .spotlight-card-body { padding: 10px 12px; }
+  .spotlight-card-eyebrow { font-size: 8px; font-weight: 600; color: rgb(34,160,80); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .spotlight-card-name { font-size: 12px; font-weight: 700; color: rgb(17,17,17); margin-bottom: 4px; }
+  .spotlight-card-desc { font-size: 9px; color: rgba(0,0,0,0.45); line-height: 1.5; margin-bottom: 8px; }
+  .spotlight-card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .spotlight-card-location { font-size: 8px; color: rgba(0,0,0,0.3); }
+  .spotlight-card-btn { font-size: 8px; font-weight: 600; color: rgb(34,160,80); }
+  .spotlight-card-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+  .spotlight-card-tag { font-size: 8px; padding: 1px 6px; border-radius: 3px; background: rgba(34,160,80,0.08); color: rgba(20,120,50,0.7); }
+
+  /* ----- Press logos demo ----- */
+  .press-row { display: flex; align-items: center; justify-content: center; gap: 32px; padding: 20px 0; font-family: system-ui, -apple-system, sans-serif; }
+  .press-logo { font-size: 14px; font-weight: 800; color: rgba(0,0,0,0.2); letter-spacing: -0.3px; }
+  .press-logo.serif { font-family: Georgia, serif; font-style: italic; }
+  .press-logo.small-caps { font-variant: small-caps; letter-spacing: 0.5px; font-size: 11px; }
+
+  /* ----- Relaunch AI demo ----- */
+  .relaunch-ui { font-family: system-ui, -apple-system, sans-serif; }
+  .relaunch-pipeline { display: flex; flex-direction: column; gap: 8px; }
+  .pipeline-step { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.07); }
+  .pipeline-icon { width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .pipeline-icon.green { background: rgba(34,160,80,0.1); }
+  .pipeline-icon.blue { background: rgba(0,100,220,0.08); }
+  .pipeline-icon.orange { background: rgba(255,140,0,0.1); }
+  .pipeline-icon.purple { background: rgba(120,80,200,0.1); }
+  .pipeline-info { flex: 1; }
+  .pipeline-label { font-size: 10px; font-weight: 600; color: rgb(17,17,17); }
+  .pipeline-sub { font-size: 9px; color: rgba(0,0,0,0.4); margin-top: 1px; }
+  .pipeline-badge { font-size: 8px; font-weight: 600; padding: 2px 7px; border-radius: 100px; flex-shrink: 0; }
+  .pipeline-badge.done { background: rgba(34,160,80,0.1); color: rgba(20,120,50,0.8); }
+  .pipeline-badge.live { background: rgba(0,100,220,0.08); color: rgba(0,80,180,0.7); }
+  .pipeline-badge.wip { background: rgba(255,140,0,0.1); color: rgba(180,100,0,0.7); }
+
+  /* Stagger in */
+  @keyframes staggerIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  article > * { animation: staggerIn 0.5s ease both; }
+  article > :nth-child(1) { animation-delay: 0s; }
+  article > :nth-child(2) { animation-delay: 0.05s; }
+  article > :nth-child(3) { animation-delay: 0.1s; }
+  article > :nth-child(4) { animation-delay: 0.15s; }
+  article > :nth-child(5) { animation-delay: 0.2s; }
+  article > :nth-child(6) { animation-delay: 0.25s; }
+
+  .mobile-back { display: none; }
+  @media (max-width: 1080px) {
+    .aside { display: none; }
+    .mobile-back { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; margin-bottom: 24px; }
+    .mobile-back:hover { color: rgba(0,0,0,0.8); }
+    .page-wrap { padding: 40px 24px 80px; width: 100%; max-width: 600px; }
+  }
+  @media (max-width: 600px) {
+    .page-wrap { padding: 32px 20px 60px; }
+    .section-heading { padding-top: 48px; }
+    .stats { gap: 24px; flex-wrap: wrap; }
+    .demo-content { max-height: 360px; }
+    .role-details { gap: 6px; }
+  }
+  @media (max-width: 380px) {
+    .page-wrap { padding: 28px 16px 48px; }
+    .stats { gap: 16px; }
+    .stat-value { font-size: 18px; }
+  }
+  ::selection { background: #39FF14; color: #FF6600; }
+  ::-moz-selection { background: #39FF14; color: #FF6600; }
+</style>
+</head>
+<body>
+
+<aside class="aside">
+  <a href="portfolio.html" class="back-link">← Go back</a>
+  <nav class="toc">
+    <h2 class="toc-title" onclick="window.scrollTo({top:0,behavior:'smooth'})">Farms That Are Delivering</h2>
+    <ul class="toc-list">
+      <li class="toc-item active" data-section="background"><a href="#background">The background</a></li>
+      <li class="toc-item" data-section="starting-simple"><a href="#starting-simple">Starting simple</a></li>
+      <li class="toc-item" data-section="database"><a href="#database">Building the database</a></li>
+      <li class="toc-item" data-section="search"><a href="#search">The search experience</a></li>
+      <li class="toc-item" data-section="pivot"><a href="#pivot">The pivot to browsing</a></li>
+      <li class="toc-item" data-section="growing"><a href="#growing">Growing the platform</a></li>
+      <li class="toc-item" data-section="press"><a href="#press">Press and impact</a></li>
+      <li class="toc-item" data-section="relaunch"><a href="#relaunch">The relaunch</a></li>
+      <li class="toc-item" data-section="brand"><a href="#brand">Building the brand</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<div class="page-wrap">
+  <a href="portfolio.html" class="mobile-back">← Go back</a>
+  <article>
+    <header>
+      <h1>Farms That Are Delivering</h1>
+    </header>
+
+    <div style="padding-top:40px;display:flex;flex-direction:column;gap:20px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Responsibilities</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Product strategy and leadership</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">UI/UX design and product development</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">User research and validation</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Branding and marketing</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Farm research and curation</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Results</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Over 1 million searches in 3 months</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Curated 1,300+ farms from 14,000+</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Featured in the Wall Street Journal, NPR, and Bon Appetit</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">60,000 annual views years after sunsetting</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Currently relaunching with AI-powered farm discovery</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BACKGROUND -->
+    <div class="section-heading" id="background">
+      <div class="section-title">The background</div>
+    </div>
+
+    <p>In early 2020, when the pandemic hit, grocery stores in NYC were struggling to keep shelves stocked. My cofounder David and I were both living in the city and running into the same problem: it was getting really hard to find quality food. I found a local farm that delivered directly to my door, and the experience completely changed how I thought about food. The quality, the care that went into how the animals were raised, all of it was on a different level than what you find in a grocery store. I told David about it, he placed an order too, and had the same reaction.</p>
+
+    <p>We knew other people were dealing with the same thing. So we decided to put something together.</p>
+
+    <!-- STARTING SIMPLE -->
+    <div class="section-heading" id="starting-simple">
+      <div class="section-title">Starting simple</div>
+    </div>
+
+    <p>The first version of the site was incredibly simple. It was just a list of farms that delivered in the NYC area. Farm name, location, and a link to their website. That was it. No search, no filters, no design system. We just wanted to get something up that people could start using right away.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">farmsthataredelivering.com</div>
+        </div>
+        <div class="demo-content">
+          <div class="farm-list-v1">
+            <div class="farm-list-v1-title">Farms delivering in the NYC area</div>
+            <div class="farm-list-v1-item">
+              <div>
+                <div class="farm-list-v1-name">Millbrook Farm</div>
+                <div class="farm-list-v1-loc">Millbrook, NY</div>
+              </div>
+              <div class="farm-list-v1-link">Visit site →</div>
+            </div>
+            <div class="farm-list-v1-item">
+              <div>
+                <div class="farm-list-v1-name">Stone House Farm</div>
+                <div class="farm-list-v1-loc">Hudson, NY</div>
+              </div>
+              <div class="farm-list-v1-link">Visit site →</div>
+            </div>
+            <div class="farm-list-v1-item">
+              <div>
+                <div class="farm-list-v1-name">Four Winds Farm</div>
+                <div class="farm-list-v1-loc">Gardiner, NY</div>
+              </div>
+              <div class="farm-list-v1-link">Visit site →</div>
+            </div>
+            <div class="farm-list-v1-item">
+              <div>
+                <div class="farm-list-v1-name">Breezy Hill Orchard</div>
+                <div class="farm-list-v1-loc">Staatsburg, NY</div>
+              </div>
+              <div class="farm-list-v1-link">Visit site →</div>
+            </div>
+            <div class="farm-list-v1-item">
+              <div>
+                <div class="farm-list-v1-name">Violet Hill Farm</div>
+                <div class="farm-list-v1-loc">Chatham, NY</div>
+              </div>
+              <div class="farm-list-v1-link">Visit site →</div>
+            </div>
+            <div class="farm-list-v1-item">
+              <div>
+                <div class="farm-list-v1-name">Northwind Farms</div>
+                <div class="farm-list-v1-loc">Tivoli, NY</div>
+              </div>
+              <div class="farm-list-v1-link">Visit site →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">The entire first version: a plain list of farms with their location and a link. No search, no filters, no images. It went live in days.</div>
+    </div>
+
+    <p>That turned out to be the right call. The site started to gain traction on social media almost immediately. People were sharing it, local news picked it up, and within a few weeks we were getting way more traffic than we expected.</p>
+
+    <!-- DATABASE -->
+    <div class="section-heading" id="database">
+      <div class="section-title">Building the database</div>
+    </div>
+
+    <p>Once we saw the demand, we knew we needed to go bigger. David and I started scouring the internet for farms across the country. What we discovered is that these nonconventional farms were very different from farms that supply major grocery stores. They were going the extra mile in how they raised their animals, what they fed them, and how they processed everything. We wanted to capture all of that detail because we knew it could become really powerful filters and discovery tools down the road.</p>
+
+    <p>We went through over 14,000 farms. The criteria for making the list was straightforward: the farm had to have a working website, they had to offer delivery or allow pickup at the farm, and they had to sell their own products. That alone eliminated a huge number from the list.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">Farm Research Master, Google Sheets</div>
+        </div>
+        <div style="padding:0;">
+          <div class="gs-wrap">
+            <div class="gs-toolbar">
+              <div class="gs-toolbar-title">Farm Research Master</div>
+              <div class="gs-toolbar-icons">
+                <div class="gs-toolbar-icon"></div>
+                <div class="gs-toolbar-icon"></div>
+                <div class="gs-toolbar-icon"></div>
+              </div>
+            </div>
+            <div class="gs-formulabar">
+              <div class="gs-cellref">A3</div>
+              <div class="gs-formula-icon">fx</div>
+              <div class="gs-formula-text">Parker Pastures</div>
+            </div>
+            <div class="gs-table-wrap">
+              <table class="gs-table">
+                <thead>
+                  <tr>
+                    <th class="gs-col-header" style="border-right:2px solid #e0e0e0;"></th>
+                    <th class="gs-col-header">A</th>
+                    <th class="gs-col-header">B</th>
+                    <th class="gs-col-header">C</th>
+                    <th class="gs-col-header">D</th>
+                    <th class="gs-col-header">E</th>
+                    <th class="gs-col-header">F</th>
+                    <th class="gs-col-header">G</th>
+                    <th class="gs-col-header">H</th>
+                  </tr>
+                </thead>
+                <thead class="gs-thead">
+                  <tr>
+                    <td class="gs-row-num">1</td>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">Farm</th>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">State</th>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">Products</th>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">Delivery</th>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">Pickup</th>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">Breed</th>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">Feed</th>
+                    <th class="gs-thead" style="border-right:1px solid #e0e0e0;border-bottom:2px solid #c6c9cd;padding:4px 8px;font-size:9px;font-weight:600;color:#3c4043;white-space:nowrap;background:#f8f9fa;">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="gs-tr gs-selected">
+                    <td class="gs-row-num">2</td>
+                    <td class="gs-td">Parker Pastures</td>
+                    <td class="gs-td">CO</td>
+                    <td class="gs-td">Beef, Lamb</td>
+                    <td class="gs-td"><span class="gs-chip yes">Yes</span></td>
+                    <td class="gs-td"><span class="gs-chip yes">Yes</span></td>
+                    <td class="gs-td">Angus cross</td>
+                    <td class="gs-td">100% grass</td>
+                    <td class="gs-td"><span class="gs-chip listed">Listed</span></td>
+                  </tr>
+                  <tr class="gs-tr">
+                    <td class="gs-row-num">3</td>
+                    <td class="gs-td">Lava Lake Lamb</td>
+                    <td class="gs-td">ID</td>
+                    <td class="gs-td">Lamb</td>
+                    <td class="gs-td"><span class="gs-chip yes">Yes</span></td>
+                    <td class="gs-td"><span class="gs-chip no">No</span></td>
+                    <td class="gs-td">Rambouillet</td>
+                    <td class="gs-td">Wild grasses</td>
+                    <td class="gs-td"><span class="gs-chip listed">Listed</span></td>
+                  </tr>
+                  <tr class="gs-tr">
+                    <td class="gs-row-num">4</td>
+                    <td class="gs-td">Elmwood Stock Farm</td>
+                    <td class="gs-td">KY</td>
+                    <td class="gs-td">Pork, Beef, Chicken</td>
+                    <td class="gs-td"><span class="gs-chip yes">Yes</span></td>
+                    <td class="gs-td"><span class="gs-chip yes">Yes</span></td>
+                    <td class="gs-td">Berkshire</td>
+                    <td class="gs-td">Non-GMO grain</td>
+                    <td class="gs-td"><span class="gs-chip listed">Listed</span></td>
+                  </tr>
+                  <tr class="gs-tr">
+                    <td class="gs-row-num">5</td>
+                    <td class="gs-td">Primal Pastures</td>
+                    <td class="gs-td">CA</td>
+                    <td class="gs-td">Chicken, Pork, Beef</td>
+                    <td class="gs-td"><span class="gs-chip yes">Yes</span></td>
+                    <td class="gs-td"><span class="gs-chip no">No</span></td>
+                    <td class="gs-td">Heritage breeds</td>
+                    <td class="gs-td">Pasture + grain</td>
+                    <td class="gs-td"><span class="gs-chip listed">Listed</span></td>
+                  </tr>
+                  <tr class="gs-tr gs-skipped">
+                    <td class="gs-row-num">6</td>
+                    <td class="gs-td">Valley Farms Inc.</td>
+                    <td class="gs-td">OH</td>
+                    <td class="gs-td">Eggs</td>
+                    <td class="gs-td"><span class="gs-chip no">No</span></td>
+                    <td class="gs-td"><span class="gs-chip no">No</span></td>
+                    <td class="gs-td" style="color:#bdc1c6;">–</td>
+                    <td class="gs-td" style="color:#bdc1c6;">–</td>
+                    <td class="gs-td"><span class="gs-chip skipped">Skipped</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">Every farm got its own row. Delivery, pickup, breed, feed, and processing details were all documented by hand. We went through over 14,000 to find the 1,300 that made the list.</div>
+    </div>
+
+    <p>The process was slow, especially at first. David and I were doing it ourselves on top of our full-time jobs at Mogul, staying up late many nights. Eventually my wife started helping, and we hired someone else too. So at one point we had four people going through farms, checking websites, documenting what they offered, and recording details about their practices.</p>
+
+    <!-- SEARCH EXPERIENCE -->
+    <div class="section-heading" id="search">
+      <div class="section-title">The search experience</div>
+    </div>
+
+    <p>With the database built, I designed a clean search experience. The core interaction was a search bar where users could enter their address and instantly see nearby farms. It was focused and fast, designed to get people what they needed without any extra steps.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">farmsthataredelivering.com</div>
+        </div>
+        <div class="demo-content">
+          <div class="search-ui">
+            <div class="search-bar-wrap">
+              <div class="search-input">Brooklyn, NY 11201</div>
+              <div class="search-btn">Find Farms</div>
+            </div>
+            <div class="farm-result">
+              <div class="farm-result-dot" style="background:rgba(34,160,80,0.1);">🐄</div>
+              <div class="farm-result-info">
+                <div class="farm-result-name">Stone House Farm</div>
+                <div class="farm-result-meta">Hudson, NY · Beef, Pork, Chicken</div>
+                <div class="farm-result-tags">
+                  <span class="farm-tag">Home delivery</span>
+                  <span class="farm-tag">100% grass-fed</span>
+                  <span class="farm-tag">Certified humane</span>
+                </div>
+              </div>
+              <div class="farm-result-dist">96 mi</div>
+            </div>
+            <div class="farm-result">
+              <div class="farm-result-dot" style="background:rgba(255,160,30,0.1);">🐔</div>
+              <div class="farm-result-info">
+                <div class="farm-result-name">Northwind Farms</div>
+                <div class="farm-result-meta">Tivoli, NY · Chicken, Eggs, Turkey</div>
+                <div class="farm-result-tags">
+                  <span class="farm-tag">Home delivery</span>
+                  <span class="farm-tag">Pasture raised</span>
+                  <span class="farm-tag">Non-GMO feed</span>
+                </div>
+              </div>
+              <div class="farm-result-dist">108 mi</div>
+            </div>
+            <div class="farm-result">
+              <div class="farm-result-dot" style="background:rgba(100,80,200,0.08);">🐑</div>
+              <div class="farm-result-info">
+                <div class="farm-result-name">Four Winds Farm</div>
+                <div class="farm-result-meta">Gardiner, NY · Lamb, Vegetables, Eggs</div>
+                <div class="farm-result-tags">
+                  <span class="farm-tag">Farm pickup</span>
+                  <span class="farm-tag">Certified organic</span>
+                </div>
+              </div>
+              <div class="farm-result-dist">82 mi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">Enter an address, instantly see nearby farms. Each result showed distance, products, delivery options, and the practices that made each farm stand out.</div>
+    </div>
+
+    <p>As traffic grew and we reached over 1 million searches in the first three months, we also started to add more detailed information to each farm listing. We captured things like product offerings, animal breed, feed, and butchering methods. The more we dug in, the more we realized that every farm had a story worth telling.</p>
+
+    <!-- THE PIVOT -->
+    <div class="section-heading" id="pivot">
+      <div class="section-title">The pivot to browsing</div>
+    </div>
+
+    <p>We noticed something interesting through a combination of data and direct user feedback. First, we looked at Google search data and saw that a lot of people were searching for things like "Los Angeles farms" or "farms near me" rather than typing in a specific address. We knew incorporating city and state-based pages would be good for SEO, but there was more to it than that.</p>
+
+    <p>We also put an email signup on the site and used those emails to send out questionnaires. What we found is that many users actually enjoyed the process of exploring what farms were near them and what made each one unique. Finding the right farm was a fun experience for people. Every farm had something different that spoke to different users, whether it was how they raised their animals, what breeds they worked with, or the story behind the farm itself.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">farmsthataredelivering.com</div>
+        </div>
+        <!-- Full site mockup, no padding wrapper -->
+        <div style="font-family:'Georgia',serif;background:#fff;overflow:hidden;">
+
+          <!-- Nav -->
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:16px 20px 12px;">
+            <div style="font-family:'Georgia',serif;font-size:10px;font-weight:700;color:#1a3a2a;line-height:1.3;letter-spacing:0.01em;">Farms<br>that are<br>delivering</div>
+            <div style="font-family:system-ui,sans-serif;font-size:10px;color:#1a3a2a;padding-top:2px;">Browse farms</div>
+          </div>
+
+          <!-- Hero -->
+          <div style="text-align:center;padding:16px 24px 20px;">
+            <div style="font-size:16px;font-weight:700;color:#1a3a2a;line-height:1.25;letter-spacing:-0.01em;">
+              Order online<br>from a farm that delivers<br>
+              <span id="rotating-word" style="text-decoration:underline;text-underline-offset:3px;">organic vegetables</span>
+            </div>
+
+            <!-- Search bar -->
+            <div style="margin-top:14px;display:flex;border:1px solid rgba(0,0,0,0.18);overflow:hidden;max-width:320px;margin-left:auto;margin-right:auto;height:30px;">
+              <div style="flex:1;padding:0 12px;text-align:left;display:flex;flex-direction:column;justify-content:center;">
+                <div style="font-family:system-ui,sans-serif;font-size:8px;font-weight:700;color:#1a3a2a;letter-spacing:0.01em;margin-bottom:-10px;">LOCATION</div>
+                <div style="font-family:system-ui,sans-serif;font-size:9px;color:rgba(0,0,0,0.35);">Where do you live?</div>
+              </div>
+              <div style="background:#1a3a2a;color:#fff;font-family:system-ui,sans-serif;font-size:9px;font-weight:700;padding:0 14px;display:flex;align-items:center;white-space:nowrap;">Search 1,371 farms</div>
+            </div>
+          </div>
+
+          <!-- Dark footer with city + state links -->
+          <div style="background:#1a3a2a;padding:14px 16px;font-family:system-ui,sans-serif;">
+            <div style="font-size:7.5px;color:rgba(255,255,255,0.6);text-align:center;line-height:2;">
+              Albuquerque farms | Atlanta farms | Austin farms | Baltimore farms | Boston farms | Charlotte farms | Chicago farms | Cleveland farms |<br>
+              Colorado Springs farms | Columbus farms | Dallas farms | Denver farms | Detroit farms | El Paso farms | Fort Worth farms | Fresno farms |<br>
+              Houston farms | Indianapolis farms | Jacksonville farms | Kansas City farms | Las Vegas farms | Long Beach farms | Los Angeles farms |<br>
+              Louisville farms | Memphis farms | Mesa farms | Miami farms | Milwaukee farms | Minneapolis farms | Nashville farms | New Orleans farms |<br>
+              New York City farms | Oakland farms | Omaha farms | Philadelphia farms | Phoenix farms | Portland farms | Raleigh farms | Sacramento farms | San Antonio farms | San Diego farms | San Francisco farms | San Jose farms | Seattle farms | Tucson farms | Tulsa farms | Washington, D.C. farms | Wichita farms |
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.15);margin:10px auto;max-width:260px;"></div>
+            <div style="font-size:7.5px;color:rgba(255,255,255,0.6);text-align:center;line-height:2;">
+              Alaska farms | Alabama farms | Arkansas farms | Arizona farms | California farms | Colorado farms | Connecticut farms |<br>
+              District Of Columbia farms | Delaware farms | Florida farms | Georgia farms | Hawaii farms | Iowa farms | Idaho farms | Illinois farms |<br>
+              Indiana farms | Kansas farms | Kentucky farms | Louisiana farms | Massachusetts farms | Maryland farms | Maine farms | Michigan farms |<br>
+              Minnesota farms | Missouri farms | Mississippi farms | Montana farms | North Carolina farms | North Dakota farms | Nebraska farms |<br>
+              New Hampshire farms | New Jersey farms | New Mexico farms | Nevada farms | New York farms | Ohio farms | Oklahoma farms |<br>
+              Oregon farms | Pennsylvania farms | Rhode Island farms | South Carolina farms | South Dakota farms | Tennessee farms | Texas farms |<br>
+              Utah farms | Virginia farms | Vermont farms | Washington farms | Wisconsin farms | West Virginia farms | Wyoming farms |
+            </div>
+          </div>
+
+          <!-- Footer bar -->
+          <div style="display:flex;justify-content:space-between;padding:8px 20px;border-top:1px solid rgba(0,0,0,0.06);">
+            <div style="font-family:system-ui,sans-serif;font-size:8px;color:rgba(0,0,0,0.35);">© Farms That Are Delivering 2020</div>
+            <div style="font-family:system-ui,sans-serif;font-size:8px;color:rgba(0,0,0,0.35);">Contact David &amp; Jason</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="demo-caption">The city and state link grid did double duty: it let users browse by location and built up a ton of SEO-indexed pages at the same time.</div>
+    </div>
+
+    <p>That insight shifted our approach. We added city and state-based categories so users could browse farms by location. We also introduced a rotating headline on the homepage to show the full range of what you could search for, helping new users instantly understand the breadth of the platform.</p>
+
+    <!-- GROWING THE PLATFORM -->
+    <div class="section-heading" id="growing">
+      <div class="section-title">Growing the platform</div>
+    </div>
+
+    <p>As we continued to grow, we rebranded from Farms That Are Delivering to Aina, which means "land" or "earth" in Hawaiian. With the new brand came a more intentional focus on user experience.</p>
+
+    <p>We added an "Add My Farm" feature that let farmers create accounts and list their own products directly on the platform. More and more farms were reaching out to join, so giving them a self-service option made sense.</p>
+
+    <p>On the customer side, we started highlighting standout farms that were doing things differently. Farms like Parker Pastures, where cows graze year-round on Colorado's wild grasses, or Lava Lake Lamb, where sheep roam freely across a million acres in the Rockies. These curated spotlights helped users connect with the values behind the food and brought a richer, more story-driven experience to the platform.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">aina.com</div>
+        </div>
+        <div style="font-family:system-ui,-apple-system,sans-serif;background:#fff;overflow:hidden;">
+
+          <!-- Hero with illustrated landscape -->
+          <div style="position:relative;overflow:hidden;height:200px;">
+            <!-- Hero image -->
+            <div style="position:absolute;inset:0;background:url('../images/farms-image-0.jpg') center/cover no-repeat;"></div>
+            <!-- Nav overlay -->
+            <div style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;">
+              <div style="font-size:11px;font-weight:700;color:#fff;letter-spacing:-0.3px;">Aina</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="background:#3ab54a;color:#fff;font-size:8px;font-weight:600;padding:4px 10px;border-radius:4px;">Add my farm</div>
+                <div style="font-size:9px;color:#fff;">Browse</div>
+              </div>
+            </div>
+            <!-- Hero text overlay -->
+            <div style="position:absolute;bottom:28%;left:12px;">
+              <div style="font-size:18px;font-weight:800;color:#fff;line-height:1.15;text-shadow:0 1px 4px rgba(0,0,0,0.2);">Food raised<br>the hard way</div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.9);margin-top:3px;text-shadow:0 1px 3px rgba(0,0,0,0.2);">Find farms near you that deliver</div>
+              <!-- Search bar -->
+              <div style="display:flex;margin-top:8px;overflow:hidden;border-radius:3px;height:26px;max-width:220px;">
+                <div style="flex:1;background:#fff;display:flex;align-items:center;padding:0 10px;font-size:8px;color:rgba(0,0,0,0.35);">Enter your address here</div>
+                <div style="background:#f26522;color:#fff;font-size:8px;font-weight:700;padding:0 12px;display:flex;align-items:center;">Search</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Discover unique farms -->
+          <div style="padding:14px 12px 16px;">
+            <div style="font-size:12px;font-weight:700;color:rgb(17,17,17);margin-bottom:10px;">Discover unique farms</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+
+              <!-- Card 1: Parker Pastures -->
+              <div style="border:1px solid rgba(0,0,0,0.1);border-radius:10px;overflow:hidden;background:#fff;">
+                <!-- Mint header -->
+                <div style="background:#edf7ee;height:70px;display:flex;align-items:center;justify-content:center;">
+                  <div style="font-size:28px;opacity:0.7;">🏔️</div>
+                </div>
+                <!-- Card body -->
+                <div style="padding:10px 12px 10px;">
+                  <div style="font-size:7px;font-weight:700;color:#3ab54a;letter-spacing:0.06em;margin-bottom:4px;">FARM SPOTLIGHT</div>
+                  <div style="font-size:11px;font-weight:700;color:rgb(17,17,17);margin-bottom:4px;">Parker Pastures</div>
+                  <div style="font-size:8px;color:rgba(0,0,0,0.5);line-height:1.5;margin-bottom:8px;">Cows graze year-round on Colorado's wild mountain grasses, never touched by grain.</div>
+                  <!-- Products -->
+                  <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:16px;height:16px;border:1px solid rgba(0,0,0,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;">🐄</div>
+                      <div style="font-size:8px;color:rgb(17,17,17);">Beef</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:16px;height:16px;border:1px solid rgba(0,0,0,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;">🐑</div>
+                      <div style="font-size:8px;color:rgb(17,17,17);">Lamb</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:16px;height:16px;border:1px solid rgba(0,0,0,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;">🐖</div>
+                      <div style="font-size:8px;color:rgb(17,17,17);">Pork</div>
+                    </div>
+                  </div>
+                  <!-- Tags -->
+                  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">100% grass-fed</span>
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">Angus cross</span>
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">Home delivery</span>
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">Family owned</span>
+                  </div>
+                  <!-- Footer -->
+                  <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(0,0,0,0.06);padding-top:8px;">
+                    <div style="font-size:7px;color:rgba(0,0,0,0.35);">Chaffee County, CO</div>
+                    <div style="font-size:8px;font-weight:600;color:#3ab54a;">View farm →</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: Lava Lake Lamb -->
+              <div style="border:1px solid rgba(0,0,0,0.1);border-radius:10px;overflow:hidden;background:#fff;">
+                <!-- Mint header -->
+                <div style="background:#edf7ee;height:70px;display:flex;align-items:center;justify-content:center;">
+                  <div style="font-size:28px;opacity:0.7;">🌄</div>
+                </div>
+                <!-- Card body -->
+                <div style="padding:10px 12px 10px;">
+                  <div style="font-size:7px;font-weight:700;color:#3ab54a;letter-spacing:0.06em;margin-bottom:4px;">FARM SPOTLIGHT</div>
+                  <div style="font-size:11px;font-weight:700;color:rgb(17,17,17);margin-bottom:4px;">Lava Lake Lamb</div>
+                  <div style="font-size:8px;color:rgba(0,0,0,0.5);line-height:1.5;margin-bottom:8px;">Sheep roam freely across a million acres in the Rockies on wild native grasses.</div>
+                  <!-- Products -->
+                  <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:16px;height:16px;border:1px solid rgba(0,0,0,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;">🐑</div>
+                      <div style="font-size:8px;color:rgb(17,17,17);">Lamb</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <div style="width:16px;height:16px;border:1px solid rgba(0,0,0,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;">🧶</div>
+                      <div style="font-size:8px;color:rgb(17,17,17);">Wool</div>
+                    </div>
+                  </div>
+                  <!-- Tags -->
+                  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">Rambouillet</span>
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">Wild grasses</span>
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">Home delivery</span>
+                    <span style="font-size:7px;padding:2px 7px;border-radius:4px;border:1px solid rgba(34,160,80,0.25);color:rgba(20,120,50,0.8);background:rgba(34,160,80,0.04);">1M+ acres</span>
+                  </div>
+                  <!-- Footer -->
+                  <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(0,0,0,0.06);padding-top:8px;">
+                    <div style="font-size:7px;color:rgba(0,0,0,0.35);">Hailey, ID</div>
+                    <div style="font-size:8px;font-weight:600;color:#3ab54a;">View farm →</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">The Aina rebrand brought a whole new visual identity to the platform. Farm spotlights gave each listing a story, and the illustrated hero made the brand feel alive.</div>
+    </div>
+
+    <!-- PRESS AND IMPACT -->
+    <div class="section-heading" id="press">
+      <div class="section-title">Press and impact</div>
+    </div>
+
+    <p>The platform was featured in the Wall Street Journal, NPR, Bon Appetit, Time Out, and Ciaooo Magazine for its impact during the pandemic. We weren't a tech company trying to disrupt farming. We were two people who found a real gap and built something that connected families with farms that cared about how they raised their food.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">As seen in</div>
+        </div>
+        <div class="demo-content">
+          <div class="press-row" style="flex-wrap:wrap;gap:20px 32px;">
+            <div class="press-logo serif">The Wall Street Journal</div>
+            <div class="press-logo" style="font-size:11px;letter-spacing:1px;font-weight:700;">NPR</div>
+            <div class="press-logo small-caps" style="font-family:Georgia,serif;">Bon Appétit</div>
+            <div class="press-logo" style="font-size:12px;font-weight:800;letter-spacing:-0.3px;font-family:system-ui,sans-serif;">Time<span style="color:rgba(0,0,0,0.15);">Out</span></div>
+            <div class="press-logo" style="font-size:11px;font-weight:700;font-family:system-ui,sans-serif;letter-spacing:0.5px;">ciaooo<span style="font-weight:400;opacity:0.5;font-size:9px;"> mag</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">Five publications that helped put the platform on the map. The WSJ piece in particular drove a significant spike in traffic and farm signups.</div>
+    </div>
+
+    <p>After about three years, we had to sunset the platform. David and I were both getting increasingly busy at Mogul, and with a small team there just wasn't enough bandwidth to keep both projects going at the level they deserved.</p>
+
+    <p>But the work wasn't wasted. We had built a real product that people loved, learned how to do user research and iterate on a live product with real users, and proved that there was a market for connecting people directly with small farms. Even after sunsetting the platform, the site continued to get about 60,000 views a year all from backlinks built through press coverage, social sharing, and SEO.</p>
+
+    <!-- THE RELAUNCH -->
+    <div class="section-heading" id="relaunch">
+      <div class="section-title">The relaunch</div>
+    </div>
+
+    <p>In 2025, David and I got back together to relaunch the platform. We're starting fresh, but this time we have two things we didn't have before: experience and AI. We also made the decision to go back to the original name instead of keeping the Aina rebrand. The original name was still driving 60,000 annual views to a site that wasn't even live. That kind of organic traffic is too valuable to walk away from, especially when the name itself tells people exactly what the platform does.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">Relaunch pipeline</div>
+        </div>
+        <div class="demo-content">
+          <div class="relaunch-ui">
+            <div class="relaunch-pipeline">
+              <div class="pipeline-step">
+                <div class="pipeline-icon green">🔍</div>
+                <div class="pipeline-info">
+                  <div class="pipeline-label">AI-powered farm discovery</div>
+                  <div class="pipeline-sub">Scrapers automatically find farms, filter for delivery, and capture delivery radiuses</div>
+                </div>
+                <div class="pipeline-badge done">Built</div>
+              </div>
+              <div class="pipeline-step">
+                <div class="pipeline-icon blue">📋</div>
+                <div class="pipeline-info">
+                  <div class="pipeline-label">Automated data capture</div>
+                  <div class="pipeline-sub">Scrapers tag breed, feed, raising practices, and processing details from each farm's site</div>
+                </div>
+                <div class="pipeline-badge done">Built</div>
+              </div>
+              <div class="pipeline-step">
+                <div class="pipeline-icon orange">📦</div>
+                <div class="pipeline-info">
+                  <div class="pipeline-label">Live inventory tracking</div>
+                  <div class="pipeline-sub">Search results show what's actually in stock, updated regularly</div>
+                </div>
+                <div class="pipeline-badge wip">In progress</div>
+              </div>
+              <div class="pipeline-step">
+                <div class="pipeline-icon purple">🌐</div>
+                <div class="pipeline-info">
+                  <div class="pipeline-label">New search experience</div>
+                  <div class="pipeline-sub">Rebuilt from scratch with everything we learned the first time around</div>
+                </div>
+                <div class="pipeline-badge wip">In progress</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">What used to take weeks of manual research now takes hours. The first relaunch sprint focused on rebuilding the pipeline before rebuilding the product.</div>
+    </div>
+
+    <p>The first time around, we spent months manually going through 14,000 farms. This time, we built scrapers that automatically go through farm lists, eliminate farms without websites or delivery options, and even find delivery radiuses. We also built scrapers that visit each farm's website and tag all the details that make farms unique. And one of the biggest additions this time is that we're capturing what each farm actually has for sale, so search results can show live inventory. That wasn't possible the first time without a huge manual effort.</p>
+
+    <p>Starting over sounds daunting, but it's actually the best thing because we get to apply everything we learned the first time. We know what information matters to users, we know what makes a good farm listing, and we know what kind of experience people want.</p>
+
+    <!-- BUILDING THE BRAND -->
+    <div class="section-heading" id="brand">
+      <div class="section-title">Building the brand</div>
+    </div>
+
+    <p>One of the things we're doing differently this time is being much more intentional about how Farms That Are Delivering looks and feels. We landed on watercolor illustrations as the core visual language for the brand. The reason is that watercolor has a softness and warmth to it that reflects the care and gentleness that these farmers put into raising their animals. It feels handmade, which is exactly what these farms are.</p>
+
+    <p>At the same time, we're pairing those illustrations with clean, modern design elements. The farming industry is old, and most of the websites and brands in this space feel outdated. We want to sit at the intersection of something that feels natural and trustworthy but also feels current and forward-thinking. When someone lands on Farms That Are Delivering, we want them to feel like this is a place they can trust to help them find a great farm.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">Brand direction: watercolor illustrations</div>
+        </div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+          <img src="../images/farms-image-1.jpg" style="width:100%;display:block;border-radius:6px;">
+          <img src="../images/farms-image-2.jpg" style="width:100%;display:block;border-radius:6px;">
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">farmsthataredelivering.com</div>
+        </div>
+        <img src="../images/farms-image-3.jpg" style="width:100%;display:block;">
+      </div>
+      <div class="demo-caption">The relaunched site brings together everything we learned the first time around. The watercolor illustration sets the tone immediately: this is food that comes from somewhere real, raised by people who care. And the search UI makes it effortless to find it.</div>
+    </div>
+
+  </article>
+</div>
+
+<script>
+  // Scroll spy
+  (function() {
+    var items = document.querySelectorAll('.toc-item[data-section]');
+    var sections = [];
+    items.forEach(function(item) {
+      var id = item.getAttribute('data-section');
+      var el = document.getElementById(id);
+      if (el) sections.push({ item: item, el: el });
+    });
+
+    function onScroll() {
+      var scrollY = window.scrollY || window.pageYOffset;
+      var winH = window.innerHeight;
+      var active = null;
+
+      for (var i = sections.length - 1; i >= 0; i--) {
+        var top = sections[i].el.getBoundingClientRect().top + scrollY;
+        if (scrollY >= top - winH * 0.4) {
+          active = sections[i].item;
+          break;
+        }
+      }
+
+      if (!active && sections.length) active = sections[0].item;
+
+      items.forEach(function(item) { item.classList.remove('active'); });
+      if (active) active.classList.add('active');
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // Rotating headline words
+  (function() {
+    var el = document.getElementById('rotating-word');
+    if (!el) return;
+    var words = ['organic vegetables', 'grass-fed beef', 'pasture-raised pork', 'free-range chicken', 'heritage lamb', 'farm-fresh eggs', 'raw honey', 'heritage turkey'];
+    var i = 0;
+    el.style.transition = 'opacity 0.35s ease';
+    setInterval(function() {
+      el.style.opacity = '0';
+      setTimeout(function() {
+        i = (i + 1) % words.length;
+        el.textContent = words[i];
+        el.style.opacity = '1';
+      }, 350);
+    }, 2400);
+  })();
+
+  // Browse category click
+  (function() {
+    var cats = document.querySelectorAll('.browse-cat');
+    cats.forEach(function(cat) {
+      cat.addEventListener('click', function() {
+        cats.forEach(function(c) { c.classList.remove('active'); });
+        cat.classList.add('active');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

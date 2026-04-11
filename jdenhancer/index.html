@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Job Description Enhancer | Jason Curescu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;460;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { min-height: 100%; overflow-y: scroll; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: rgba(0,0,0,0); text-rendering: optimizelegibility; text-size-adjust: 100%; }
+  body { background: #fff; color: rgb(17,17,17); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; min-height: 100%; display: flex; justify-content: center; }
+  .page-wrap { position: relative; width: 550px; padding: 80px 0 100px; }
+  .aside { position: fixed; top: 80px; left: 80px; width: 156px; }
+  .back-link { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; padding-bottom: 4px; }
+  .back-link:hover { color: rgba(0,0,0,0.8); }
+  .toc { margin-top: 24px; }
+  .toc-title { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgb(17,17,17); padding-bottom: 16px; cursor: pointer; }
+  .toc-list { list-style: none; }
+  .toc-item { cursor: pointer; transition: opacity 0.15s; }
+  .toc-item a { display: block; padding: 4px 0; font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(0,0,0,0.25); text-decoration: none; transition: color 0.2s; }
+  .toc-item.active a { color: rgba(0,0,0,0.7); }
+  .toc-item a:hover { color: rgba(0,0,0,0.5); }
+  article header { padding-top: 0; }
+  article header h1 { font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); }
+  article header time { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgba(0,0,0,0.4); display: block; }
+  article p { font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 16px; }
+  article p strong { font-weight: 600; }
+  .section-heading { padding-top: 64px; }
+  .section-label { font-size: 13px; font-weight: 460; line-height: 15.6px; letter-spacing: -0.04px; color: rgba(18,18,18,0.4); }
+  .section-title { font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.09008px; color: rgb(17,17,17); padding-top: 4px; }
+  article a { position: relative; display: inline; color: inherit; font-weight: inherit; text-decoration: none; transition: 0.2s; }
+  article a::before { pointer-events: none; content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; border-radius: 2px; background: rgb(217,217,217); transition: inherit; }
+  article a:hover::before { background: rgb(102,102,102); }
+  .role-details { padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .role-tag { font-size: 12px; font-weight: 460; line-height: 16px; padding: 4px 10px; border-radius: 100px; background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.5); }
+
+  /* Demo browser container */
+  .demo-container { margin-top: 24px; }
+  .demo-browser { position: relative; width: 100%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.08); }
+  .demo-bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .demo-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .demo-dot.red { background: #ff5f57; }
+  .demo-dot.yellow { background: #febc2e; }
+  .demo-dot.green { background: #28c840; }
+  .demo-url { flex: 1; margin-left: 8px; padding: 4px 10px; background: rgba(0,0,0,0.04); border-radius: 6px; font-size: 10px; color: rgba(0,0,0,0.4); font-family: system-ui, sans-serif; }
+  .demo-content { padding: 20px; }
+  .demo-caption { font-size: 12px; line-height: 16px; color: rgba(0,0,0,0.4); margin-top: 10px; }
+
+  /* Bad vs good comparison */
+  .compare-split { display: flex; gap: 12px; font-family: system-ui, -apple-system, sans-serif; }
+  .compare-panel { flex: 1; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); overflow: hidden; }
+  .compare-panel-header { padding: 8px 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.2px; display: flex; align-items: center; gap: 6px; }
+  .compare-panel-header.bad { background: rgba(239,68,68,0.05); color: rgba(185,28,28,0.7); border-bottom: 1px solid rgba(239,68,68,0.08); }
+  .compare-panel-header.good { background: rgba(34,197,94,0.05); color: rgba(21,128,57,0.7); border-bottom: 1px solid rgba(34,197,94,0.08); }
+  .compare-panel-body { padding: 12px; }
+  .compare-title { font-size: 10px; font-weight: 700; color: rgb(17,17,17); margin-bottom: 6px; font-family: system-ui, sans-serif; }
+  .compare-line { font-size: 9px; color: rgba(0,0,0,0.5); line-height: 1.6; font-family: system-ui, sans-serif; margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; }
+  .compare-line .mark { flex-shrink: 0; margin-top: 1px; }
+  .compare-bad-text { color: rgba(185,28,28,0.6); text-decoration: line-through; }
+  .compare-req { font-size: 9px; font-weight: 600; color: rgba(0,0,0,0.4); margin-top: 8px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; font-family: system-ui, sans-serif; }
+
+  /* Breadboard flow */
+  .breadboard { display: flex; align-items: center; gap: 0; font-family: system-ui, -apple-system, sans-serif; flex-wrap: wrap; justify-content: center; }
+  .bb-step { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bb-box { padding: 7px 10px; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; background: rgba(0,0,0,0.02); font-size: 9px; font-weight: 600; color: rgba(0,0,0,0.55); text-align: center; white-space: nowrap; font-family: system-ui, sans-serif; }
+  .bb-arrow { font-size: 10px; color: rgba(0,0,0,0.2); padding: 0 4px; flex-shrink: 0; }
+  .bb-label { font-size: 8px; color: rgba(0,0,0,0.3); font-family: system-ui, sans-serif; text-align: center; }
+
+  /* JD Enhancer main demo */
+  .jde-wrap { font-family: system-ui, -apple-system, sans-serif; }
+  .jde-categories { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .jde-cat { display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 100px; font-size: 9px; font-weight: 600; font-family: system-ui, sans-serif; letter-spacing: 0.1px; border: 1px solid transparent; cursor: default; }
+  .jde-cat.purple { background: rgba(124,58,237,0.08); color: rgba(109,40,217,0.8); border-color: rgba(124,58,237,0.12); }
+  .jde-cat.blue { background: rgba(59,130,246,0.08); color: rgba(37,99,235,0.8); border-color: rgba(59,130,246,0.12); }
+  .jde-cat.yellow { background: rgba(234,179,8,0.1); color: rgba(133,100,0,0.85); border-color: rgba(234,179,8,0.18); }
+  .jde-cat.green { background: rgba(34,197,94,0.08); color: rgba(21,128,57,0.8); border-color: rgba(34,197,94,0.12); }
+  .jde-cat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .jde-cat.purple .jde-cat-dot { background: rgba(124,58,237,0.7); }
+  .jde-cat.blue .jde-cat-dot { background: rgba(59,130,246,0.7); }
+  .jde-cat.yellow .jde-cat-dot { background: rgba(234,179,8,0.9); }
+  .jde-cat.green .jde-cat-dot { background: rgba(34,197,94,0.7); }
+  .jde-cat-count { font-weight: 700; }
+  .jde-body { font-size: 10px; line-height: 1.8; color: rgba(0,0,0,0.65); font-family: system-ui, sans-serif; }
+  .jde-body strong { font-size: 11px; font-weight: 700; color: rgb(17,17,17); display: block; margin-bottom: 8px; }
+  .jde-body .sec-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: rgba(0,0,0,0.4); display: block; margin-top: 12px; margin-bottom: 4px; }
+  .jde-body ul { padding-left: 12px; margin: 0; }
+  .jde-body li { margin-bottom: 2px; }
+
+  /* Highlight spans */
+  .hl { position: relative; border-radius: 3px; padding: 1px 2px; cursor: pointer; opacity: 0; transition: opacity 0.3s; }
+  .hl.show { opacity: 1; }
+  .hl.purple { background: rgba(124,58,237,0.12); color: rgba(109,40,217,0.85); }
+  .hl.blue { background: rgba(59,130,246,0.12); color: rgba(37,99,235,0.85); }
+  .hl.yellow { background: rgba(234,179,8,0.18); color: rgba(133,100,0,0.9); }
+  .hl.green { background: rgba(34,197,94,0.12); color: rgba(21,128,57,0.85); }
+
+  /* Tooltip */
+  .hl-tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: rgb(17,17,17); color: #fff; font-size: 9px; line-height: 1.5; padding: 6px 9px; border-radius: 6px; white-space: nowrap; z-index: 10; pointer-events: none; max-width: 220px; white-space: normal; }
+  .hl-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: rgb(17,17,17); }
+  .hl:hover .hl-tooltip { display: block; }
+  .hl-tooltip-label { font-weight: 700; margin-bottom: 2px; }
+  .hl-tooltip-label.purple { color: rgba(196,168,255,1); }
+  .hl-tooltip-label.blue { color: rgba(147,197,253,1); }
+  .hl-tooltip-label.yellow { color: rgba(253,224,71,1); }
+  .hl-tooltip-label.green { color: rgba(134,239,172,1); }
+
+  /* Accept all button */
+  .jde-footer { margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); display: flex; justify-content: flex-end; }
+  .jde-accept-btn { font-size: 9px; font-weight: 700; font-family: system-ui, sans-serif; letter-spacing: 0.2px; color: #fff; background: rgb(17,17,17); border: none; border-radius: 6px; padding: 6px 14px; cursor: pointer; transition: background 0.15s; }
+  .jde-accept-btn:hover { background: rgba(17,17,17,0.8); }
+
+  /* Feedback callout */
+  .feedback-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .feedback-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: rgba(0,0,0,0.02); border-radius: 8px; border: 1px solid rgba(0,0,0,0.06); }
+  .feedback-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .feedback-text { font-size: 13px; font-weight: 460; line-height: 18px; color: rgb(17,17,17); }
+  .feedback-text strong { font-weight: 600; }
+
+  /* Shipped demo highlight spans */
+  .shl { border-radius: 3px; padding: 1px 2px; cursor: pointer; transition: filter 0.15s; }
+  .shl.green-hl { background: rgba(52,211,153,0.25); color: rgba(4,120,87,0.9); }
+  .shl.purple-hl { background: rgba(167,139,250,0.25); color: rgba(109,40,217,0.9); }
+  .shl.blue-hl { background: rgba(96,165,250,0.22); color: rgba(30,64,175,0.9); }
+  .shl.yellow-hl { background: rgba(253,224,71,0.35); color: rgba(113,79,0,0.9); }
+  .shl.active-hl { filter: brightness(0.88); outline: 1.5px solid rgba(0,0,0,0.2); }
+  /* Suggestion panel components */
+  .sp-cat-pill { display: inline-block; padding: 3px 9px; border-radius: 100px; font-size: 8px; font-weight: 700; font-family: system-ui, sans-serif; margin-bottom: 10px; }
+  .sp-cat-pill.green { background: rgba(52,211,153,0.2); color: rgba(4,120,87,0.9); }
+  .sp-cat-pill.purple { background: rgba(167,139,250,0.2); color: rgba(109,40,217,0.9); }
+  .sp-cat-pill.blue { background: rgba(96,165,250,0.2); color: rgba(30,64,175,0.9); }
+  .sp-cat-pill.yellow { background: rgba(253,224,71,0.35); color: rgba(113,79,0,0.9); }
+  .sp-desc { font-size: 8px; line-height: 1.6; color: rgba(0,0,0,0.6); font-family: system-ui, sans-serif; margin-bottom: 10px; }
+  .sp-box { border-radius: 5px; padding: 8px 10px; margin-bottom: 6px; }
+  .sp-box-label { font-size: 7.5px; font-weight: 700; color: rgba(0,0,0,0.55); font-family: system-ui, sans-serif; margin-bottom: 3px; }
+  .sp-box-text { font-size: 8px; line-height: 1.5; font-style: italic; font-family: system-ui, sans-serif; }
+  .sp-box.original { background: rgba(0,0,0,0.04); }
+  .sp-box.original .sp-box-text { color: rgba(0,0,0,0.6); }
+  .sp-box.suggested { background: rgba(52,211,153,0.08); }
+  .sp-box.suggested .sp-box-text { color: rgba(4,120,87,0.85); }
+  .sp-actions { display: flex; gap: 6px; margin-top: 12px; }
+  .sp-btn { flex: 1; padding: 5px 0; border-radius: 5px; font-size: 8px; font-weight: 700; font-family: system-ui, sans-serif; cursor: pointer; border: none; text-align: center; transition: opacity 0.15s; }
+  .sp-btn.accept { background: rgb(34,197,94); color: #fff; }
+  .sp-btn.skip { background: rgba(0,0,0,0.07); color: rgba(0,0,0,0.5); }
+  .sp-btn:hover { opacity: 0.8; }
+  .sp-empty { font-size: 8px; color: rgba(0,0,0,0.3); font-family: system-ui, sans-serif; line-height: 1.6; }
+
+  .callout { padding-top: 24px; padding-left: 16px; border-left: 2px solid rgba(0,0,0,0.08); }
+  .callout p { padding-top: 0; color: rgba(0,0,0,0.5); font-style: italic; }
+  .reflection { padding-top: 24px; }
+  .reflection p { padding-top: 0; color: rgb(17,17,17); }
+
+  @keyframes staggerIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  article > * { animation: staggerIn 0.5s ease both; }
+  article > :nth-child(1) { animation-delay: 0s; }
+  article > :nth-child(2) { animation-delay: 0.05s; }
+  article > :nth-child(3) { animation-delay: 0.1s; }
+  article > :nth-child(4) { animation-delay: 0.15s; }
+  article > :nth-child(5) { animation-delay: 0.2s; }
+  article > :nth-child(6) { animation-delay: 0.25s; }
+
+  .mobile-back { display: none; }
+  @media (max-width: 1080px) {
+    .aside { display: none; }
+    .mobile-back { display: flex; align-items: center; gap: 4px; color: rgba(0,0,0,0.4); font-size: 14px; font-weight: 460; line-height: 20px; letter-spacing: -0.09008px; text-decoration: none; transition: color 0.1s; margin-bottom: 24px; }
+    .mobile-back:hover { color: rgba(0,0,0,0.8); }
+    .page-wrap { padding: 40px 24px 80px; width: 100%; max-width: 600px; }
+  }
+  @media (max-width: 600px) {
+    .page-wrap { padding: 32px 20px 60px; }
+    .section-heading { padding-top: 48px; }
+    .stats { gap: 24px; flex-wrap: wrap; }
+    .demo-content { max-height: 360px; }
+    .role-details { gap: 6px; }
+  }
+  @media (max-width: 380px) {
+    .page-wrap { padding: 28px 16px 48px; }
+    .stats { gap: 16px; }
+    .stat-value { font-size: 18px; }
+  }
+  ::selection { background: #39FF14; color: #FF6600; }
+  ::-moz-selection { background: #39FF14; color: #FF6600; }
+</style>
+</head>
+<body>
+
+<aside class="aside">
+  <a href="portfolio.html" class="back-link">← Go back</a>
+  <nav class="toc">
+    <h2 class="toc-title" onclick="window.scrollTo({top:0,behavior:'smooth'})">AI Job Description Enhancer</h2>
+    <ul class="toc-list">
+      <li class="toc-item active" data-section="problem"><a href="#problem">The problem</a></li>
+      <li class="toc-item" data-section="approach"><a href="#approach">The approach</a></li>
+      <li class="toc-item" data-section="prototype"><a href="#prototype">Building it</a></li>
+      <li class="toc-item" data-section="tool"><a href="#tool">How it works</a></li>
+      <li class="toc-item" data-section="testing"><a href="#testing">Client testing</a></li>
+      <li class="toc-item" data-section="shipped"><a href="#shipped">What shipped</a></li>
+      <li class="toc-item" data-section="learned"><a href="#learned">What I learned</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<div class="page-wrap">
+  <a href="portfolio.html" class="mobile-back">← Go back</a>
+  <article>
+    <header>
+      <h1>AI Job Description Enhancer</h1>
+    </header>
+
+    <div style="padding-top:40px;display:flex;flex-direction:column;gap:20px;">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Responsibilities</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Identified user need through Client Success feedback</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Collaborated with product team on priorities and scope</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Used AI tools to explore layouts and estimate effort</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Designed and built a working prototype independently using Cursor</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Tested prototype live with clients through Client Success</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Iterated based on real client feedback before launch</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:rgb(17,17,17);padding-bottom:8px;">Results</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:3px;">
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Shipped to clients as a live tool in the Mogul Recruiter</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Prototype built independently without engineering support</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Validated directly with clients through live testing on calls</li>
+          <li style="font-size:13px;font-weight:460;line-height:17px;color:rgba(0,0,0,0.6);">Client feedback shaped the final version before launch</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-heading" id="problem">
+      <div class="section-title">The problem</div>
+    </div>
+
+    <p>Bad job descriptions cost companies money, waste recruiter time, and turn away great candidates. Our Client Success team kept hearing the same thing from clients: their job descriptions and recruiting messages were inconsistent, unclear, and often unintentionally exclusionary. This was leading to poor applicant quality, low response rates, and slower hiring overall.</p>
+
+    <p>When something gets mentioned enough times by clients, Client Success brings it to the product team. This was one of those features. We added it to our backlog and decided to revisit it when we had more time.</p>
+
+    <p>The difference between a bad job description and a good one is huge. A bad one uses vague language, buzzword soup, intimidating tone, and a wish list of requirements that scares people off. A good one is clear, specific, explains the actual work and why it matters, and uses focused requirements that don't filter out strong candidates unnecessarily. Most companies don't realize their job descriptions are working against them.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">Bad vs. good</div>
+        </div>
+        <div class="demo-content">
+          <div class="compare-split">
+            <div class="compare-panel">
+              <div class="compare-panel-header bad">✕ &nbsp;Before</div>
+              <div class="compare-panel-body">
+                <div class="compare-title">Marketing Rockstar Wanted</div>
+                <div class="compare-line"><span class="mark">·</span><span class="compare-bad-text">Passionate guru who crushes KPIs</span></div>
+                <div class="compare-line"><span class="mark">·</span><span class="compare-bad-text">Thrives in fast-paced environment</span></div>
+                <div class="compare-line"><span class="mark">·</span><span class="compare-bad-text">Self-starter with can-do attitude</span></div>
+                <div class="compare-req">Requirements</div>
+                <div class="compare-line"><span class="mark">·</span><span class="compare-bad-text">10+ years of experience required</span></div>
+                <div class="compare-line"><span class="mark">·</span><span class="compare-bad-text">Must have exceptional writing skills</span></div>
+                <div class="compare-line"><span class="mark">·</span><span class="compare-bad-text">Bachelor's degree required, MBA preferred</span></div>
+              </div>
+            </div>
+            <div class="compare-panel">
+              <div class="compare-panel-header good">✓ &nbsp;After</div>
+              <div class="compare-panel-body">
+                <div class="compare-title">Marketing Manager, Growth</div>
+                <div class="compare-line"><span class="mark">·</span>Develop and run campaigns across paid and organic channels</div>
+                <div class="compare-line"><span class="mark">·</span>Report on performance against defined goals weekly</div>
+                <div class="compare-line"><span class="mark">·</span>Partner with product and sales to align on messaging</div>
+                <div class="compare-req">Requirements</div>
+                <div class="compare-line"><span class="mark">·</span>3–5 years of marketing experience</div>
+                <div class="compare-line"><span class="mark">·</span>Strong written communication skills</div>
+                <div class="compare-line"><span class="mark">·</span>Experience with campaign analytics</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">The same role, written two different ways. The version on the left reads like a wish list. The one on the right tells candidates what the job actually is.</div>
+    </div>
+
+    <div class="section-heading" id="approach">
+      <div class="section-title">The approach</div>
+    </div>
+
+    <p>I started by talking with our Client Success team to understand what clients were actually asking for and where their biggest pain points were. From there, I worked with the product team to align on priorities, identify gaps, and figure out how much time we wanted to invest.</p>
+
+    <p>Once we had a clear direction, I used Claude to explore different layout options for the tool and estimate development effort. This let me quickly work through questions about how the tool should be structured and what the flow should feel like, without needing to pull in the engineering team right away.</p>
+
+    <p>From those explorations, I sketched out breadboards that mapped the core user journey. The idea was simple: a recruiter pastes in their job description, the tool analyzes it and highlights areas that need improvement, and they work through the suggestions at their own pace.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">User flow</div>
+        </div>
+        <div class="demo-content" style="padding: 24px 20px;">
+          <div class="breadboard">
+            <div class="bb-step">
+              <div class="bb-box">Paste JD</div>
+              <div class="bb-label">recruiter pastes their text</div>
+            </div>
+            <div class="bb-arrow">→</div>
+            <div class="bb-step">
+              <div class="bb-box">Analyze</div>
+              <div class="bb-label">AI flags issues across 4 categories</div>
+            </div>
+            <div class="bb-arrow">→</div>
+            <div class="bb-step">
+              <div class="bb-box">Review</div>
+              <div class="bb-label">highlights appear inline in the text</div>
+            </div>
+            <div class="bb-arrow">→</div>
+            <div class="bb-step">
+              <div class="bb-box">Accept / Reject</div>
+              <div class="bb-label">each suggestion individually or all at once</div>
+            </div>
+            <div class="bb-arrow">→</div>
+            <div class="bb-step">
+              <div class="bb-box">Copy</div>
+              <div class="bb-label">improved text ready to use</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">The core flow mapped out before any design work started. Each step had to be obvious and fast. Recruiters aren't going to slow down for a tool that makes them think too hard.</div>
+    </div>
+
+    <div class="section-heading" id="prototype">
+      <div class="section-title">Building the prototype</div>
+    </div>
+
+    <p>This is where things got interesting. I wanted to test what I could accomplish using AI tools on my own, without leaning on the engineering team. I took my breadboard ideas and wrote a prompt in Cursor to help me build a working prototype.</p>
+
+    <p>It was a game changer. I was able to move really fast, test ideas, and iterate on the fly. Instead of waiting for engineering bandwidth or putting together a spec and handing it off, I had a functional prototype I could put in front of real users. This is the kind of thing that would have taken weeks in a traditional workflow, and I was able to do it independently.</p>
+
+    <div class="section-heading" id="tool">
+      <div class="section-title">How it works</div>
+    </div>
+
+    <p>The tool analyzes a pasted job description and highlights suggestions across four categories. Recruiters can review each one individually, accept or reject changes, and watch their job description improve in real time.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">app.mogulrecruiter.com/tools/jd-enhancer</div>
+        </div>
+        <div class="demo-content">
+          <div class="jde-wrap" id="jde-demo">
+            <div class="jde-categories">
+              <div class="jde-cat purple"><div class="jde-cat-dot"></div>Clarity <span class="jde-cat-count" id="cnt-purple">0</span></div>
+              <div class="jde-cat blue"><div class="jde-cat-dot"></div>Inclusive language <span class="jde-cat-count" id="cnt-blue">0</span></div>
+              <div class="jde-cat yellow"><div class="jde-cat-dot"></div>Requirements <span class="jde-cat-count" id="cnt-yellow">0</span></div>
+              <div class="jde-cat green"><div class="jde-cat-dot"></div>Tone <span class="jde-cat-count" id="cnt-green">0</span></div>
+            </div>
+            <div class="jde-body">
+              <strong>Software Engineering Manager</strong>
+              We're looking for a <span class="hl purple" data-color="purple" id="hl0">rockstar engineering manager<div class="hl-tooltip"><div class="hl-tooltip-label purple">Clarity</div>Vague and culture-specific. Try "experienced engineering manager" to describe the role clearly.</div></span> to join our growing team. You'll be a <span class="hl blue" data-color="blue" id="hl1">ninja<div class="hl-tooltip"><div class="hl-tooltip-label blue">Inclusive language</div>"Ninja" and similar terms can feel exclusionary. Consider "skilled" or "experienced" instead.</div></span> who can <span class="hl purple" data-color="purple" id="hl2">juggle multiple priorities<div class="hl-tooltip"><div class="hl-tooltip-label purple">Clarity</div>This phrase is vague. Be specific about what they'll actually be managing at once.</div></span> in a fast-paced, dynamic environment.
+
+              <span class="sec-label">What you'll do</span>
+              <ul>
+                <li>Lead and mentor a team of engineers to <span class="hl purple" data-color="purple" id="hl3">crush their sprint goals<div class="hl-tooltip"><div class="hl-tooltip-label purple">Clarity</div>Unclear and informal. Try "meet sprint commitments" or "hit delivery milestones."</div></span></li>
+                <li>Interface with stakeholders and <span class="hl green" data-color="green" id="hl4">drive technical strategy<div class="hl-tooltip"><div class="hl-tooltip-label green">Tone</div>Consider "develop and communicate technical strategy" to sound more collaborative than directive.</div></span></li>
+                <li>Partner closely with product and design</li>
+              </ul>
+
+              <span class="sec-label">Requirements</span>
+              <ul>
+                <li><span class="hl yellow" data-color="yellow" id="hl5">10+ years of software engineering experience<div class="hl-tooltip"><div class="hl-tooltip-label yellow">Requirements</div>This may filter out strong candidates. Consider "5+ years" or focus on specific skills instead of years.</div></span></li>
+                <li><span class="hl green" data-color="green" id="hl6">Must have<div class="hl-tooltip"><div class="hl-tooltip-label green">Tone</div>"Must have" reads as demanding. Try "strong" or "demonstrated" to set a more welcoming tone.</div></span> excellent written and verbal communication</li>
+                <li><span class="hl yellow" data-color="yellow" id="hl7">Bachelor's degree required (Master's preferred)<div class="hl-tooltip"><div class="hl-tooltip-label yellow">Requirements</div>Degree requirements can limit diversity. Consider "or equivalent practical experience."</div></span></li>
+                <li><span class="hl blue" data-color="blue" id="hl8">Must be a team player<div class="hl-tooltip"><div class="hl-tooltip-label blue">Inclusive language</div>This phrase is subjective and hard to define. Focus on specific collaborative behaviors instead.</div></span> who is passionate about excellence</li>
+              </ul>
+            </div>
+            <div class="jde-footer">
+              <button class="jde-accept-btn" id="jde-accept">Accept all suggestions</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-caption">Hover any highlight to see the suggestion. Each category flags a different type of issue. Recruiters can work through them one at a time or accept everything at once.</div>
+    </div>
+
+    <p><strong>Purple highlights flag clarity issues</strong>: vague language, buzzwords, and sections that don't clearly communicate what the role actually involves.</p>
+
+    <p><strong>Blue highlights flag inclusive language</strong>: wording that could unintentionally discourage certain candidates from applying, with more welcoming alternatives suggested.</p>
+
+    <p><strong>Yellow highlights flag requirements</strong>: inflated or unnecessary criteria that might be filtering out strong candidates who could do the job.</p>
+
+    <p><strong>Green highlights flag tone</strong>: adjustments that make the overall description more approachable and human.</p>
+
+    <div class="section-heading" id="testing">
+      <div class="section-title">Client testing</div>
+    </div>
+
+    <p>Once I had a working prototype, I sent it to our Client Success team. Instead of running a traditional usability test, they did something better: they tested it live during client calls with the exact clients who had originally requested this kind of tool.</p>
+
+    <p>The reaction was really positive. Clients were excited to actually test out a feature and give direct feedback. It also gave us a clear picture of what needed to change before we built the final version.</p>
+
+    <div class="feedback-list">
+      <div class="feedback-item">
+        <div class="feedback-icon">✦</div>
+        <div class="feedback-text"><strong>Copy and paste, not file upload.</strong> Clients wanted to paste their job descriptions directly into the tool. Most job descriptions weren't saved as PDFs anyway. They lived in email drafts, Google Docs, or ATS systems.</div>
+      </div>
+      <div class="feedback-item">
+        <div class="feedback-icon">✦</div>
+        <div class="feedback-text"><strong>Accept all suggestions.</strong> Clients wanted a way to accept everything at once for efficiency, not just work through each suggestion one at a time.</div>
+      </div>
+      <div class="feedback-item">
+        <div class="feedback-icon">✦</div>
+        <div class="feedback-text"><strong>No export button needed.</strong> Clients didn't need to export to a file. They just wanted to copy the improved text and paste it wherever they were working.</div>
+      </div>
+      <div class="feedback-item">
+        <div class="feedback-icon">✦</div>
+        <div class="feedback-text"><strong>Match the formatting.</strong> The tool needed to preserve the original formatting so the output looked consistent with whatever they'd pasted in.</div>
+      </div>
+    </div>
+
+    <div class="section-heading" id="shipped">
+      <div class="section-title">What shipped</div>
+    </div>
+
+    <p>We implemented all the changes that came out of client testing. The final version was more polished than the prototype, but the prototype had already nailed the flow, the core functionality, and the features that mattered most. The client feedback mostly shaped the details and the experience around the edges.</p>
+
+    <p>The tool shipped as part of the Mogul Recruiter, living in the Tools section where recruiters could use it alongside their sourcing and outreach workflow.</p>
+
+    <div class="demo-container">
+      <div class="demo-browser">
+        <div class="demo-bar">
+          <div class="demo-dot red"></div>
+          <div class="demo-dot yellow"></div>
+          <div class="demo-dot green"></div>
+          <div class="demo-url">app.mogulrecruiter.com/tools/jd-optimizer</div>
+        </div>
+        <img src="../images/jdenhancer.jpg" style="width:100%;display:block;" alt="Job Description Optimization tool showing color-coded suggestions in the Mogul Recruiter">
+      </div>
+      <div class="demo-caption">The shipped version of the tool inside the Mogul Recruiter.</div>
+    </div>
+
+    <div class="section-heading" id="learned">
+      <div class="section-title">What I learned</div>
+    </div>
+
+    <div class="reflection"><p>This project changed how I think about prototyping. Being able to go from sketches to a working prototype on my own, using AI tools like Claude and Cursor, meant I didn't have to wait for engineering time to validate an idea. I could test a concept with real users and come to the engineering team with a validated direction and real feedback instead of just a spec. That's a fundamentally different conversation, and it leads to better products shipping faster.</p></div>
+
+  </article>
+</div>
+
+<script>
+  // Shipped tool demo interactivity
+  (function() {
+    var suggestions = [
+      { cat: 'green', catLabel: 'Clarity', desc: 'Avoid culture-specific terms that may alienate candidates. Use language that describes the role clearly.', original: '"rockstar developer"', suggested: '"experienced software engineer"' },
+      { cat: 'purple', catLabel: 'Inclusive language', desc: 'Terms like "ninja" can feel exclusionary. Focus on specific skills and competencies instead.', original: '"programmer who can handle everything"', suggested: '"versatile engineer comfortable across the stack"' },
+      { cat: 'blue', catLabel: 'Requirements', desc: 'Absolute requirements can unnecessarily exclude qualified candidates. Consider making experience requirements preferences when possible.', original: '"Must have 5+ years of experience"', suggested: '"5+ years of experience preferred"' },
+      { cat: 'blue', catLabel: 'Requirements', desc: '"No exceptions" signals inflexibility and can discourage strong candidates who are slightly outside the range.', original: '"(no exceptions)"', suggested: 'Remove this phrase entirely.' },
+      { cat: 'blue', catLabel: 'Requirements', desc: 'Specifying university prestige can introduce bias. Focus on skills and demonstrated ability instead.', original: '"computer science degree from a top university"', suggested: '"CS degree or equivalent practical experience"' },
+      { cat: 'yellow', catLabel: 'Inclusive language', desc: 'Age requirements are discriminatory in most jurisdictions and likely illegal. Remove this requirement entirely.', original: '"Must be under 30 years old"', suggested: 'Remove this requirement.' },
+      { cat: 'yellow', catLabel: 'Inclusive language', desc: 'Native speaker requirements can exclude qualified bilingual candidates. Specify the actual communication needs instead.', original: '"Must be a native English speaker"', suggested: '"Fluency in written and spoken English"' },
+    ];
+
+    var activeIdx = 2; // start on the third suggestion (Requirements)
+    var dismissed = {};
+    var remainingCount = suggestions.length;
+
+    function renderPanel(idx) {
+      var panel = document.getElementById('suggestion-content');
+      if (!panel) return;
+      var s = suggestions[idx];
+      panel.innerHTML =
+        '<div class="sp-cat-pill ' + s.cat + '">' + s.catLabel + '</div>' +
+        '<div class="sp-desc">' + s.desc + '</div>' +
+        '<div class="sp-box original"><div class="sp-box-label">Original</div><div class="sp-box-text">' + s.original + '</div></div>' +
+        '<div class="sp-box suggested"><div class="sp-box-label">Suggested</div><div class="sp-box-text">' + s.suggested + '</div></div>' +
+        '<div class="sp-actions">' +
+          '<button class="sp-btn accept" id="sp-accept-btn">Accept</button>' +
+          '<button class="sp-btn skip" id="sp-skip-btn">Skip</button>' +
+        '</div>';
+
+      document.getElementById('sp-accept-btn').onclick = function() { dismissHighlight(activeIdx, true); };
+      document.getElementById('sp-skip-btn').onclick = function() { dismissHighlight(activeIdx, false); };
+    }
+
+    function dismissHighlight(idx, accepted) {
+      dismissed[idx] = true;
+      var els = document.querySelectorAll('.shl[data-idx="' + idx + '"]');
+      els.forEach(function(el) {
+        if (accepted) {
+          el.style.background = 'rgba(34,197,94,0.1)';
+          el.style.color = 'rgba(21,128,57,0.7)';
+          el.style.textDecoration = 'line-through';
+        } else {
+          el.style.background = 'transparent';
+          el.style.color = 'inherit';
+        }
+        el.classList.remove('active-hl');
+        el.style.cursor = 'default';
+        el.onclick = null;
+      });
+      remainingCount = suggestions.filter(function(_, i) { return !dismissed[i]; }).length;
+      var countEl = document.getElementById('shipped-suggestion-count');
+      if (countEl) countEl.textContent = remainingCount + ' suggestion' + (remainingCount !== 1 ? 's' : '') + ' found';
+
+      // Find next undismissed
+      var nextIdx = -1;
+      for (var i = 0; i < suggestions.length; i++) {
+        if (!dismissed[i]) { nextIdx = i; break; }
+      }
+      if (nextIdx >= 0) {
+        setActive(nextIdx);
+      } else {
+        document.getElementById('suggestion-content').innerHTML = '<div class="sp-empty">All suggestions reviewed. Your job description is ready to copy.</div>';
+      }
+    }
+
+    function setActive(idx) {
+      // Remove all active states
+      document.querySelectorAll('.shl').forEach(function(el) { el.classList.remove('active-hl'); });
+      // Set new active
+      document.querySelectorAll('.shl[data-idx="' + idx + '"]').forEach(function(el) { el.classList.add('active-hl'); });
+      activeIdx = idx;
+      renderPanel(idx);
+    }
+
+    // Bind click on all highlights
+    document.querySelectorAll('.shl').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-idx'));
+        if (!dismissed[idx]) setActive(idx);
+      });
+    });
+
+    // Accept all button
+    var acceptAll = document.getElementById('shipped-accept-all');
+    if (acceptAll) {
+      acceptAll.addEventListener('click', function() {
+        suggestions.forEach(function(_, i) {
+          if (!dismissed[i]) dismissHighlight(i, true);
+        });
+      });
+    }
+
+    // Initialize with suggestion 2 active
+    setActive(2);
+  })();
+  var sections = document.querySelectorAll('.section-heading');
+  var tocItems = document.querySelectorAll('.toc-item');
+  function updateTOC() {
+    var scrollPos = window.scrollY + 120;
+    var current = '';
+    sections.forEach(function(s) { if (s.offsetTop <= scrollPos) current = s.id; });
+    tocItems.forEach(function(item) {
+      if (item.dataset.section === current) item.classList.add('active');
+      else item.classList.remove('active');
+    });
+  }
+  window.addEventListener('scroll', updateTOC);
+  updateTOC();
+  document.querySelectorAll('.toc-item a').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.querySelector(this.getAttribute('href'));
+      if (target) window.scrollTo({ top: target.offsetTop - 40, behavior: 'smooth' });
+    });
+  });
+
+  // JD demo: animate highlights in on scroll, count up per category
+  (function() {
+    var highlights = [
+      { id: 'hl0', color: 'purple' },
+      { id: 'hl1', color: 'blue' },
+      { id: 'hl2', color: 'purple' },
+      { id: 'hl3', color: 'purple' },
+      { id: 'hl4', color: 'green' },
+      { id: 'hl5', color: 'yellow' },
+      { id: 'hl6', color: 'green' },
+      { id: 'hl7', color: 'yellow' },
+      { id: 'hl8', color: 'blue' }
+    ];
+
+    var counts = { purple: 0, blue: 0, yellow: 0, green: 0 };
+    var started = false;
+
+    function animateHighlights() {
+      if (started) return;
+      started = true;
+      var delay = 200;
+      highlights.forEach(function(h, i) {
+        setTimeout(function() {
+          var el = document.getElementById(h.id);
+          if (el) el.classList.add('show');
+          counts[h.color]++;
+          var countEl = document.getElementById('cnt-' + h.color);
+          if (countEl) countEl.textContent = counts[h.color];
+        }, delay);
+        delay += 180;
+      });
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          animateHighlights();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    var demo = document.getElementById('jde-demo');
+    if (demo) observer.observe(demo);
+
+    // Accept all button
+    var acceptBtn = document.getElementById('jde-accept');
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', function() {
+        highlights.forEach(function(h) {
+          var el = document.getElementById(h.id);
+          if (el) {
+            el.style.background = 'rgba(34,197,94,0.1)';
+            el.style.color = 'rgba(21,128,57,0.85)';
+            el.style.textDecoration = 'line-through';
+            el.style.opacity = '0.5';
+          }
+        });
+        acceptBtn.textContent = 'All suggestions accepted';
+        acceptBtn.style.background = 'rgba(21,128,57,0.8)';
+        acceptBtn.disabled = true;
+      });
+    }
+  })();
+</script>
+</body>
+</html>
