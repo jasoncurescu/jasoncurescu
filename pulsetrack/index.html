@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PulseTrack — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Silkscreen&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --brand:        #2C41FF;
+  --ink:          #0A0E1A;
+  --gray-700:     #3F4458;
+  --gray-500:     #6B7180;
+  --gray-400:     #9CA0AE;
+  --gray-300:     #D4D8E2;
+  --gray-200:     #E5E8F0;
+  --gray-100:     #F0F2F8;
+  --gray-50:      #F8F9FB;
+  --warm-tag-bg:  #F3F0ED;
+  --warm-tag-txt: #6B7180;
+  --warm-tag-bdr: #E5E1DD;
+  --canvas:       #FAFAFA;
+  --white:        #FFFFFF;
+  --sidebar-bg:   #FAFAFA;
+  --green:        #047857;
+  --green-fill:   #10B981;
+  --green-bg:     #ECFDF5;
+  --amber:        #B45309;
+  --amber-fill:   #F59E0B;
+  --red:          #B91C1C;
+  --red-fill:     #EF4444;
+  --red-bg:       #FEF2F2;
+  --blue-fill:    #3B82F6;
+  --font-d: 'Inter', system-ui, sans-serif;
+  --font-s: 'Inter', system-ui, sans-serif;
+  --font-m: 'Inter', system-ui, sans-serif;
+  --font-pixel: 'Silkscreen', monospace;
+}
+
+/* ── RESET ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+html, body { font-family: 'Inter', system-ui, sans-serif; font-size: 14px; color: var(--ink); background: var(--canvas); -webkit-font-smoothing: antialiased; }
+body { min-height: 100vh; }
+button { font-family: 'Inter', system-ui, sans-serif; cursor: pointer; }
+
+/* ── FRAME — full viewport, no chrome ───────────────────── */
+.frame { width: 100%; height: 100vh; background: var(--canvas); display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── SHELL ──────────────────────────────────────────────── */
+.shell { display: grid; grid-template-columns: 240px 1fr; height: 100vh; overflow: hidden; flex: 1; }
+
+/* ── SIDEBAR — light, matches Figma ─────────────────────── */
+.sidebar {
+  background: #FAFAFA;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 12px 20px;
+  gap: 2px;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sb-wordmark { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: -.02em; color: var(--ink); padding: 0 4px 10px; display: flex; align-items: center; gap: 7px; }
+.sb-nav svg { flex-shrink: 0; display: block; }
+.sb-nav { display: flex; align-items: center; gap: 9px; padding: 7px 12px; border-radius: 7px; font-size: 13px; color: var(--gray-500); cursor: pointer; transition: all .1s; }
+.sb-nav:hover { background: var(--gray-50); color: var(--gray-700); }
+.sb-nav.on { background: var(--white); color: var(--ink); font-weight: 500; border: 1px solid var(--gray-200); box-shadow: 0 1px 2px rgba(10,14,26,.05); }
+.sb-nav .ti { font-size: 16px; }
+.sb-badge { margin-left: auto; font-size: 10px; font-weight: 600; background: var(--red-bg); color: var(--red); padding: 1px 6px; border-radius: 99px; }
+/* Bottom section — pushed to bottom, always visible */
+.sb-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 2px; }
+.sb-profile { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; cursor: pointer; }
+.sb-profile:hover { background: var(--gray-50); }
+.sb-av { width: 28px; height: 28px; border-radius: 50%; background: var(--brand); color: var(--white); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; object-fit: cover; overflow: hidden; }
+.sb-name { font-size: 12px; font-weight: 500; color: var(--ink); }
+.sb-role { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
+/* Live data box */
+.sb-live-box {
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  background: var(--white);
+}
+.sb-live { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+.sb-live-label { color: var(--ink); font-weight: 500; }
+.sb-live-refresh { color: var(--gray-400); }
+.sb-live-dot { width: 6px; height: 6px; background: var(--green-fill); border-radius: 50%; flex-shrink: 0; display: inline-block; }
+/* Silkscreen applied to "UPDATED 7M AGO" */
+.sb-updated { font-family: var(--font-pixel); font-size: 9px; color: #0055FF; letter-spacing: .02em; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+
+/* ── MAIN ───────────────────────────────────────────────── */
+.main { padding: 28px 30px 20px 0; background: var(--canvas); height: 100vh; overflow-y: auto; }
+.greeting { margin-bottom: 20px; }
+.greeting-h { font-family: var(--font-d); font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
+.greeting-s { margin-top: 4px; font-size: 13px; color: var(--gray-500); display: flex; align-items: center; gap: 7px; }
+.alert-link { color: var(--red); font-weight: 500; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.alert-link::before { content: ''; width: 5px; height: 5px; background: var(--red); border-radius: 50%; display: inline-block; }
+
+/* ── CARD ───────────────────────────────────────────────── */
+.card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+
+/* PRIORITY OVERVIEW ─────────────────────────────────────── */
+.f1-head { padding: 16px 24px; border-bottom: 1px solid var(--gray-100); }
+.f1-title { font-size: 15px; font-weight: 500; font-family: var(--font-d); color: var(--ink); }
+
+.f1-body { display: grid; grid-template-columns: 1fr 1px 280px; }
+.f1-divider { background: var(--gray-100); }
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .shell { grid-template-columns: 200px 1fr; }
+  .main { padding: 28px 30px 20px 10px; }
+}
+
+@media (max-width: 768px) {
+  .shell { grid-template-columns: 52px 1fr; }
+  .sb-wordmark { padding: 0 0 18px; justify-content: center; }
+  .sb-wordmark span:last-child { display: none; }
+  .sb-nav { justify-content: center; padding: 10px 0; border: none; box-shadow: none; }
+  .sb-nav .ti { font-size: 18px; }
+  .sb-nav span:not(.sb-badge) { display: none; }
+  .sb-badge { display: none; }
+  .sb-profile { justify-content: center; padding: 8px 0; }
+  .sb-name, .sb-role { display: none; }
+  .sb-live-box { display: none; }
+  .f1-body { grid-template-columns: 1fr; }
+  .f1-divider { display: none; }
+  .teams-col { border-top: 1px solid var(--gray-100); }
+  .main { padding: 20px 16px 40px; }
+}
+
+/* Alerts column */
+.alerts-col {}
+.alerts-hdr { display: flex; align-items: center; gap: 8px; padding: 13px 24px 9px; }
+.a-lbl { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-400); }
+.a-counts { display: flex; align-items: center; gap: 5px; }
+.cnt-c { font-size: 12px; font-weight: 500; color: #EF4444; }
+.cnt-w { font-size: 12px; font-weight: 500; color: #F59E0B; }
+.cnt-dot { color: var(--gray-300); font-size: 12px; }
+
+.a-list { padding: 0; }
+
+/* Individual alert row — full-width borders, clean on hover */
+.a-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 13px 24px;
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+  position: relative;
+  transition: background .1s;
+}
+.a-row:last-child { border-bottom: none; }
+.a-row:hover { background: var(--gray-50); }
+.a-row.focused { background: rgba(44,65,255,.04); outline: 2px solid var(--brand); outline-offset: -1px; }
+.a-row.acked { opacity: .45; }
+.a-row.snoozed { display: none; }
+
+.a-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.a-dot.c { background: var(--red-fill); }
+.a-dot.w { background: var(--amber-fill); }
+.a-dot.i { background: var(--gray-300); }
+
+.a-body { flex: 1; min-width: 0; }
+.a-hl { font-size: 13px; font-weight: 600; line-height: 1.4; color: var(--ink); }
+.a-row.w .a-hl { color: var(--ink); font-weight: 600; }
+.a-row.i .a-hl { color: var(--gray-500); font-weight: 400; }
+.a-meta { display: flex; align-items: center; gap: 7px; margin-top: 5px; }
+
+/* Silkscreen applied to timestamps — "6H AGO", "3H AGO" etc */
+.a-tag { font-size: 11px; font-weight: 400; padding: 2px 8px; border-radius: 4px; background: var(--warm-tag-bg); color: var(--warm-tag-txt); border: 1px solid var(--warm-tag-bdr); }
+.a-time { font-family: var(--font-pixel); font-size: 11px; color: #5C5C5C; letter-spacing: .02em; }
+.a-ack-lbl { font-size: 11px; color: var(--green); font-weight: 500; display: flex; align-items: center; gap: 3px; }
+
+/* Action buttons — hidden until hover/focus */
+.a-actions { display: flex; align-items: center; gap: 3px; opacity: 0; pointer-events: none; transition: opacity .15s; flex-shrink: 0; margin-left: auto; }
+.a-row:hover .a-actions,
+.a-row.focused .a-actions { opacity: 1; pointer-events: all; }
+.act-btn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--gray-200); border-radius: 5px; background: var(--white); color: var(--gray-500); cursor: pointer; position: relative; transition: all .1s; font-size: 14px; }
+.act-btn:hover { border-color: var(--gray-400); color: var(--ink); background: var(--gray-50); }
+/* Tooltip on action button */
+.act-btn .tip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--white); font-size: 11px; font-family: var(--font-s); padding: 4px 8px; border-radius: 5px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .12s; z-index: 40; }
+.act-btn .tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--ink); }
+.act-btn:hover .tip { opacity: 1; }
+
+/* Extra alerts drawer */
+.extra-drawer { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+.extra-drawer.open { max-height: 240px; }
+.extra-inner { border-top: 1px solid var(--gray-100); padding: 0 16px 0 24px; }
+
+/* Keyboard bar */
+.kb-bar { display: flex; align-items: center; gap: 14px; padding: 0 24px; font-size: 11px; color: var(--gray-500); background: var(--gray-50); border-top: 1px solid var(--gray-100); max-height: 0; overflow: hidden; opacity: 0; transition: max-height .2s, opacity .2s, padding .2s; }
+.kb-bar.show { max-height: 40px; opacity: 1; padding: 10px 24px; }
+.kb-k { display: flex; align-items: center; gap: 4px; }
+.kk { font-family: var(--font-m); font-size: 10px; padding: 2px 5px; border: 1px solid var(--gray-300); border-radius: 3px; background: var(--white); color: var(--gray-700); }
+
+/* Alerts footer */
+.a-footer { display: flex; align-items: center; justify-content: space-between; padding: 11px 24px; border-top: 1px solid var(--gray-100); }
+.more-lbl { font-size: 12px; color: var(--gray-500); }
+.view-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--brand); background: none; border: none; cursor: pointer; }
+.view-btn:hover { color: var(--brand-dark, #1E2DB3); }
+.view-btn .ti { font-size: 12px; }
+
+/* Team health column */
+.teams-col {}
+.teams-hdr { display: flex; align-items: center; justify-content: space-between; padding: 13px 20px 9px; }
+.t-lbl { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--gray-400); }
+.t-vs { font-size: 11px; color: var(--gray-400); }
+.t-list { padding: 0; }
+.t-row {
+  display: grid;
+  grid-template-columns: 1fr 52px 48px;
+  align-items: center;
+  padding: 9px 24px 9px 20px;
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+  transition: background .1s;
+}
+.t-row:last-child { border-bottom: none; }
+.t-row:hover { background: var(--gray-50); }
+.t-name { font-size: 13px; font-weight: 500; color: var(--ink); padding-right: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.t-score { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: var(--ink); text-align: right; }
+.t-trend { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 2px; justify-content: flex-end; }
+.t-trend.up { color: var(--green); }
+.t-trend.dn { color: var(--red); }
+.t-trend.fl { color: var(--gray-400); }
+
+/* PERFORMANCE OVERVIEW ──────────────────────────────────── */
+.f2-head { padding: 16px 24px; border-bottom: 1px solid var(--gray-100); }
+.f2-title { font-size: 15px; font-weight: 500; font-family: var(--font-d); color: var(--ink); }
+
+/* Filter bar */
+.filter-bar { display: flex; align-items: center; padding: 12px 24px; gap: 0; border-bottom: 1px solid var(--gray-100); }
+.m-pills { display: flex; gap: 4px; }
+
+/* Metric pill — exact match to Figma states */
+.mpill { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 6px; font-size: 12px; font-family: var(--font-s); border: 1px solid transparent; background: transparent; color: var(--gray-400); cursor: pointer; transition: all .1s; white-space: nowrap; }
+.mpill .ti { font-size: 13px; }
+.mpill:hover { background: var(--gray-100); color: var(--gray-700); }
+.mpill.on { background: var(--white); border-color: var(--ink); color: var(--ink); font-weight: 500; }
+
+/* Period selector — exact match to Figma */
+.period-wrap { margin-left: auto; display: flex; align-items: center; gap: 2px; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 7px; padding: 3px; }
+.pbtn { padding: 4px 12px; border-radius: 5px; font-size: 12px; font-family: var(--font-s); border: none; cursor: pointer; background: transparent; color: var(--gray-500); transition: all .1s; }
+.pbtn:hover { color: var(--gray-700); }
+.pbtn.on { background: var(--white); color: var(--ink); font-weight: 500; box-shadow: 0 1px 2px rgba(10,14,26,.06); }
+
+/* Sort dropdown */
+.sort-wrap { margin-left: 10px; position: relative; }
+.sort-trig { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border: 1px solid var(--gray-200); border-radius: 6px; font-size: 12px; font-family: var(--font-s); background: var(--white); color: var(--gray-700); cursor: pointer; transition: border-color .1s; white-space: nowrap; }
+.sort-trig:hover { border-color: var(--gray-400); }
+.sort-trig .ti { font-size: 13px; color: var(--gray-400); }
+.sort-menu { position: absolute; top: calc(100% + 5px); right: 0; background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; box-shadow: 0 8px 24px rgba(10,14,26,.1); min-width: 170px; z-index: 50; overflow: hidden; display: none; }
+.sort-menu.open { display: block; }
+.sopt { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; font-size: 13px; color: var(--gray-700); cursor: pointer; transition: background .08s; }
+.sopt:hover { background: var(--gray-50); }
+.sopt.on { color: var(--ink); font-weight: 500; }
+.sopt .ti { font-size: 13px; color: var(--brand); }
+
+/* Custom SVG icons */
+.mpill svg { flex-shrink: 0; display: block; }
+.a-dot-svg { flex-shrink: 0; margin-top: 2px; display: block; }
+.t-trend svg { flex-shrink: 0; }
+
+/* Chart area */
+.chart-area { padding: 0 24px; }
+.chart-hdr { display: grid; grid-template-columns: 190px 1fr 52px 48px; padding: 9px 16px 6px 0; }
+.ch { font-size: 10px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; color: var(--gray-400); }
+.ch.r { text-align: right; }
+
+.b-row { display: grid; grid-template-columns: 190px 1fr 52px 48px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--gray-100); position: relative; }
+.b-row:last-child { border-bottom: none; }
+
+.d-cell { padding-right: 14px; }
+.d-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+/* Silkscreen applied to "X PEOPLE" team size labels */
+.d-count { font-family: var(--font-pixel); font-size: 11px; color: #5C5C5C; letter-spacing: .02em; margin-top: 3px; }
+.bar-track { height: 16px; background: var(--gray-100); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; transition: width .45s cubic-bezier(.4,0,.2,1); }
+.bar-fill.g { background: var(--green-fill); }
+.bar-fill.b { background: var(--blue-fill); }
+.bar-fill.a { background: var(--amber-fill); }
+.bar-fill.r { background: var(--red-fill); }
+.s-cell { text-align: right; font-family: var(--font-m); font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink); padding-left: 10px; }
+.tr-cell { display: flex; align-items: center; justify-content: flex-end; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; gap: 2px; }
+.tr-cell .ti { font-size: 12px; }
+.tr-cell.up { color: var(--green); }
+.tr-cell.dn { color: var(--red); }
+.tr-cell.fl { color: var(--gray-400); }
+
+/* Chart footer */
+.chart-footer { display: flex; align-items: center; justify-content: space-between; padding: 11px 24px; border-top: 1px solid var(--gray-100); background: var(--gray-50); }
+.legend { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--gray-500); }
+.leg { display: flex; align-items: center; gap: 5px; }
+.leg-sq { width: 8px; height: 8px; border-radius: 2px; }
+.vs-txt { font-size: 12px; color: var(--gray-500); display: flex; align-items: center; gap: 4px; }
+.vs-txt .ti { font-size: 13px; color: var(--gray-400); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+<div class="shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sb-wordmark">PulseTrack</div>
+      <div class="sb-nav on"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 7L10 4" stroke="black" stroke-linecap="round"/><circle cx="7" cy="7" r="6.5" stroke="black"/><path d="M8.479 2.74996C6.13176 1.9332 3.56683 3.17389 2.75007 5.52113C2.30967 6.78677 2.46746 8.1157 3.07436 9.19974" stroke="black" stroke-linecap="round"/><circle cx="7" cy="7" r="1" fill="black" stroke="black"/></svg>Overview</div>
+      <div class="sb-nav"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 13.5V10.5C9.5 8.84315 8.15685 7.5 6.5 7.5H3.5C1.84315 7.5 0.5 8.84315 0.5 10.5V13.5" stroke="#6B7180" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 13.5V10.5C13.5 8.84315 12.1569 7.5 10.5 7.5H10" stroke="#6B7180" stroke-linecap="round" stroke-linejoin="round"/><circle cx="5" cy="3" r="2.5" stroke="#6B7180"/><path d="M9 5.5C10.3807 5.5 11.5 4.38071 11.5 3C11.5 1.61929 10.3807 0.5 9 0.5" stroke="#6B7180" stroke-linecap="round"/></svg>Teams</div>
+      <div class="sb-nav"><svg width="11" height="14" viewBox="0 0 11 14" fill="none"><path d="M3.5 4.5V10.5" stroke="#6B7180" stroke-linecap="round"/><path d="M5.5 8.5V10.5" stroke="#6B7180" stroke-linecap="round"/><path d="M7.5 6.5V10.5" stroke="#6B7180" stroke-linecap="round"/><path d="M0.5 2.5C0.5 1.39543 1.39543 0.5 2.5 0.5H6.17157C6.70201 0.5 7.21071 0.710714 7.58579 1.08579L9.91421 3.41421C10.2893 3.78929 10.5 4.29799 10.5 4.82843V11.5C10.5 12.6046 9.60457 13.5 8.5 13.5H2.5C1.39543 13.5 0.5 12.6046 0.5 11.5V2.5Z" stroke="#6B7180"/><path d="M7 1V3C7 3.55228 7.44772 4 8 4H10" stroke="#6B7180" stroke-linecap="round"/></svg>Reports</div>
+      <div class="sb-nav"><svg width="12" height="13" viewBox="0 0 12 13" fill="none"><circle cx="6" cy="10.5" r="2" fill="#FAFAFA" stroke="#6B7180"/><path d="M11.5 9.5H0.5L0.70958 9.29042C1.53582 8.46418 2 7.34355 2 6.17507C2 5.09604 2.39598 4.05452 3.11286 3.24804L5.25259 0.840836C5.65038 0.393321 6.34962 0.393321 6.74741 0.840836L8.88714 3.24804C9.60402 4.05452 10 5.09604 10 6.17507C10 7.34355 10.4642 8.46418 11.2904 9.29042L11.5 9.5Z" fill="#FAFAFA" stroke="#6B7180" stroke-linecap="round" stroke-linejoin="round"/></svg>Alerts</div>
+
+      <div class="sb-bottom">
+        <!-- Settings above Jordan Reyes -->
+        <div class="sb-nav"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9692 3.0648L11.2478 3.47998L11.2478 3.47996L10.9692 3.0648ZM11.7691 3.12575L12.1705 2.82761L12.1703 2.82734L11.7691 3.12575ZM12.5666 4.53847L13.0294 4.34914L13.0294 4.34913L12.5666 4.53847ZM12.2055 5.25521L12.4169 5.70833L12.4172 5.70816L12.2055 5.25521ZM11.0505 7.04666L10.5505 7.0416L10.5505 7.04161L11.0505 7.04666ZM12.1676 8.85919L11.9471 9.30797L11.9471 9.30798L12.1676 8.85919ZM12.5148 9.58273L12.9738 9.78103L12.9738 9.78092L12.5148 9.58273ZM12.1465 10.3077L12.5769 10.5621L12.577 10.5621L12.1465 10.3077ZM11.6896 10.9792L12.0846 11.2857L12.0847 11.2857L11.6896 10.9792ZM10.8878 11.025L10.6013 11.4347L10.6013 11.4347L10.8878 11.025ZM8.76125 10.9208L8.51572 10.4853L8.51563 10.4853L8.76125 10.9208ZM7.74968 12.7959L8.24858 12.7627L8.24856 12.7625L7.74968 12.7959ZM7.29656 13.4572L7.35418 13.9538L7.35418 13.9538L7.29656 13.4572ZM5.67338 13.4418L5.60575 13.9372L5.60596 13.9372L5.67338 13.4418ZM5.23409 12.7704L5.73217 12.8142L5.73218 12.8141L5.23409 12.7704ZM2.13088 10.9367L1.85243 10.5214L1.85241 10.5215L2.13088 10.9367ZM1.3309 10.8758L0.929436 11.1738L0.929646 11.1741L1.3309 10.8758ZM0.533904 9.46222L0.0710607 9.65136L0.0710737 9.65139L0.533904 9.46222ZM0.89504 8.74548L0.683894 8.29225L0.683646 8.29236L0.89504 8.74548ZM2.05037 6.95537L2.55035 6.96042L2.55035 6.96033L2.05037 6.95537ZM0.932474 5.14233L0.711689 5.59095L0.711853 5.59103L0.932474 5.14233ZM0.585777 4.41795L0.126975 4.21921L0.126803 4.2196L0.585777 4.41795ZM0.954403 3.6943L0.523947 3.43992L0.523938 3.43994L0.954403 3.6943ZM1.41096 3.02147L1.01578 2.71515L1.01552 2.71549L1.41096 3.02147ZM2.21224 2.97656L2.4991 2.56704L2.499 2.56696L2.21224 2.97656ZM4.33964 3.08118L4.58525 3.5167L4.58525 3.5167L4.33964 3.08118ZM5.3517 1.20528L4.85282 1.23884L4.85283 1.23895L5.3517 1.20528ZM5.80447 0.54269L5.7471 0.0459922L5.7471 0.0459928L5.80447 0.54269ZM7.42666 0.559764L7.49463 0.0644047L7.49416 0.0643414L7.42666 0.559764ZM7.86596 1.2311L7.36786 1.18746L7.36786 1.18746L7.86596 1.2311ZM4.82858 5.98356L4.39815 5.72915L4.39812 5.7292L4.82858 5.98356ZM8.2723 8.01846L8.70276 8.27282L8.70279 8.27278L8.2723 8.01846ZM10.9692 3.0648L11.2478 3.47996C11.2693 3.46557 11.2936 3.45417 11.3181 3.44692C11.3427 3.43962 11.3627 3.43787 11.376 3.43841C11.3889 3.43893 11.3911 3.44137 11.3861 3.43892C11.3794 3.43572 11.3721 3.42978 11.3679 3.42415L11.7691 3.12575L12.1703 2.82734C11.9727 2.56169 11.6835 2.44996 11.4161 2.43921C11.1561 2.42876 10.8984 2.51009 10.6905 2.64963L10.9692 3.0648ZM11.7691 3.12575L11.3677 3.42388C11.6687 3.82902 11.9156 4.26758 12.1039 4.72781L12.5666 4.53847L13.0294 4.34913C12.8094 3.81148 12.5213 3.29982 12.1705 2.82761L11.7691 3.12575ZM12.5666 4.53847L12.1039 4.72779C12.1012 4.72123 12.0999 4.71193 12.1006 4.70461C12.1011 4.69903 12.102 4.70225 12.0957 4.71373C12.0893 4.72541 12.0774 4.74175 12.0584 4.7591C12.0395 4.77635 12.0171 4.79133 11.9938 4.80226L12.2055 5.25521L12.4172 5.70816C12.644 5.60214 12.8467 5.42349 12.972 5.19547C13.1009 4.96109 13.1548 4.65566 13.0294 4.34914L12.5666 4.53847ZM12.2055 5.25521L11.9941 4.80209C11.1513 5.19527 10.5606 6.04639 10.5505 7.0416L11.0505 7.04666L11.5505 7.05171C11.5565 6.45649 11.909 5.94526 12.4169 5.70833L12.2055 5.25521ZM11.0505 7.04666L10.5505 7.04161C10.5405 8.03629 11.1127 8.89807 11.9471 9.30797L12.1676 8.85919L12.388 8.41041C11.8856 8.16364 11.5445 7.6467 11.5505 7.05171L11.0505 7.04666ZM12.1676 8.85919L11.9471 9.30798C11.9705 9.31944 11.9926 9.33489 12.0111 9.35248C12.0298 9.37018 12.0413 9.38667 12.0475 9.39837C12.0535 9.40985 12.0525 9.41296 12.052 9.40733C12.0515 9.39997 12.053 9.39081 12.0557 9.38454L12.5148 9.58273L12.9738 9.78092C13.105 9.47703 13.0573 9.17071 12.9329 8.93364C12.8119 8.70312 12.6126 8.52074 12.388 8.4104L12.1676 8.85919ZM12.5148 9.58273L12.0558 9.38443C11.9574 9.61205 11.8447 9.83563 11.716 10.0534L12.1465 10.3077L12.577 10.5621C12.728 10.3065 12.8596 10.0453 12.9738 9.78103L12.5148 9.58273ZM12.1465 10.3077L11.716 10.0534C11.5876 10.2707 11.4463 10.4771 11.2945 10.6728L11.6896 10.9792L12.0847 11.2857C12.2609 11.0584 12.4261 10.8174 12.5769 10.5621L12.1465 10.3077ZM11.6896 10.9792L11.2946 10.6727C11.2987 10.6673 11.3059 10.6617 11.3124 10.6587C11.3173 10.6565 11.3149 10.6589 11.3018 10.6592C11.2885 10.6595 11.2684 10.6573 11.2439 10.6496C11.2196 10.6419 11.1955 10.63 11.1743 10.6152L10.8878 11.025L10.6013 11.4347C10.9678 11.691 11.6653 11.826 12.0846 11.2857L11.6896 10.9792ZM10.8878 11.025L11.1743 10.6152C10.4128 10.0827 9.38205 9.99691 8.51572 10.4853L8.76125 10.9208L9.00678 11.3564C9.52482 11.0644 10.1424 11.1138 10.6013 11.4347L10.8878 11.025ZM8.76125 10.9208L8.51563 10.4853C7.64887 10.9741 7.18863 11.9016 7.2508 12.8293L7.74968 12.7959L8.24856 12.7625C8.2111 12.2034 8.48855 11.6487 9.00686 11.3564L8.76125 10.9208ZM7.74968 12.7959L7.25079 12.8291C7.25251 12.855 7.25018 12.8817 7.24424 12.9064C7.23825 12.9312 7.22977 12.9493 7.22276 12.9604C7.21588 12.9712 7.21273 12.9719 7.21741 12.9687C7.22351 12.9645 7.23218 12.9613 7.23895 12.9605L7.29656 13.4572L7.35418 13.9538C8.03376 13.875 8.27827 13.2082 8.24858 12.7627L7.74968 12.7959ZM7.29656 13.4572L7.23895 12.9605C6.7439 13.0179 6.24052 13.0143 5.7408 12.9463L5.67338 13.4418L5.60596 13.9372C6.18996 14.0167 6.77737 14.0207 7.35418 13.9538L7.29656 13.4572ZM5.67338 13.4418L5.74101 12.9464C5.74803 12.9473 5.7568 12.9508 5.76287 12.9552C5.76752 12.9585 5.76434 12.9577 5.75761 12.9466C5.75077 12.9353 5.74261 12.9169 5.73712 12.8917C5.73167 12.8668 5.72991 12.8399 5.73217 12.8142L5.23409 12.7704L4.736 12.7267C4.7141 12.976 4.76711 13.241 4.90169 13.4637C5.04007 13.6928 5.27754 13.8924 5.60575 13.9372L5.67338 13.4418ZM5.23409 12.7704L5.73218 12.8141C5.81343 11.8877 5.37247 10.9511 4.51554 10.4447L4.26118 10.8752L4.00682 11.3057C4.51907 11.6083 4.78497 12.1684 4.736 12.7267L5.23409 12.7704ZM4.26118 10.8752L4.51554 10.4447C3.65873 9.93844 2.62507 10.0034 1.85243 10.5214L2.13088 10.9367L2.40932 11.352C2.87484 11.0399 3.49434 11.0028 4.00682 11.3057L4.26118 10.8752ZM2.13088 10.9367L1.85241 10.5215C1.8309 10.5359 1.80649 10.5473 1.78198 10.5546C1.75731 10.5619 1.73722 10.5636 1.72398 10.5631C1.71098 10.5626 1.7088 10.5601 1.71394 10.5626C1.72065 10.5658 1.72795 10.5718 1.73216 10.5775L1.3309 10.8758L0.929646 11.1741C1.12724 11.4399 1.41657 11.5516 1.68392 11.5623C1.94394 11.5727 2.2015 11.4914 2.40934 11.352L2.13088 10.9367ZM1.3309 10.8758L1.73237 10.5777C1.4316 10.1726 1.18502 9.73369 0.996735 9.27304L0.533904 9.46222L0.0710737 9.65139C0.290851 10.1891 0.578579 10.7012 0.929436 11.1738L1.3309 10.8758ZM0.533904 9.46222L0.996748 9.27307C0.999404 9.27957 1.00071 9.28878 1.00002 9.29599C0.999498 9.30149 0.998592 9.29822 1.00489 9.28676C1.0113 9.27509 1.02318 9.2588 1.04211 9.24151C1.06092 9.22434 1.08317 9.20944 1.10643 9.19859L0.89504 8.74548L0.683646 8.29236C0.456502 8.39833 0.253794 8.57712 0.128469 8.80522C-0.000331941 9.03964 -0.0541428 9.34498 0.0710607 9.65136L0.533904 9.46222ZM0.89504 8.74548L1.10619 9.19871C1.94906 8.80604 2.54028 7.95601 2.55035 6.96042L2.05037 6.95537L1.5504 6.95031C1.54438 7.54521 1.19206 8.05551 0.683894 8.29225L0.89504 8.74548ZM2.05037 6.95537L2.55035 6.96033C2.56022 5.96549 1.98715 5.10374 1.1531 4.69364L0.932474 5.14233L0.711853 5.59103C1.21466 5.83826 1.5563 6.35569 1.5504 6.9504L2.05037 6.95537ZM0.932474 5.14233L1.15326 4.69372C1.13013 4.68234 1.10811 4.66693 1.0896 4.64932C1.07097 4.63159 1.05939 4.61501 1.05319 4.60316C1.04709 4.59151 1.04804 4.58821 1.04845 4.59364C1.04899 4.6008 1.04751 4.60992 1.04475 4.61631L0.585777 4.41795L0.126803 4.2196C-0.00448624 4.5234 0.0431324 4.82975 0.167146 5.06676C0.287814 5.29738 0.486817 5.48028 0.711689 5.59095L0.932474 5.14233ZM0.585777 4.41795L1.04458 4.6167C1.14278 4.39001 1.25608 4.16661 1.38487 3.94866L0.954403 3.6943L0.523938 3.43994C0.373583 3.69439 0.241433 3.95499 0.126975 4.21921L0.585777 4.41795ZM0.954403 3.6943L1.38486 3.94868C1.51387 3.73036 1.65506 3.52305 1.80641 3.32744L1.41096 3.02147L1.01552 2.71549C0.839113 2.94348 0.674466 3.18521 0.523947 3.43992L0.954403 3.6943ZM1.41096 3.02147L1.80614 3.32779C1.80186 3.33331 1.79449 3.33912 1.78774 3.3422C1.78257 3.34455 1.78481 3.34216 1.79781 3.3419C1.81106 3.34163 1.83111 3.34378 1.85564 3.35159C1.88002 3.35935 1.90422 3.37127 1.92547 3.38615L2.21224 2.97656L2.499 2.56696C2.29395 2.42341 2.03803 2.33688 1.77778 2.3421C1.51018 2.34746 1.21868 2.45339 1.01578 2.71515L1.41096 3.02147ZM2.21224 2.97656L1.92537 3.38608C2.68702 3.9196 3.71846 4.00553 4.58525 3.5167L4.33964 3.08118L4.09403 2.64567C3.57565 2.93801 2.95781 2.88835 2.4991 2.56704L2.21224 2.97656ZM4.33964 3.08118L4.58525 3.5167C5.45218 3.02778 5.91323 2.10006 5.85056 1.17161L5.3517 1.20528L4.85283 1.23895C4.89056 1.79792 4.61284 2.35307 4.09402 2.64567L4.33964 3.08118ZM5.3517 1.20528L5.85057 1.17172C5.84882 1.14579 5.85114 1.11886 5.85711 1.09392C5.86312 1.06882 5.87167 1.05051 5.87874 1.0393C5.88569 1.0283 5.88886 1.02769 5.88408 1.03095C5.87784 1.03521 5.86892 1.03857 5.86185 1.03939L5.80447 0.54269L5.7471 0.0459928C5.41772 0.0840428 5.17617 0.279001 5.03323 0.505346C4.89424 0.72544 4.83603 0.989244 4.85282 1.23884L5.3517 1.20528ZM5.80447 0.54269L5.86185 1.03939C6.35576 0.982336 6.85915 0.987061 7.35916 1.05519L7.42666 0.559764L7.49416 0.0643414C6.9114 -0.0150588 6.32411 -0.0206578 5.7471 0.0459922L5.80447 0.54269ZM7.42666 0.559764L7.3587 1.05512C7.35176 1.05417 7.34307 1.05068 7.33706 1.0464C7.33247 1.04313 7.33568 1.04389 7.34241 1.05502C7.34926 1.06636 7.35741 1.08478 7.3629 1.10988C7.36835 1.13483 7.37012 1.16168 7.36786 1.18746L7.86596 1.2311L8.36405 1.27474C8.3859 1.02538 8.33286 0.760539 8.19827 0.537822C8.0599 0.308845 7.82256 0.109399 7.49463 0.0644049L7.42666 0.559764ZM7.86596 1.2311L7.36786 1.18746C7.28666 2.11425 7.72845 3.05095 8.58534 3.55729L8.8397 3.12683L9.09407 2.69637C8.58144 2.39345 8.31514 1.833 8.36405 1.27474L7.86596 1.2311ZM8.8397 3.12683L8.58534 3.55729C9.44235 4.06371 10.4754 3.99823 11.2478 3.47998L10.9692 3.0648L10.6906 2.64961C10.2252 2.96186 9.60647 2.99914 9.09407 2.69637L8.8397 3.12683ZM7.56789 5.27915L7.82225 4.84869C6.63358 4.1463 5.10058 4.5407 4.39815 5.72915L4.82858 5.98356L5.25902 6.23797C5.68054 5.5248 6.60042 5.28824 7.31353 5.70962L7.56789 5.27915ZM4.82858 5.98356L4.39812 5.7292C3.69572 6.91789 4.08993 8.45093 5.27863 9.15333L5.53299 8.72287L5.78735 8.2924C5.07414 7.87096 4.83761 6.95114 5.25905 6.23792L4.82858 5.98356ZM5.53299 8.72287L5.27863 9.15333C6.46732 9.85574 8.00036 9.46152 8.70276 8.27282L8.2723 8.01846L7.84184 7.7641C7.42039 8.47732 6.50057 8.71385 5.78735 8.2924L5.53299 8.72287ZM8.2723 8.01846L8.70279 8.27278C9.40497 7.08418 9.01093 5.55108 7.82225 4.84869L7.56789 5.27915L7.31353 5.70962C8.02664 6.13099 8.26317 7.05089 7.84181 7.76414L8.2723 8.01846Z" fill="#6B7180"/></svg>Settings</div>
+        <!-- Profile -->
+        <div class="sb-profile">
+          <img class="sb-av" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgEAkACQAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAA2ADYDAREAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD+/igD8ob3/go3H8d/2gfFn7NX7Fun6V49X4UTQJ8f/wBo/UiupfC34d3NxcS2tt4G+HllZ3UH/CzviVqlxa6jZrcnUNP8FeFX0+71C6m8ZTWU3hmbw8bnlLDOpGjTeIdLSTTtF1G7Rpw1XM31kmorZOUmke3hslq1Y0516iwyq6wi4uVRU1rOrOO8YpfDGzlK92oxTkdH4p/aJ1yyWz0PxDeeIfGniBLhrK80T4ea7o+laPHKJjHZjVPGlyvhM6nrtx8st7b+GNJtNKRpXtbfSAkdtcy/lWY+JtGGLnhIUauaYyNXklgcqnL6rQltGjLFvndestFJ06UoKWi5neUv1rKPCueJw0cZLEQyjAOkqkcfntFvGYpWblWpZbRjOGGw71UPb1YyavNzs+SC3HxW1Twxa3us+LvAXjDwjYWTWYvNQtfHsfjFdPhvbiG38/U9NvpdPMNtbeelxqN1bxX6WVmlzdPIsVrM0f1uRZzjcVVqfXshxWUOEYyk4ZhDFSXM1JqpRbpNySvKSSnKNtGpHnZpwngKNKnHK+IsJmzrSajGeW1MEpOCl71OspV1ySceVKbpuTa922r9S8L/AB8luree88M+JbbXoNPuGtr7Tb8XJezuYz81jqNrdKmraRK5IZVkSGVUmgnWKeGW3S6/Qsur4bMKPPh6sa6jJ05W9ypCcF70akZe9Ca3cZxu73WjifAZvk+Jy+pCnjMJLDTqRjVpOy5K1KSuqtKpDmpVIPZShKcb3j8SaX0x8PPit4e+IEMkFs39n63aExX+jXMifaIZkjErrEcjzgIXjuAUBV7aWO5t3ubN47qTpqUJQTkryimoy0tKnJpPlmtbXummm4yTTT1seBWoSpNa3jJXi7dPNdN+/wCZ6hWBifze/wDBwJ+334++DHgDw5+xz+z/AKtd6L8WPjxoc2pfEXxhpdxNbah4G+EV7fXGgxaZp13Zh7zT9c+I2pW+qaX9utVa907w3o+tC3jju9Z02+tPluI88o5fD6r7VQq1KXtarXxwotuMVFX+KrKMkr292Mtrpn23CvDGKzSEs0lQcsHSxH1WjKatTqYqMI1JpvqqMJ05NJO8px0fLJH59fB7xLZ/8E6/2TPgn+y/4S1LTl+Pf7TPi3Ttb8a6vbFtP1Ky1/4lyaJoXhfQXkV5bzSzp2lXuhaNfXRG/SYbbXr2wW31vU7KN/xnijOsVisM8HgH9XhDCTxWY4pO8qOGcOdUouLSWIqU5NJwbcNbSWso/tHB+S5ZhsVUzfNoPFPD16eHyrAOm3SxmKjOTdeopJr6rQlBSalrWl7Jcrjzp/VfiP8A4JmfDHxLew+IPj7408WfGjxKieYtvqniHWNM8GaQZT5rWXh3wnpt/b6ZYWED/wCp8yOe5cgzXErTO7H4fLsRVy2NOngsRSwcFaXLhKdP2sv708VOEq05N3btKMb7RjY+xq5hSzuVSticPVruUnpiZzdNJO0Yww8ZexgorRJqUrac7W+R4q+E/jX4YWDaX8I/ip4vi8DRaZd6VefB3xrrmoeMfhxqOmXNuLW503T4Nbk1DVPCnn24aKKXQbyKxglle4udIv8AMkT/AGOG4hzOFOE44yrVlS1jKq+eE4t3lCrB2jNX+0lGpHXkmtU+CGXZZCpU9pgKXs67jzulFQrU+W/LKhW/iQnG7fJKUqM3pOm2oyj4D8MfEvxR+EHibw78U7C+1jUfhno9zYeEPiFG2oyak9lo1pPbaHe6b4khike9k1TQmuIZ7CeVWa8l8qeO4Ol6zezX+HDWN4wyXiulncaNevkeZYpU8wWGcqmDWGqzUHJrWVOeFdTnpuaUkoSi3yybf1/FL8OeJuBcXw7UxmEwXE2U4OpisoeKUaWYTxVKjOv7OMrKFSljo0nGtCDcHKcakV7SnDl/ZyPU79prmbR9dv8AQNTawNlbeI9MlVNRtbHUIJ20fWLZ2DRPqnhzUZC1kzp5Cx37ROrxEov9UYqksZQqUoVqlF4ihOiq9NpVKalFujXg3de0oVbTpyeid097n8Y4PExw2Ipzq4eniqdGvGVTDVY3pV1Bp1KFRK0vZVoXp1FFp22s1c+9P2UfjrefGnwHqlj4uWxs/i78LNc/4QD4t6XYL5NlL4ittOstU0nxhols22SPwt8Q/DWoaV4w0FSrLYLqV54ekmnv9Bv2Hz+U4ytiKVbDYxw/tLLqv1PMFBcsJ1VCM6eKpR6UcZQnTxEErqm5zoc0pUZM14oyajleLw+Ly9VJZJnWG/tLJqlR804YeVSdKvgK89VLFZZioVcFXbalVVOliuWEMTBH8lP7f3xt0mD41/tDftAeJrnw+98njrXNI8M3gvtSjutQ8PeEpx4V8H6JA0lvI1nLb6Lodj/alvplmbVr+e7vUluZ7ie4f+beKM0xWbcV4+nSlKdN4udCEFfSlQXsI6OytyU1Jq+rbbd2z+leD6NDA8I5Nh5+zhCjgliZP3OX22IcsTWm5x96U3VrSinJycVGMFaMYxX8+Gj/AB4+MvxF/by/Z08f+PbfT7y/svH7+OND8E674w/4Q7SPsfh7SdR1C0udT1rWoNQ/siG3byfsRutOuJjLIogtI1cqnvYjDYBcL51CNapzVaFPC4jFUKEsTU561SnT9nSpU2uaT+GSjLRLV2PDVbMJ8RZPGNGm489evhsLOt7CHs6VCq/aVJVE3FrmUoqUG5N2tu1/X/8ACH9uG2+PWieMrpvhxe+FNa8CWMt3qOl2/i/wt4203UoLZNsl1o3iHw1eSRTwRybEn/tGw0q4iNxAxt9j7h+RYy2CxmHwdJzqqpyqMquHxGFqxSSvKpRrU4uOivzRco2+1fQ+/wAvwDWGdary006k9Y1aNak29VGnVouUJaK3LLkktmluflv4v/4KQ+MdT8ciw8e+MfgL+zp4Sl1M2Oh6Pr+na18UPHfiNfMTab+a18V+ANC0VHjeEzQ6cdZuLf7RGHuFBjaX9NynC4ephLU8vzHMnGNq1eio0aNKWvuwjapOpqtG1FX05XuvmM0nXoYmKr5lluVwqNOhh8VUdStWV07zs6appv7N5XX2lsdh8Rv2jI/2cJPC3xy1m207Wvgp8Sdd0j4eftAaXpcV0dH1Pw54ojbRdC+IWlQXSC7tdV0G9urWCeA+fNqOhajd6LLcX11Y6Fqdp7XC2ZPC5nVy2Up1MBiqVR+wqq0oTppuUbX0k4c3N00Tsj5njPJljcupZhHkp4/B1IKOIoyXLJVNIrm6wlPl5dXbm3e7/YP4ReO9C8SeCNB1PQ9ftvE+k3Ph+00/R9ftrhLmLW9PguMW2qtcR4RpdSsb7Sb19gxv83acICP3/LcRGpgKN589oukpXu5cr5Y693G2vR763PxarRqQrVPaw9nOUuaUXo02tb721/T5nh39rLwV+x9+0z4f8ceP7/7B4H+P37MgsdbtkuYrf7d8Qvgv408Lp4c1SVrh/KNyvhT4ra/YSMqebNBbWiltloAfmMzr/wBlZ5TzOSboZplMaOJhFpOWKwNanLDVHfqqGKrwel2lH+VX+xwmCXEnCEcjVSlSx+S5/LHZfUqvSOW5tgZ08yoLVO31zL8vqpXai51H9o/m8/4KJ+FfEU2p/FrVrXWtM0eD4deO/E1zp0mtSQQadJrP2hme0ljukKajex30wvYOGZIpxGpRoix/nrF0pYHib2E6E8Q8bUUsS6SbnTjUnLns47JK+2rd13Z+hcE4p5hwdTxMqsaLwFKeHoqq1yTnRajGUrpX92SVtXpdPY/L3/gmb+y/bft0/tq3fg/4t63NqWm6T4J8WePdd1S7u5QdVh0XUfDOgR6Ms1tcRNDbM3jCGaSC1e2Q2vmqIIVmVK9/jDNK3DfDuF/sqMcHUxGNw2FppqKjSjUp4jETrTUlrNrCuKcuZ3tGLDh7DUc2znFV81jVxsMNhK+IlCnJuVWcZYehGhBXfLC1e7S0t8W+v9gHwz/Zv/ZZ/Yh+HnxdvvC+t+EfD2reOmlttZub+7sdIhupbiVZL1rdLiUv5YDFZpZbiRFMiwI0MFtFDF+f5RmMs5zL6xm+YQxmIw9J4fCU5rVzrL3pU4paqMIJXklq7rVWPv3gZ0adLD5blFXAZeufF4iUV7t+SVOn7SUpWc25OSSV+WN+iPILb9lb9kj4zT2nifxLp+jz3ej399q0Vg9r4fvdLmvtRtrOw1DUrOW60u+84ajZ6bYWV1d2F4BNBZ20Ekv+jxrH6bxtfBYuVGjmNfAxm4vl99Qmrt+7Z7e89lrcHl1PF0ouvgcPi3FuMKlWnGdSD/ld2nqujPy9/wCC1/xG8JeD/wBlvUvhl4WisBB4i13w34c0WC3CCKM6Vqdnry+QsYiCiKHRhFuUotus27cAor6rhWm8Vn1GqpupDB0atWdT+Zzpypau3vazvtrZrU+X43isu4eqUeVRrYqpQpUqd9VaaqaRWiUY00le1rq1y7/wRc/aE1Cx8BRfBXxd4hkuUs9+u+Gra9Ij1LRk1SOFdWsY8zTJeaWL2OG/sJYfmivLm9hli8qeyml/VMlzuNDG1svrwtRVSpUpVFrG7s+RppOOrcla+t12PyfNMndfCUcfSd6sqcY1oSvdtN6q17u2706dtf1D+N/wx+B37a3jaL4Z6x4oRPE/wP095XtbDU5bGbTbXxRBpFxeWyy27xvJC8SeH0uAC0YurQRPie2ZV/LPE3iHiSXEGFw2RT5cLhcBJVdFKEsTVqwlUT7SpUo0I23TlPY+k4WpZPluV1HnOEqPEYvEQrUJyUqcnhoU504um5W5qc6qquTTkm1DXQ/Jb/g4I/Zx8Q/DP9sX4ny6zr3iG78JeOXi+KXw/wBJluJBpEGjeM57+61ie2tbO2gEo0LxRbeJdDsbOR5Zl+wQ3TanE+oeSnt5lRnkXFmPpOjF08dW/tDD4mouepKli5ynKjCU21CnRxPtqSirWjGPuyvc2yHEU894PwLjW5KuAp/UK+Hp+5TjUw0YwjWqKOtSpXoOlVbdk5zlqrM/En9g/wDaD0/9kX9qTwB431XVZPDvgrxTrUXhjxLqk11mW08O+NtPbS31O8ui/lxWGn6vLo2raqcNCi6FNNskeFJ25eOMnrcVcO4zDYWn7XG4elLE4WEEl/tGEl7RUorrKpTVanT6v21k7tI7eEczocM51h62IlyYPGTpUqsqrbi6WKSgqs3qlCNT2c5tfD7J/wArP7RfHauPhD4W07xnrvwufwJaNDqWkeLNY8E+JfG3iTVdUndri8v9RkHi7R9OtL2WVzdr9mlktbgyR/ZrKGKJLWH+f+HamXYh0lUr1MDi6VSftaXtZUp3vyvllG3NBRunGXLNPS0rtn9D0cFHE4rHVISdepVhGLhisfRwWCjh4pODpx+qVHPXaXPdLRLqfL3n+PfFVvaaxdeI/D1p4K8Ns39if8I74GvvDXiHXZVIRIzc3viHUV0/QzAmLmzbTjPft5eZYII18/8AQ81WAxOEpLDTeJxOnLiJaezir815Pmc5PRK7Xd3R8riIQwONnGhWjKOrrU6E5VMPzdI0qlTlc0tHzKC1vY/nz/4K8fFbw5q/in4V/CvStWEviTQ77WPEuvNbziSPRZ9QhtbfS7XUJcssVxe7WMMb/vIYoxPKscM8bSfd8AYOpSp4vF1NKc6dOjFvR1ORtzcN9IdX3tvfT8m4/wAwjiKuDwSm3VU3Wk91Tskop67zbdr7W+/wL9i26+Jsnxk+Gen+EruafXLPxJp1/EglfS7hdHht9T1HXba4MC4mtrjTdKvI3Aj/AH109nloUmlhb0OI8xwWU4fF5hiKv1WnSg71kuZqbnTp05WdrWnUjo38N9Oz4KyXG59mmX5Woe3VWvCVSnNqClQpxqVq0XKzs50qU0mlvyq6u0/7mf8Agkn+ytY/EX47fGz9pfxv4Yl/4R+w8BWPwfsUu3vLa28TeL9c1zRPGvia/L2s9u8134V0/wAP+HoXklLoy+MnSFi8VwE38LsgoTwuNzOrjnnOGxlSc6VatJVY+3rzjXruL+y0vZqUb2XPZJao9j6SuYZfhK3DOQYPCUcFj8HhXXrQoxUZUMBGCw2DpPS/JWmq8o31/wBncnrO7+/f+Cuf/BOeH/goH+zpqWjeCf7A0f8AaC8C6brdx8JvEuuCeGyvI9Yto4fEHgnVry2ngEFj4jtreL+zL6+W7sdG12Czurm3Ol3OsR3H6HxNw/TzvD0akLRxuBqe2w0rqPtUrSlhak38NOrKMGpfYnFaxjKd/wCfeE+JJ5Bi6sKvNLL8dBUcVBXl7KWqp4uEF8U6HNK8V8cJNWlKMEv8tL9rb4W+I/2d/iJr3wP+J/h/UNG8ceFJp/C+r6Xq1rcpqOjaih8xkudKlghuTGi3Eb2q74/PS5jvLZporlEb43K4163tZVKU8LVw+Ik61CcXSmqkGlKMub4b2vs04pP4dX+jZrVw1COHdOtTxdHFYZewrwkq1P2U17jio7qN7fFeMr3Seh+9X/BL7/gpD8Wfhb+yX4x8GfE74b3Hxg8DfCnWtK0Pwj4inlsL3XPCmkanY50vRNSi1mSFdT0ezktLi10u/wDPS60m2RLSY3VhCr6d+ScZcJ4CecvMcurYPDVsc+bGYevTXLWxTlLmrYWCu4Vai96tFRcZt+0XLJyT/SeEc1zCrQw+BxmGzLERw1CSw9bBzXNHDU+RQo4ucuROFNu1KTlz2Sp+8lGR6/41/b18e/tDWtxYeCfCVv8ADjQZbN5I9Rt2tbrU7iCSPch09bSP7BZFxjFwr3b7SPKEThXHFDCRy9exrLnq05KM4ck6SjJOzUoy1suq5enbR+3WrvEpVKF406ivGTnGrO2mt02rPa9773P57fj58NtY1b45weHbbzNW1vWzLcal9suBJf3Et/Fe6gl009zKHluVTS7yRXeRpHlKIPMeVI3/AFLIcbT/ALKrYiUo0oUUvZpNRXKpKlLSysk5xUtLJavTQ/L89y+tLNMLQhQnW9vKVOcopyftZ05VoJNXtKUKdRxTaWnyf7Ef8Edv2N/it8Z/2iPDmk/DjTNQuL/SNPEXivxVqFjINM+HOmQXVxaX2seI5biDYtneWEtzZ6VYkx3+pXom0uyDXTw18tn2UY/jmNThvB0VbEV6c8TiZc/1fDYS6csRWnBx5ZUpwUoUlLnrzUIU4t3t+lcP5jk/hzhFxfm2Iko0sJUp4PAqUVjcbmCVoYPDQkn7T20JtVayTp4aHPWqyhBWf+kT8J/hj4a+DvgHw98PvCluIdL0K1KyXDIFudV1O5drnVNYviGctd6nfSTXUih2jt0eOzthHaW1vFH+7cK8NZfwjkGW8PZWpfVcuoez9rUblWxNacnUxGKrSbk/aYivOdVxT5KSlGjSUKNOnCP8qcX8U5nxpxFmfEmbTUsXmNbnVKP8LC4anGNLC4OgrR/dYXDwp0oya56rjKtVcq1SpOXotfQnzR+Yn/BQD/gkL+xB/wAFIrey1L9oH4aNafEvR7JtP0H4y+AbqHwv8SbCyxEYNN1HVVtLuw8UaVavBCbGz8T6bqsmjobtPD11orajfyXPmZhlVDHrm9pVwuIStDE4dqNS38lWElKnXp6JOFWEmldU5U3JyPbyjPcVlM7KlQxuEk/3mDxcHOk77yo1IShWw1XVtVKFSKcuV1YVYx5T8udG/wCCJ3wt/ZOvfCvgGwTwx4/+Aet6d4rs9eHiK51y2+JXinWoNHivdMXxNBaWb+FtQ0O0itb3S2hSaC7Nhqkq27WwiuotU/GOJeBoYLHUc1x+Jq5jhqLeLhGGLq4Or9Zwyc1S+rwoVKcMPOco1HOni4VlJcrUklI/orhLxQjjMpxGV5VgY5VmM1TwNVzwmHx2GeBxc/ZyqrF1a9OvPFqMZU3Crgp0ZRfOpQlov59/GHwU1P4Gft3+Kv2S/Ad5pY8Dtp1j4j+HVvqlzd3EOh+C/Ed61vpPhzVLs6bJqjapoWq3MllHqi3GpJdeH47c3UU99Cir6+d8P4XMuG6OeUoQWKxOMnRdWpJ066rKEK/7ypTjUp1sM6DUeSdFVoVouUavLUmntlGPbzevlFbnpRwWX061N4ZRnh54eHLRcHQquM6eI+sSb9rTr+ydCSg6PNTptft5+yP/AMEB1+IFkvxr+PXxC8IaBrfi671bWNBu/hPZ3XinxLpml3Lz6DpM8GsePfDGjaLo2t6V4cjm/s+G78KeM9G03Xr661UW2oSCLb6uTcDOOCwsMVi6fs3CEqsaMJVJVVKSqzipzVJUW57SUKlope7zar81zPxHeGzHMJYXB1a1RTlTwyxFSNGhhqtOnOhGtKnSdWpiWoyk3D22Hu5WcuVOMv6X/gN+zn8G/wBmjwb/AMIP8GfBGleEdKubltS12+gj+0+IfFuuSmR7rxD4v8QXHmap4i1q6lmmdrvUbiVbZJfsenxWdhFBaRfoWCy/B5dTlTweHp0VOXNVlFfvK09uetUd51Z20TnJ8q92NopJfmWa51mmd1oV8zxlbFSpQ9nh6c5NUcNSvf2WGoq1OhTvq404x55e/Nym3J+3V2HlgP/Z" alt="Jordan Reyes">
+          <div><div class="sb-name">Jordan Reyes</div><div class="sb-role">Operations Manager</div></div>
+        </div>
+        <!-- Live data box -->
+        <div class="sb-live-box">
+          <div class="sb-live">
+            <span class="sb-live-label">Live data</span>
+            <span class="sb-live-refresh">· auto-refresh 15m</span>
+          </div>
+          <div class="sb-updated">
+            <span class="sb-live-dot"></span>
+            UPDATED 7M AGO
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- ══ FEATURE 1: PRIORITY OVERVIEW ══ -->
+      <div class="card">
+        <div class="f1-head"><div class="f1-title">Priority overview</div></div>
+
+        <div class="f1-body">
+
+          <!-- ALERTS COLUMN -->
+          <div class="alerts-col">
+            <div class="alerts-hdr">
+              <span class="a-lbl">Today's alerts</span>
+              <div class="a-counts">
+                <span class="cnt-c">2 critical</span>
+                <span class="cnt-dot">•</span>
+                <span class="cnt-w">2 warnings</span>
+              </div>
+            </div>
+
+            <div class="a-list" id="mainAlerts">
+
+              <div class="a-row c" id="r1">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="a-dot-svg"><circle cx="7" cy="7" r="7" fill="#FDECEE"/><circle cx="7" cy="7" r="4" fill="#EF4444"/></svg>
+                <div class="a-body">
+                  <div class="a-hl">$94k in deals missed today's close — slipping to next week</div>
+                  <div class="a-meta">
+                    <span class="a-tag">Sales</span>
+                    <span class="a-time">6H AGO</span>
+                  </div>
+                </div>
+                <div class="a-actions">
+                  <button class="act-btn" onclick="doAck('r1')"><i class="ti ti-check"></i><span class="tip">Complete</span></button>
+                  <button class="act-btn" onclick="doSnooze('r1')"><i class="ti ti-clock"></i><span class="tip">Snooze</span></button>
+                  <button class="act-btn"><i class="ti ti-user-plus"></i><span class="tip">Assign</span></button>
+                  <button class="act-btn"><i class="ti ti-dots"></i><span class="tip">More</span></button>
+                </div>
+              </div>
+
+              <div class="a-row c" id="r2">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="a-dot-svg"><circle cx="7" cy="7" r="7" fill="#FDECEE"/><circle cx="7" cy="7" r="4" fill="#EF4444"/></svg>
+                <div class="a-body">
+                  <div class="a-hl">Checkout is slow — customers may be abandoning purchases</div>
+                  <div class="a-meta">
+                    <span class="a-tag">Engineering</span>
+                    <span class="a-time">3H AGO</span>
+                  </div>
+                </div>
+                <div class="a-actions">
+                  <button class="act-btn" onclick="doAck('r2')"><i class="ti ti-check"></i><span class="tip">Complete</span></button>
+                  <button class="act-btn" onclick="doSnooze('r2')"><i class="ti ti-clock"></i><span class="tip">Snooze</span></button>
+                  <button class="act-btn"><i class="ti ti-user-plus"></i><span class="tip">Assign</span></button>
+                  <button class="act-btn"><i class="ti ti-dots"></i><span class="tip">More</span></button>
+                </div>
+              </div>
+
+              <div class="a-row w" id="r3">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="a-dot-svg"><circle cx="7" cy="7" r="7" fill="#FFEED1"/><circle cx="7" cy="7" r="4" fill="#F59E0B"/></svg>
+                <div class="a-body">
+                  <div class="a-hl">Q2 feature spec overdue — Engineering is blocked</div>
+                  <div class="a-meta">
+                    <span class="a-tag">Product &amp; Design</span>
+                    <span class="a-time">2H AGO</span>
+                  </div>
+                </div>
+                <div class="a-actions">
+                  <button class="act-btn" onclick="doAck('r3')"><i class="ti ti-check"></i><span class="tip">Complete</span></button>
+                  <button class="act-btn" onclick="doSnooze('r3')"><i class="ti ti-clock"></i><span class="tip">Snooze</span></button>
+                  <button class="act-btn"><i class="ti ti-user-plus"></i><span class="tip">Assign</span></button>
+                  <button class="act-btn"><i class="ti ti-dots"></i><span class="tip">More</span></button>
+                </div>
+              </div>
+
+              <div class="a-row w" id="r4">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="a-dot-svg"><circle cx="7" cy="7" r="7" fill="#FFEED1"/><circle cx="7" cy="7" r="4" fill="#F59E0B"/></svg>
+                <div class="a-body">
+                  <div class="a-hl">Monthly expenses tracking 14% over budget with 6 days remaining</div>
+                  <div class="a-meta">
+                    <span class="a-tag">Finance</span>
+                    <span class="a-time">1H AGO</span>
+                  </div>
+                </div>
+                <div class="a-actions">
+                  <button class="act-btn" onclick="doAck('r4')"><i class="ti ti-check"></i><span class="tip">Complete</span></button>
+                  <button class="act-btn" onclick="doSnooze('r4')"><i class="ti ti-clock"></i><span class="tip">Snooze</span></button>
+                  <button class="act-btn"><i class="ti ti-user-plus"></i><span class="tip">Assign</span></button>
+                  <button class="act-btn"><i class="ti ti-dots"></i><span class="tip">More</span></button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Keyboard shortcut bar -->
+            <div class="kb-bar" id="kbBar">
+              <div class="kb-k"><span class="kk">tab</span> select alert</div>
+              <div class="kb-k"><span class="kk">a</span> assign</div>
+              <div class="kb-k"><span class="kk">s</span> snooze</div>
+              <div class="kb-k"><span class="kk">c</span> complete</div>
+              <div class="kb-k"><span class="kk">d</span> dismiss</div>
+              <div class="kb-k"><span class="kk">e</span> escalate</div>
+            </div>
+
+          </div>
+
+          <div class="f1-divider"></div>
+
+          <!-- TEAM HEALTH COLUMN -->
+          <div class="teams-col">
+            <div class="teams-hdr">
+              <span class="t-lbl">Team health</span>
+              <span class="t-vs">vs last week</span>
+            </div>
+            <div class="t-list">
+              <div class="t-row"><span class="t-name">Customer Success</span><span class="t-score">92</span><div class="t-trend up"><svg width="7" height="8" viewBox="0 0 7 8" fill="none"><path d="M6.5 3.5L3.5 0.5L0.5 3.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 7.5L3.5 0.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/></svg>4</div></div>
+              <div class="t-row"><span class="t-name">People</span><span class="t-score">90</span><div class="t-trend up"><svg width="7" height="8" viewBox="0 0 7 8" fill="none"><path d="M6.5 3.5L3.5 0.5L0.5 3.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 7.5L3.5 0.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/></svg>3</div></div>
+              <div class="t-row"><span class="t-name">Product &amp; Design</span><span class="t-score">88</span><div class="t-trend dn"><svg width="7" height="8" viewBox="0 0 7 8" fill="none"><path d="M0.5 4.5L3.5 7.5L6.5 4.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 0.5V7.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/></svg>2</div></div>
+              <div class="t-row"><span class="t-name">Finance</span><span class="t-score">85</span><div class="t-trend fl">— 0</div></div>
+              <div class="t-row"><span class="t-name">Engineering</span><span class="t-score">84</span><div class="t-trend dn"><svg width="7" height="8" viewBox="0 0 7 8" fill="none"><path d="M0.5 4.5L3.5 7.5L6.5 4.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 0.5V7.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/></svg>1</div></div>
+              <div class="t-row"><span class="t-name">Sales</span><span class="t-score">80</span><div class="t-trend up"><svg width="7" height="8" viewBox="0 0 7 8" fill="none"><path d="M6.5 3.5L3.5 0.5L0.5 3.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 7.5L3.5 0.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/></svg>2</div></div>
+              <div class="t-row"><span class="t-name">Marketing</span><span class="t-score">79</span><div class="t-trend dn"><svg width="7" height="8" viewBox="0 0 7 8" fill="none"><path d="M0.5 4.5L3.5 7.5L6.5 4.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 0.5V7.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/></svg>6</div></div>
+              <div class="t-row"><span class="t-name">Operations</span><span class="t-score">68</span><div class="t-trend fl">— 0</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ FEATURE 2: PERFORMANCE OVERVIEW ══ -->
+      <div class="card">
+        <div class="f2-head"><div class="f2-title">Performance overview</div></div>
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar">
+          <div class="m-pills">
+            <button class="mpill on" data-m="velocity" onclick="setMetric(this)"><svg width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M0.5 8.5L5.5 0.5L4.5 5.5L7.5 4.5L1.5 13.5L3.5 7.5L0.5 8.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Velocity</button>
+            <button class="mpill" data-m="quality" onclick="setMetric(this)"><svg width="13" height="14" viewBox="0 0 13 14" fill="none"><path d="M0.5 2.5C1.60457 2.5 2.5 1.60457 2.5 0.5H6.5H10.5C10.5 1.60457 11.3954 2.5 12.5 2.5V7C12.5 9.68736 10.7804 12.0732 8.23092 12.923L6.5 13.5L4.76908 12.923C2.21963 12.0732 0.5 9.68736 0.5 7V2.5Z" stroke="currentColor" stroke-linejoin="round"/><path d="M4.5 6.5L6.5 8.5L9.5 5.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Quality</button>
+            <button class="mpill" data-m="capacity" onclick="setMetric(this)"><svg width="14" height="7" viewBox="0 0 14 7" fill="none"><rect x="0.5" y="0.5" width="12" height="6" stroke="currentColor" stroke-linejoin="round"/><rect x="1.5" y="1.5" width="6" height="4" rx="0.5" fill="currentColor"/><rect x="12.5" y="2.5" width="1" height="2" stroke="currentColor" stroke-linejoin="round"/></svg>Capacity</button>
+            <button class="mpill" data-m="engagement" onclick="setMetric(this)"><svg width="14" height="11" viewBox="0 0 14 11" fill="none"><path d="M0.5 5.5H2.5L5 0.5L9 10L11.5 5.5H13.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Engagement</button>
+          </div>
+
+          <div class="period-wrap">
+            <button class="pbtn" data-p="day" onclick="setPeriod(this)">Day</button>
+            <button class="pbtn on" data-p="week" onclick="setPeriod(this)">Week</button>
+            <button class="pbtn" data-p="month" onclick="setPeriod(this)">Month</button>
+            <button class="pbtn" data-p="quarter" onclick="setPeriod(this)">Quarter</button>
+          </div>
+
+          <div class="sort-wrap">
+            <button class="sort-trig" id="sortTrig" onclick="toggleSort()">
+              <span id="sortLbl">Highest score first</span>
+              <i class="ti ti-chevron-down"></i>
+            </button>
+            <div class="sort-menu" id="sortMenu">
+              <div class="sopt on" data-s="hi" onclick="setSort(this)"><span>Highest score first</span></div>
+              <div class="sopt" data-s="lo" onclick="setSort(this)"><span>Lowest score first</span></div>
+              <div class="sopt" data-s="az" onclick="setSort(this)"><span>A – Z</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHART -->
+        <div class="chart-area">
+          <div id="chartBody"></div>
+        </div>
+
+        <div class="chart-footer">
+          <div class="legend">
+            <div class="leg"><span class="leg-sq" style="background:var(--green-fill)"></span>90–100 healthy</div>
+            <div class="leg"><span class="leg-sq" style="background:var(--blue-fill)"></span>80–89 stable</div>
+            <div class="leg"><span class="leg-sq" style="background:var(--amber-fill)"></span>70–79 declining</div>
+            <div class="leg"><span class="leg-sq" style="background:var(--red-fill)"></span>69 and below at risk</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/* ── DATA ──────────────────────────────────────────────────────── */
+const DS = {
+  velocity: [
+    { n:'Customer Success', p:7,  s:92, t:+4, raw:'$284k closed this week' },
+    { n:'People',           p:3,  s:90, t:+3, raw:'18 hires processed' },
+    { n:'Product & Design', p:8,  s:88, t:-2, raw:'24 deliverables shipped' },
+    { n:'Finance',          p:3,  s:85, t:0,  raw:'28 reports completed' },
+    { n:'Engineering',      p:15, s:84, t:-1, raw:'142 story points shipped' },
+    { n:'Sales',            p:9,  s:80, t:+2, raw:'$184k pipeline created' },
+    { n:'Marketing',        p:6,  s:79, t:-6, raw:'12 campaigns active' },
+    { n:'Operations',       p:4,  s:68, t:0,  raw:'68 tasks completed' },
+  ],
+  quality: [
+    { n:'People',           p:3,  s:94, t:+2, raw:'98% offer acceptance' },
+    { n:'Customer Success', p:7,  s:91, t:+1, raw:'NPS score +62' },
+    { n:'Finance',          p:3,  s:89, t:+3, raw:'Zero reporting errors' },
+    { n:'Sales',            p:9,  s:86, t:+4, raw:'92% forecast accuracy' },
+    { n:'Product & Design', p:8,  s:83, t:-3, raw:'4 bugs in last release' },
+    { n:'Marketing',        p:6,  s:81, t:0,  raw:'3.2% conversion rate' },
+    { n:'Engineering',      p:15, s:76, t:-2, raw:'94.2% uptime this week' },
+    { n:'Operations',       p:4,  s:71, t:+1, raw:'88% SLAs met on time' },
+  ],
+  capacity: [
+    { n:'Finance',          p:3,  s:93, t:+1, raw:'18% bandwidth available' },
+    { n:'Operations',       p:4,  s:88, t:+5, raw:'24% bandwidth available' },
+    { n:'Engineering',      p:15, s:85, t:-4, raw:'12% bandwidth available' },
+    { n:'Sales',            p:9,  s:82, t:+2, raw:'22% bandwidth available' },
+    { n:'People',           p:3,  s:80, t:0,  raw:'18% bandwidth available' },
+    { n:'Customer Success', p:7,  s:77, t:-3, raw:'8% bandwidth available' },
+    { n:'Marketing',        p:6,  s:74, t:-2, raw:'6% bandwidth available' },
+    { n:'Product & Design', p:8,  s:69, t:-6, raw:'2% bandwidth available' },
+  ],
+  engagement: [
+    { n:'Customer Success', p:7,  s:91, t:+3, raw:'eNPS score +54' },
+    { n:'Sales',            p:9,  s:89, t:+5, raw:'eNPS score +48' },
+    { n:'Engineering',      p:15, s:87, t:+2, raw:'eNPS score +42' },
+    { n:'Product & Design', p:8,  s:84, t:-1, raw:'eNPS score +36' },
+    { n:'People',           p:3,  s:82, t:0,  raw:'eNPS score +30' },
+    { n:'Finance',          p:3,  s:79, t:-2, raw:'eNPS score +22' },
+    { n:'Marketing',        p:6,  s:76, t:-4, raw:'eNPS score +14' },
+    { n:'Operations',       p:4,  s:70, t:0,  raw:'eNPS score +8' },
+  ],
+};
+
+/* ── STATE ─────────────────────────────────────────────────────── */
+let metric = 'velocity', period = 'week', sort = 'hi';
+let alertsOpen = false, kbMode = false, kbIdx = -1;
+const kbAlerts = ['r1','r2','r3','r4'];
+
+/* ── COLOR ─────────────────────────────────────────────────────── */
+function col(s) {
+  if (s >= 90) return 'g';
+  if (s >= 80) return 'b';
+  if (s >= 70) return 'a';
+  return 'r';
+}
+
+/* ── CHART RENDER ──────────────────────────────────────────────── */
+function render() {
+  let rows = DS[metric].map(r => ({ ...r, s: Math.min(100, Math.round(r.s * ({ day:.94, week:1, month:1.04, quarter:1.08 }[period]))) }));
+  if (sort === 'hi') rows.sort((a,b) => b.s - a.s);
+  else if (sort === 'lo') rows.sort((a,b) => a.s - b.s);
+  else rows.sort((a,b) => a.n.localeCompare(b.n));
+
+  const SVG_UP   = '<svg width="7" height="8" viewBox="0 0 7 8" fill="none" style="flex-shrink:0"><path d="M6.5 3.5L3.5 0.5L0.5 3.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 7.5L3.5 0.5" stroke="#047857" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SVG_DOWN = '<svg width="7" height="8" viewBox="0 0 7 8" fill="none" style="flex-shrink:0"><path d="M0.5 4.5L3.5 7.5L6.5 4.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 0.5V7.5" stroke="#B91C1B" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const html = rows.map(r => {
+    const tv = r.t, tc = tv > 0 ? 'up' : tv < 0 ? 'dn' : 'fl';
+    const ti = tv > 0 ? SVG_UP + tv : tv < 0 ? SVG_DOWN + Math.abs(tv) : '— 0';
+    const tt = tv > 0 ? '↑ +' + tv + ' vs last week' : tv < 0 ? '↓ ' + tv + ' vs last week' : 'No change vs last week';
+    const ttc = tv > 0 ? 'up' : tv < 0 ? 'dn' : '';
+    return `<div class="b-row">
+      <div class="d-cell"><div class="d-name">${r.n}</div><div class="d-count">${r.p} people</div></div>
+      <div class="bar-track"><div class="bar-fill ${col(r.s)}" style="width:0%"></div></div>
+      <div class="s-cell">${r.s}</div>
+      <div class="tr-cell ${tc}">${ti}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('chartBody').innerHTML = html;
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.bar-fill').forEach((el, i) => {
+      el.style.width = rows[i].s + '%';
+    });
+  }));
+}
+
+/* ── METRIC ────────────────────────────────────────────────────── */
+function setMetric(btn) {
+  document.querySelectorAll('.mpill').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  metric = btn.dataset.m;
+  render();
+}
+
+/* ── PERIOD ────────────────────────────────────────────────────── */
+function setPeriod(btn) {
+  document.querySelectorAll('.pbtn').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  period = btn.dataset.p;
+  render();
+}
+
+/* ── SORT ──────────────────────────────────────────────────────── */
+function toggleSort() { document.getElementById('sortMenu').classList.toggle('open'); }
+function setSort(opt) {
+  document.querySelectorAll('.sopt').forEach(o => { o.classList.remove('on'); });
+  opt.classList.add('on');
+  sort = opt.dataset.s;
+  document.getElementById('sortLbl').textContent = opt.querySelector('span').textContent;
+  document.getElementById('sortMenu').classList.remove('open');
+  render();
+}
+
+/* ── ALERTS TOGGLE ─────────────────────────────────────────────── */
+function toggleAlerts() {
+  alertsOpen = !alertsOpen;
+  document.getElementById('extraDrawer').classList.toggle('open', alertsOpen);
+  document.getElementById('moreLbl').textContent = alertsOpen ? '' : '3 info alerts not shown';
+  document.getElementById('viewBtn').innerHTML = alertsOpen
+    ? 'Show fewer <i class="ti ti-chevron-up"></i>'
+    : 'View all 7 alerts <i class="ti ti-chevron-down"></i>';
+}
+
+/* ── ALERT ACTIONS ─────────────────────────────────────────────── */
+function doAck(id) {
+  const row = document.getElementById(id);
+  if (!row) return;
+  row.classList.add('acked');
+  const meta = row.querySelector('.a-meta');
+  if (meta && !meta.querySelector('.a-ack-lbl')) {
+    meta.insertAdjacentHTML('beforeend', '<span class="a-ack-lbl" style="font-size:11px;color:var(--green);font-weight:500;display:flex;align-items:center;gap:3px;"><i class="ti ti-circle-check" style="font-size:12px"></i>Completed</span>');
+  }
+  setTimeout(() => {
+    row.style.transition = 'opacity .3s ease';
+    row.style.opacity = '0';
+    setTimeout(() => {
+      const h = row.offsetHeight;
+      row.style.transition = 'max-height .3s ease, padding .3s ease, border .3s ease';
+      row.style.overflow = 'hidden';
+      row.style.maxHeight = h + 'px';
+      requestAnimationFrame(() => {
+        row.style.maxHeight = '0';
+        row.style.paddingTop = '0';
+        row.style.paddingBottom = '0';
+        row.style.borderBottom = 'none';
+      });
+    }, 300);
+  }, 3000);
+}
+
+function doSnooze(id) {
+  const row = document.getElementById(id);
+  if (!row) return;
+  row.style.transition = 'opacity .25s, max-height .3s';
+  row.style.opacity = '0';
+  row.style.overflow = 'hidden';
+  setTimeout(() => { row.style.maxHeight = '0'; row.style.padding = '0'; row.style.borderBottom = 'none'; }, 250);
+}
+
+/* ── KEYBOARD MODE ─────────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    if (!kbMode) { kbMode = true; document.getElementById('kbBar').classList.add('show'); kbIdx = 0; }
+    else kbIdx = (kbIdx + 1) % kbAlerts.length;
+    updateKbFocus();
+  }
+  if (e.key === 'Escape') {
+    kbMode = false; kbIdx = -1;
+    document.getElementById('kbBar').classList.remove('show');
+    kbAlerts.forEach(id => { const r = document.getElementById(id); if (r) r.classList.remove('focused'); });
+    document.getElementById('sortMenu').classList.remove('open');
+  }
+});
+
+function updateKbFocus() {
+  kbAlerts.forEach((id, i) => {
+    const r = document.getElementById(id);
+    if (r) r.classList.toggle('focused', i === kbIdx);
+  });
+}
+
+/* Close sort on outside click */
+document.addEventListener('click', e => { if (!e.target.closest('.sort-wrap')) document.getElementById('sortMenu').classList.remove('open'); });
+
+/* ── INIT ──────────────────────────────────────────────────────── */
+render();
+</script>
+</body>
+</html>
